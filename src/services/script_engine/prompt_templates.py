@@ -1,11 +1,16 @@
 """Prompt template management for script generation."""
 
+from __future__ import annotations
+
 import json
 import logging
 from pathlib import Path
-from typing import Any, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 from src.models import ContentMode
+
+if TYPE_CHECKING:
+    from src.services.intelligence.talking_points import IntelligenceContext
 
 logger = logging.getLogger(__name__)
 
@@ -64,6 +69,7 @@ class PromptTemplates:
         self,
         context: dict[str, Any],
         include_betting: bool = True,
+        intelligence: Optional[IntelligenceContext] = None,
     ) -> str:
         """
         Build the user prompt with game context.
@@ -71,6 +77,7 @@ class PromptTemplates:
         Args:
             context: Enriched game context from DataEnricher
             include_betting: Whether to include betting data
+            intelligence: Optional intelligence context with talking points
 
         Returns:
             Formatted user prompt with context
@@ -82,16 +89,23 @@ class PromptTemplates:
         # Format context as readable JSON
         context_json = json.dumps(context, indent=2, default=str)
 
+        # Format talking points section if available
+        talking_points_section = ""
+        if intelligence and intelligence.top_stories:
+            talking_points_section = intelligence.format_for_prompt()
+
         prompt = f"""Generate a podcast script based on the following game data:
 
 GAMES DATA:
 {context_json}
 
+{talking_points_section}
 Remember to:
 - Use [PAUSE:short], [PAUSE:medium], [PAUSE:long] markers for natural pacing
-- Use *word* for emphasis on key information
 - Keep the tone professional and engaging
 - Follow the structure outlined in the system prompt
+- IMPORTANT: Incorporate the talking points naturally - reference specific facts and data, avoid generic statements
+- DO NOT use asterisks (*word*) for emphasis - the voice will convey emphasis naturally
 
 Return only the script text, no additional commentary."""
 
@@ -129,19 +143,19 @@ Return only the script text, no additional commentary."""
         if mode == ContentMode.DAILY_RECAP:
             return """You are a sports podcast host. Create an engaging recap of multiple matches.
 Include scores, key moments, and natural transitions between games.
-Use [PAUSE:short/medium/long] for pacing and *word* for emphasis.
+Use [PAUSE:short/medium/long] for pacing. DO NOT use asterisks for emphasis.
 Keep it professional and informative, 400-800 words."""
 
         elif mode == ContentMode.GAME_SPOTLIGHT_PREGAME:
             return """You are a sports analyst previewing an upcoming match.
 Cover lineups, form, head-to-head, and predictions.
-Use [PAUSE:short/medium/long] for pacing and *word* for emphasis.
+Use [PAUSE:short/medium/long] for pacing. DO NOT use asterisks for emphasis.
 Keep it analytical, 200-350 words."""
 
         elif mode == ContentMode.GAME_SPOTLIGHT_POSTGAME:
             return """You are a sports commentator recapping a finished match.
 Cover the final score, key moments, top performers, and statistics.
-Use [PAUSE:short/medium/long] for pacing and *word* for emphasis.
+Use [PAUSE:short/medium/long] for pacing. DO NOT use asterisks for emphasis.
 Keep it engaging and informative, 350-500 words."""
 
         return "Generate an engaging sports podcast script based on the provided data."

@@ -12,6 +12,7 @@ from src.models import ContentMode, Game, PodcastRequest
 from src.models.requests import PodcastFormat, PodcastMode
 from src.services.audio_manager import AudioStorage, AudioSynthesizer
 from src.services.audio_manager.multi_voice_synthesizer import MultiVoiceSynthesizer
+from src.services.intelligence import ContentIntelligence
 from src.services.retrieval import DataEnricher, GameFetcher
 from src.services.script_engine import ContentRouter, ScriptGenerator, SSMLProcessor
 
@@ -61,6 +62,7 @@ class PodcastOrchestrator:
         game_fetcher: Optional[GameFetcher] = None,
         data_enricher: Optional[DataEnricher] = None,
         content_router: Optional[ContentRouter] = None,
+        content_intelligence: Optional[ContentIntelligence] = None,
         script_generator: Optional[ScriptGenerator] = None,
         audio_synthesizer: Optional[AudioSynthesizer] = None,
         multi_voice_synthesizer: Optional[MultiVoiceSynthesizer] = None,
@@ -72,6 +74,7 @@ class PodcastOrchestrator:
         self.game_fetcher = game_fetcher or GameFetcher(self.settings)
         self.data_enricher = data_enricher or DataEnricher(self.game_fetcher)
         self.content_router = content_router or ContentRouter()
+        self.content_intelligence = content_intelligence or ContentIntelligence(self.settings)
         self.script_generator = script_generator or ScriptGenerator(self.settings)
         self.ssml_processor = SSMLProcessor()
         self.audio_synthesizer = audio_synthesizer or AudioSynthesizer(self.settings)
@@ -127,16 +130,27 @@ class PodcastOrchestrator:
             # Step 3: Enrich data
             context = await self.data_enricher.enrich_games(games, mode)
 
+            # Step 3.5: Extract content intelligence (talking points)
+            logger.info("Analyzing content intelligence...")
+            intelligence = await self.content_intelligence.analyze(
+                enriched_context=context,
+                mode=mode,
+                include_betting=request.include_betting,
+            )
+            logger.info(f"Extracted {len(intelligence.top_stories)} top talking points")
+
             # Step 4: Generate script (use panel mode if panel format requested)
             if is_panel:
                 script = await self.script_generator.generate_script(
                     context=context,
+                    intelligence=intelligence,
                     mode=ContentMode.PANEL_DISCUSSION,
                     include_betting=request.include_betting,
                 )
             else:
                 script = await self.script_generator.generate_script(
                     context=context,
+                    intelligence=intelligence,
                     mode=mode,
                     include_betting=request.include_betting,
                 )

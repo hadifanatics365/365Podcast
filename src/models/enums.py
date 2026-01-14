@@ -11,18 +11,18 @@ class GameStatus(IntEnum):
     ACTIVE = 2
     SHOW_STATUS = 3
     JUST_ENDED = 163
-    TO_FINISH = 225
     INVALID = 999
 
     @classmethod
     def is_finished(cls, status: int) -> bool:
         """Check if game is finished or just ended."""
-        return status in (cls.FINISHED, cls.JUST_ENDED, cls.TO_FINISH)
+        return status in (cls.FINISHED, cls.JUST_ENDED)
 
     @classmethod
     def is_upcoming(cls, status: int) -> bool:
         """Check if game hasn't started yet."""
-        return status == cls.DIDNT_START
+        # Status 0 = didntStart, status -1 or other negative = postponed/not started
+        return status <= cls.DIDNT_START
 
     @classmethod
     def is_live(cls, status: int) -> bool:

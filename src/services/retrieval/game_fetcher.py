@@ -188,15 +188,30 @@ class GameFetcher:
 
                 data = response.json()
 
-                # Game center returns game data directly or in "Game" key
-                game_data = data.get("Game", data)
+                # Game center can return data in different structures:
+                # 1. {"Game": {...}} - game data under Game key
+                # 2. {"Games": [{...}]} - game data in Games array
+                # 3. Direct game data at root level
+                game_data = None
+
+                if "Game" in data and isinstance(data["Game"], dict):
+                    game_data = data["Game"]
+                elif "Games" in data and isinstance(data["Games"], list) and data["Games"]:
+                    game_data = data["Games"][0]
+                elif "ID" in data:
+                    game_data = data
+
+                if not game_data:
+                    logger.debug(f"Game center response has unexpected structure for {game_id}")
+                    return None
+
                 return Game.model_validate(game_data)
 
         except httpx.HTTPStatusError as e:
             logger.warning(f"Failed to fetch game center for {game_id}: {e.response.status_code}")
             return None
         except Exception as e:
-            logger.warning(f"Error fetching game center for {game_id}: {e}")
+            logger.debug(f"Could not parse game center for {game_id}: {e}")
             return None
 
     async def fetch_featured_games(

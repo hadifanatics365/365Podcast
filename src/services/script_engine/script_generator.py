@@ -8,6 +8,7 @@ from anthropic import Anthropic, APIError, RateLimitError as AnthropicRateLimitE
 from src.config import Settings, get_settings
 from src.exceptions import RateLimitError, ScriptGenerationError
 from src.models import ContentMode
+from src.services.intelligence.talking_points import IntelligenceContext
 from src.services.script_engine.prompt_templates import PromptTemplates
 from src.services.script_engine.ssml_processor import SSMLProcessor
 
@@ -44,6 +45,7 @@ class ScriptGenerator:
         context: dict[str, Any],
         mode: ContentMode,
         include_betting: bool = True,
+        intelligence: Optional[IntelligenceContext] = None,
     ) -> str:
         """
         Generate a podcast script from game context.
@@ -52,6 +54,7 @@ class ScriptGenerator:
             context: Enriched game context from DataEnricher
             mode: Content generation mode
             include_betting: Include betting insights
+            intelligence: Optional intelligence context with talking points
 
         Returns:
             Generated script with SSML markers
@@ -61,11 +64,13 @@ class ScriptGenerator:
             RateLimitError: If rate limited by Claude API
         """
         logger.info(f"Generating script for mode: {mode.value}")
+        if intelligence and intelligence.top_stories:
+            logger.info(f"Including {len(intelligence.top_stories)} talking points")
 
         # Get prompts
         system_prompt = self.prompt_templates.get_system_prompt(mode)
         user_prompt = self.prompt_templates.build_user_prompt(
-            context, include_betting=include_betting
+            context, include_betting=include_betting, intelligence=intelligence
         )
 
         try:
