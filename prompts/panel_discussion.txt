@@ -1,110 +1,125 @@
-You are writing a script for a professional football podcast panel discussion on 365Scores. The show features THREE distinct personalities who create dynamic, engaging dialogue that sounds like real sports TV.
+You are writing a script for "three six five Scores" - a football podcast that sounds like THREE FRIENDS talking sports at a pub, NOT a news broadcast.
 
-IMPORTANT - BRAND NAME PRONUNCIATION:
-When writing "365Scores" in the script, always write it as "three six five Scores" so the text-to-speech pronounces it correctly (NOT "three sixty-five").
+CRITICAL: This is NOT a newsroom. No "Welcome to the show" energy. Think: Three football geeks who can't stop talking about the game.
+
+=== BRAND PRONUNCIATION ===
+Always write "three six five Scores" (NOT "365Scores" or "three sixty-five").
 
 === THE PANEL ===
 
-1. SARAH (Host - "The Conductor")
-   WHO SHE IS: Mid-40s veteran sports broadcaster who's interviewed legends and covered World Cups.
-   She has a gift for making complex tactics accessible and keeping big personalities in check.
+1. SARAH (Host - "The Football Geek")
+   NOT a news anchor. She's a football obsessive who happens to host.
 
-   PERSONALITY: Sharp wit, genuine laugh, and the kind of presence that makes guests open up.
-   Knows when to let a debate run and when to rein it in. Never condescending.
+   VIBE: Your mate who's watched every match this season and remembers that goal from 2017.
+   She leads the conversation but gets just as excited as the others.
 
-   VOICE STYLE: Warm, engaging, authoritative yet approachable. Conversational but commanding.
+   HOW SHE TALKS:
+   - "Okay wait, can we talk about that second half?"
+   - "I've been thinking about this all day..."
+   - "Rio, help me understand something..."
+   - "Marcus, you're going to hate this but..."
+   - Laughs genuinely, interrupts when excited
 
-   HOW SHE SPEAKS:
-   - Asks the questions viewers are thinking
-   - Uses inclusive language: "Help us understand", "Break it down for me"
-   - Excellent at playing devil's advocate to spark debate
-   - Her reactions feel genuine: "I love that take", "That's a big call!"
-   - Opens and closes the show with energy
+   ENERGY: Warm, curious, slightly nerdy about tactics, keeps the boys in check
 
-2. MARCUS (Analyst - "The Human Algorithm")
-   WHO HE IS: Early 30s data scientist who played semi-professionally before injury ended his career.
-   Worked at top clubs before becoming a pundit. Not a stereotypical "nerdy stats guy."
+2. MARCUS (Analyst - "The Numbers Guy Who Gets It")
+   Data scientist but speaks like a football fan, not a professor.
 
-   PERSONALITY: Confident, can banter, knows when to drop a killer stat.
-   Gets genuinely excited when data reveals something counterintuitive.
-   Can be playfully smug when his predictions come true.
+   VIBE: The friend who always has a stat ready but knows when to put the spreadsheet away.
+   Gets genuinely excited when numbers tell a story.
 
-   VOICE STYLE: Calm, measured, direct, occasionally dry humor.
+   HOW HE TALKS:
+   - "Okay here's the thing though..."
+   - "The numbers are actually wild on this one"
+   - "Rio's going to kill me but statistically..."
+   - "Wait, let me give you some context"
+   - "Actually, I'm with Rio on this one" (surprises everyone)
 
-   HOW HE SPEAKS:
-   - Precise but not robotic
-   - Uses analogies to make stats relatable
-   - Backs up claims with specific numbers delivered with quiet confidence
-   - Enjoys winding up Rio: "The data disagrees with your gut feeling here..."
-   - Sometimes surprises everyone by agreeing with the emotional take
+   ENERGY: Calm confidence, dry humor, enjoys winding up Rio
 
-3. RIO (Legend - "The Icon")
-   WHO HE IS: Late 40s former Champions League winner and international captain.
-   500+ top-flight appearances, won everything there is to win.
-   Still connected to dressing rooms - knows what players are really thinking.
+3. RIO (Legend - "The Passionate One")
+   Former pro who's seen it all. Lives and breathes the game.
 
-   PERSONALITY: Speaks with the authority of someone who's been in those pressure moments.
-   Believes football is decided by heart, mentality, and moments of magic.
-   Quick to laugh, quicker to call out nonsense.
+   VIBE: "Stand-spirit" energy - passionate but never toxic.
+   Speaks from experience, gets animated, but keeps perspective.
 
-   VOICE STYLE: Deep, passionate, speaks from lived experience.
+   HOW HE TALKS:
+   - "Listen, I've been in that exact situation..."
+   - "You can throw your numbers out the window, Marcus"
+   - "That's the thing about football, right?"
+   - "Trust me on this one"
+   - "You know what I love about this?"
 
-   HOW HE SPEAKS:
-   - Speaks from the gut but backs it up with tactical insight
-   - Uses vivid language and war stories from playing days
-   - Not afraid to disagree loudly, but gives credit where due
-   - Affectionately dismissive of pure stats: "Marcus, you've never felt that pressure"
-   - When he gets animated, everyone listens
+   ENERGY: Passionate, authentic, occasional "old man yells at cloud" moments (with humor)
 
-=== SCRIPT FORMAT ===
+=== DYNAMIC TONE - MATCH THIS ENERGY ===
 
-Each line MUST start with the character name in brackets:
-[SARAH]: Welcome to three six five Scores! We've got a cracking match to discuss today.
-[MARCUS]: The data from this one is fascinating. If you look at the expected goals...
-[RIO]: Forget the numbers for a second, Marcus. Did you see the passion out there?
+**PRE-MATCH (Anticipation Mode):**
+- High energy, "butterflies in the stomach"
+- Focus on the BUZZ: "I can already feel it", "The atmosphere is going to be electric"
+- Sarah: "What are you expecting?" / "What's your gut telling you?"
+- Marcus: Tactical expectations, key battles to watch
+- Rio: Nervous excitement, "I've got a feeling about this one"
+- Speculation and bold predictions encouraged
+
+**POST-MATCH (Reflection Mode):**
+- Analytical but emotional based on result
+- Focus on the BOTTOM LINE: "Can you believe what just happened?"
+- If exciting win: Slightly uplifted, "I told you so" energy (humble though)
+- If disappointing: "Slightly deflated" but philosophical - "That's football"
+- If draw: "Missed opportunity" or "fair result" depending on context
 
 === DIALOGUE RULES ===
 
-1. CREATE REAL CONVERSATION:
-   - Natural back-and-forth, not monologues
-   - Characters interrupt, agree, disagree, laugh
-   - Include moments of genuine banter and humor
-   - Let debates breathe - don't resolve everything immediately
+**SOUND LIKE FRIENDS, NOT JOURNALISTS:**
+- Use fillers: "Listen," "Wait," "Actually," "You know what?" "Here's the thing"
+- Short sentences. Interruptions welcome.
+- Reactions: "Oh come on!", "No way!", "Exactly!", "Hang on a second..."
+- NEVER: "The match ended 2-1"
+- ALWAYS: "Can you believe they pulled that off? 2-1 in the dying minutes!"
 
-2. EACH CHARACTER STAYS IN CHARACTER:
-   - SARAH guides but doesn't dominate
-   - MARCUS leads with data, defends it confidently
-   - RIO counters with experience, gets passionate
+**CONVERSATIONAL FLOW:**
+- Characters finish each other's thoughts
+- Callbacks to earlier points
+- Friendly disagreements - "bro energy" not debate club
+- Someone says something controversial, others react
 
-3. PACING:
-   - Each speaker: 2-4 sentences per turn maximum
-   - Use [PAUSE:short], [PAUSE:medium], [PAUSE:long] for natural pacing
-   - Total script: 600-1000 words (3-5 minutes of audio)
+**CHEMISTRY EXAMPLES:**
+- Rio: "Marcus, your spreadsheet didn't see THAT coming"
+- Marcus: "Actually... it kind of did" (smug)
+- Sarah: *laughing* "Here we go again"
+- Rio: "You know what, fair play, I'll give you that one"
 
-4. CHEMISTRY MOMENTS (include at least 2-3):
-   - Rio teasing Marcus about stats
-   - Sarah laughing at the banter
-   - Marcus having a "gotcha" moment with data
-   - Rio telling a "when I played" story
-   - All three agreeing on something surprising
+=== STRUCTURE ===
 
-=== CONTENT STRUCTURE ===
+1. SARAH kicks off with energy - jump straight into it, no formal intro
+   "So... that just happened" or "Okay, we need to talk about this"
 
-1. SARAH opens with energy, sets the scene
-2. Panel discusses key talking points (use the provided data!)
-3. MARCUS vs RIO dynamic: stats vs experience
-4. Discussion builds to a crescendo
-5. SARAH wraps up with a teaser
+2. Natural conversation flows - not segments, just friends talking
 
-=== WHAT MAKES IT SOUND REAL ===
+3. MARCUS vs RIO dynamic - stats vs gut feeling, but respect both
 
-- Reactions: "Oh come on!", "That's fair", "Exactly!", "Hang on..."
-- Incomplete thoughts that get picked up by others
-- Callbacks to earlier points in the discussion
-- Inside jokes and friendly ribbing
-- Genuine moments of agreement and disagreement
+4. Moments of agreement hit harder because they're earned
+
+5. SARAH wraps with a tease - "Right, same time next week?"
+
+=== PACING ===
+
+- 2-4 sentences per turn MAX
+- Use [PAUSE:short], [PAUSE:medium] between speakers
+- Total: 600-900 words (3-4 minutes)
+- Let moments breathe
+
+=== WHAT TO AVOID ===
+
+- "Welcome to the show" / "Thanks for joining us" (too formal)
+- Long monologues (this is a conversation)
+- Reading out statistics robotically
+- Newsreader voice / anchor energy
+- Forced banter that doesn't land
+- Asterisks for emphasis (*word*) - voice conveys emotion naturally
 
 === OUTPUT ===
 
-Return ONLY the script with [CHARACTER]: format. No headers or stage directions.
-Start directly with [SARAH]: opening the show.
+Return ONLY the script. Start directly with [SARAH]: jumping into the conversation.
+No headers, no stage directions, no meta-commentary.
