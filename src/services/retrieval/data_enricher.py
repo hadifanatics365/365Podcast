@@ -5,6 +5,7 @@ from typing import Any, Optional
 
 from src.models import ContentMode, Game, GameStatus
 from src.services.retrieval.game_fetcher import GameFetcher
+from src.services.retrieval.news_fetcher import NewsFetcher
 
 logger = logging.getLogger(__name__)
 
@@ -17,10 +18,12 @@ class DataEnricher:
     - Fetching detailed statistics for post-game analysis
     - Organizing games by status (finished, upcoming, live)
     - Adding H2H and form data where available
+    - Fetching and filtering relevant news articles
     """
 
-    def __init__(self, game_fetcher: GameFetcher):
+    def __init__(self, game_fetcher: GameFetcher, news_fetcher: Optional[NewsFetcher] = None):
         self.game_fetcher = game_fetcher
+        self.news_fetcher = news_fetcher or NewsFetcher()
 
     async def enrich_games(
         self,
@@ -67,16 +70,67 @@ class DataEnricher:
         # Process ended games (focus on results and key moments)
         for game in categorized["ended"]:
             enriched = self._extract_postgame_data(game)
+            # Fetch standings for finished games
+            if game.competition_id:
+                try:
+                    standings = await self.game_fetcher.fetch_standings(game.competition_id)
+                    enriched["standings"] = self._format_standings(standings, game)
+                except Exception as e:
+                    logger.warning(f"Failed to fetch standings for game {game.gid}: {e}")
+                    enriched["standings"] = None
+            # Fetch news for finished games
+            try:
+                news_items = await self.news_fetcher.fetch_relevant_news(game, time_window_hours=48)
+                enriched["news"] = [news.to_dict() for news in news_items]
+                enriched["news_count"] = len(news_items)
+            except Exception as e:
+                logger.warning(f"Failed to fetch news for game {game.gid}: {e}")
+                enriched["news"] = []
+                enriched["news_count"] = 0
             context["ended_games"].append(enriched)
 
         # Process upcoming games (focus on preview data)
         for game in categorized["upcoming"]:
             enriched = self._extract_pregame_data(game)
+            # Fetch standings for scheduled games
+            if game.competition_id:
+                try:
+                    standings = await self.game_fetcher.fetch_standings(game.competition_id)
+                    enriched["standings"] = self._format_standings(standings, game)
+                except Exception as e:
+                    logger.warning(f"Failed to fetch standings for game {game.gid}: {e}")
+                    enriched["standings"] = None
+            # Fetch news for scheduled games (last 24 hours)
+            try:
+                news_items = await self.news_fetcher.fetch_relevant_news(game, time_window_hours=24)
+                enriched["news"] = [news.to_dict() for news in news_items]
+                enriched["news_count"] = len(news_items)
+            except Exception as e:
+                logger.warning(f"Failed to fetch news for game {game.gid}: {e}")
+                enriched["news"] = []
+                enriched["news_count"] = 0
             context["upcoming_games"].append(enriched)
 
         # Process live games
         for game in categorized["live"]:
             enriched = self._extract_live_data(game)
+            # Fetch standings for live games
+            if game.competition_id:
+                try:
+                    standings = await self.game_fetcher.fetch_standings(game.competition_id)
+                    enriched["standings"] = self._format_standings(standings, game)
+                except Exception as e:
+                    logger.warning(f"Failed to fetch standings for game {game.gid}: {e}")
+                    enriched["standings"] = None
+            # Fetch recent news for live games
+            try:
+                news_items = await self.news_fetcher.fetch_relevant_news(game, time_window_hours=24)
+                enriched["news"] = [news.to_dict() for news in news_items]
+                enriched["news_count"] = len(news_items)
+            except Exception as e:
+                logger.warning(f"Failed to fetch news for game {game.gid}: {e}")
+                enriched["news"] = []
+                enriched["news_count"] = 0
             context["live_games"].append(enriched)
 
         # Add all games in order for script generation
@@ -101,6 +155,27 @@ class DataEnricher:
         if detailed_game:
             enriched.update(self._extract_pregame_data(detailed_game))
 
+        # Fetch league standings
+        if game.competition_id:
+            try:
+                standings = await self.game_fetcher.fetch_standings(game.competition_id)
+                enriched["standings"] = self._format_standings(standings, game)
+                logger.info(f"Fetched standings for competition {game.competition_id}")
+            except Exception as e:
+                logger.warning(f"Failed to fetch standings for game {game.gid}: {e}")
+                enriched["standings"] = None
+
+        # Fetch relevant news from last 24 hours
+        try:
+            news_items = await self.news_fetcher.fetch_relevant_news(game, time_window_hours=24)
+            enriched["news"] = [news.to_dict() for news in news_items]
+            enriched["news_count"] = len(news_items)
+            logger.info(f"Fetched {len(news_items)} relevant news items for pre-game")
+        except Exception as e:
+            logger.warning(f"Failed to fetch news for game {game.gid}: {e}")
+            enriched["news"] = []
+            enriched["news_count"] = 0
+
         context["game"] = enriched
         context["games"] = [enriched]
 
@@ -123,6 +198,28 @@ class DataEnricher:
         detailed_game = await self.game_fetcher.fetch_game_center(game.gid)
         if detailed_game:
             enriched.update(self._extract_postgame_data(detailed_game))
+
+        # Fetch league standings (updated after match)
+        if game.competition_id:
+            try:
+                standings = await self.game_fetcher.fetch_standings(game.competition_id)
+                enriched["standings"] = self._format_standings(standings, game)
+                logger.info(f"Fetched standings for competition {game.competition_id}")
+            except Exception as e:
+                logger.warning(f"Failed to fetch standings for game {game.gid}: {e}")
+                enriched["standings"] = None
+
+        # Fetch relevant news from after match end
+        try:
+            # For finished games, fetch news from match end time onwards
+            news_items = await self.news_fetcher.fetch_relevant_news(game, time_window_hours=48)
+            enriched["news"] = [news.to_dict() for news in news_items]
+            enriched["news_count"] = len(news_items)
+            logger.info(f"Fetched {len(news_items)} relevant news items for post-game")
+        except Exception as e:
+            logger.warning(f"Failed to fetch news for game {game.gid}: {e}")
+            enriched["news"] = []
+            enriched["news_count"] = 0
 
         context["game"] = enriched
         context["games"] = [enriched]
@@ -350,4 +447,129 @@ class DataEnricher:
                 opt.name for opt in bet_line.options if opt.won
             ],
             "match_winner": winner,
+        }
+
+    def _format_standings(
+        self,
+        standings_data: dict[str, Any],
+        game: Game,
+    ) -> dict[str, Any]:
+        """
+        Format standings data and extract relevant team positions.
+
+        Args:
+            standings_data: Raw standings from API
+            game: Game object to extract team IDs
+
+        Returns:
+            Formatted standings with highlighted team positions
+        """
+        teams = standings_data.get("teams", [])
+        if not teams:
+            return None
+
+        home_team_id = game.home_team.id if game.home_team else None
+        away_team_id = game.away_team.id if game.away_team else None
+
+        # Find home and away team positions
+        home_team_position = None
+        away_team_position = None
+        home_team_data = None
+        away_team_data = None
+
+        for team in teams:
+            if team.get("team_id") == home_team_id:
+                home_team_position = team.get("position")
+                home_team_data = team
+            if team.get("team_id") == away_team_id:
+                away_team_position = team.get("position")
+                away_team_data = team
+
+        # Get context around teams (teams above and below)
+        home_context = self._get_standings_context(teams, home_team_position, 2)
+        away_context = self._get_standings_context(teams, away_team_position, 2)
+
+        formatted = {
+            "competition_id": standings_data.get("competition_id"),
+            "season_id": standings_data.get("season_id"),
+            "table_name": standings_data.get("table_name"),
+            "total_teams": standings_data.get("total_teams", len(teams)),
+            "home_team": {
+                "position": home_team_position,
+                "points": home_team_data.get("points") if home_team_data else None,
+                "played": home_team_data.get("played") if home_team_data else None,
+                "wins": home_team_data.get("wins") if home_team_data else None,
+                "draws": home_team_data.get("draws") if home_team_data else None,
+                "losses": home_team_data.get("losses") if home_team_data else None,
+                "goals_for": home_team_data.get("goals_for") if home_team_data else None,
+                "goals_against": home_team_data.get("goals_against") if home_team_data else None,
+                "goal_difference": home_team_data.get("goal_difference") if home_team_data else None,
+                "form": home_team_data.get("form") if home_team_data else None,
+            },
+            "away_team": {
+                "position": away_team_position,
+                "points": away_team_data.get("points") if away_team_data else None,
+                "played": away_team_data.get("played") if away_team_data else None,
+                "wins": away_team_data.get("wins") if away_team_data else None,
+                "draws": away_team_data.get("draws") if away_team_data else None,
+                "losses": away_team_data.get("losses") if away_team_data else None,
+                "goals_for": away_team_data.get("goals_for") if away_team_data else None,
+                "goals_against": away_team_data.get("goals_against") if away_team_data else None,
+                "goal_difference": away_team_data.get("goal_difference") if away_team_data else None,
+                "form": away_team_data.get("form") if away_team_data else None,
+            },
+            "position_difference": (
+                abs(home_team_position - away_team_position)
+                if home_team_position and away_team_position
+                else None
+            ),
+            "home_context": home_context,  # Teams around home team
+            "away_context": away_context,  # Teams around away team
+            "top_three": [t for t in teams[:3] if t.get("position")],  # Top 3 teams
+            "bottom_three": [t for t in teams[-3:] if t.get("position")],  # Bottom 3 teams
+        }
+
+        return formatted
+
+    def _get_standings_context(
+        self,
+        teams: list[dict[str, Any]],
+        team_position: Optional[int],
+        context_size: int = 2,
+    ) -> Optional[dict[str, Any]]:
+        """
+        Get teams around a specific position in the standings.
+
+        Args:
+            teams: List of team standings
+            team_position: Position of the team
+            context_size: Number of teams above and below to include
+
+        Returns:
+            Dictionary with teams above, at, and below the position
+        """
+        if team_position is None:
+            return None
+
+        # Find teams in the context range
+        above = []
+        below = []
+        current = None
+
+        for team in teams:
+            pos = team.get("position")
+            if pos is None:
+                continue
+
+            if pos == team_position:
+                current = team
+            elif pos < team_position and pos >= team_position - context_size:
+                above.append(team)
+            elif pos > team_position and pos <= team_position + context_size:
+                below.append(team)
+
+        return {
+            "above": sorted(above, key=lambda x: x.get("position", 0)),
+            "current": current,
+            "below": sorted(below, key=lambda x: x.get("position", 0)),
         }

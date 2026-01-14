@@ -1,31 +1,41 @@
-[SARAH]: Welcome back to three six five Scores! I'm Sarah, and we've just witnessed a fascinating cup upset in Israel. Beitar Jerusalem have knocked out Kiryat Shmona two-nil in the FA Cup Round of Sixteen. [PAUSE:short] With me as always are Marcus, our data wizard, and Rio, our former England captain. Gentlemen, this result tells quite a story, doesn't it?
+[SARAH]: Welcome to three six five Scores! I'm Sarah, and we've just witnessed a fascinating cup upset in Israel. Beitar Jerusalem knocked out Kiryat Shmona two-nil in the FA Cup Round of Sixteen. [PAUSE:short] With me as always, our data wizard Marcus and Champions League winner Rio. Gentlemen, this result tells quite a story, doesn't it?
 
-[MARCUS]: It absolutely does, Sarah. The numbers paint a picture of a home side that's been struggling badly. Kiryat Shmona have now lost four of their last five matches at home. That's a shocking record for any team, especially when you're trying to progress in cup competition.
+[MARCUS]: It absolutely does, Sarah. The numbers were screaming this outcome before kickoff. Kiryat Shmona had lost four of their last five home matches - that's a shocking record for any team, especially at their own ground.
 
-[RIO]: You know what, Marcus? Sometimes the stats tell you everything you need to know. When I see a team losing that much at home, it's not just about tactics or formations. That's a confidence issue. The crowd turns, the players feel it, and suddenly your own stadium becomes a burden instead of an advantage.
+[RIO]: Marcus, you can't just reduce football to statistics like that! Sometimes teams find something extra in cup competitions. The magic of the knockout rounds, the pressure...
 
-[SARAH]: And here's what's really interesting - both teams scored two goals each, but Beitar were the ones who found the back of the net when it mattered. Marcus, break down those key moments for us.
+[MARCUS]: [PAUSE:short] But Rio, look at the actual performance. Beitar had sixty-one percent possession, dominated with more passes, and scored two clinical goals. The data backed up what we saw on the pitch.
 
-[MARCUS]: Looking at the timing, Sarah, Yarden Shua's thirty-fourth minute goal was crucial. Coming just two minutes after Kiryat Shmona had their chance, it completely shifted the momentum. Then Timothy Muzie sealed it in the eighty-fourth minute. Classic cup football - capitalize on your moments.
+[SARAH]: Marcus raises an interesting point about those home struggles. Rio, you've played in plenty of cup ties - when a team's confidence is shot at home, can they really flip a switch for cup football?
 
-[RIO]: That's exactly it! Cup football is about those moments of quality and mental strength. When you're away from home and you get that first goal, you can feel the home crowd deflate. I've been in those situations where suddenly the opposition players start looking at each other, questioning themselves.
+[RIO]: That's the thing, Sarah - they can, but only if the mentality is right. And clearly Kiryat Shmona's wasn't. When I see a team conceding goals in the thirty-ninth and eighty-fourth minutes, that tells me they switched off twice. You can't do that and expect to progress.
 
-[SARAH]: Now here's a stat that caught my eye, Marcus. Over two point five goals has hit in six consecutive matches for these teams. That's quite a streak!
+[MARCUS]: Exactly! And here's what's fascinating - this match continued a trend we've been tracking. It's now six matches in a row where we've seen over two point five goals involving these teams. The attacking intent was always there.
 
-[MARCUS]: [PAUSE:short] That's remarkable consistency, Sarah. Six out of six is no coincidence. It suggests both teams have been involved in open, attacking games. Yet today we only saw two goals total, which tells me Beitar Jerusalem came with a game plan to stay tight and hit on the counter.
+[RIO]: [PAUSE:medium] Wait, hang on Marcus. This game finished two-nil. That's exactly two point five goals, not over.
 
-[RIO]: See, this is where I love the contrast between what the numbers suggest and what actually happened. You'd expect goals galore based on that streak, but good cup teams know how to adapt. Beitar clearly said, "We don't need to win four-two, we just need to win."
+[MARCUS]: [PAUSE:short] You're technically correct, but the pattern shows both teams commit forward. Beitar took their chances, Kiryat Shmona couldn't find the net despite having opportunities.
 
-[SARAH]: Rio, you've played in these pressure cooker cup ties. What do you make of Kiryat Shmona's performance, especially given their recent home struggles?
+[SARAH]: That's a brilliant observation! Rio, from a player's perspective, when you're in a cup tie and the goals are flowing in recent matches, does that change how you approach the game?
 
-[RIO]: When you've lost four of five at home, that's in your head before you even kick off. The first time something goes wrong, there's this sinking feeling. I guarantee you, after Beitar scored first, half that Kiryat Shmona team was already thinking about their holidays instead of fighting back.
+[RIO]: Absolutely it does. Players know the recent form, they know if games have been open. You go into it thinking this could be end-to-end stuff. But what impressed me about Beitar was their composure - two goals, job done.
 
-[MARCUS]: The possession stats back that up too, Rio. Beitar had sixty-one percent possession, which is unusual for an away team in cup football. That suggests Kiryat Shmona couldn't impose themselves on their own pitch.
+[MARCUS]: The efficiency was remarkable. Beitar didn't need to dominate every statistic to win. They had fewer shots on target but made them count when it mattered.
 
-[SARAH]: [PAUSE:medium] So we've got a Beitar Jerusalem side moving into the quarter-finals, having shown they can grind out results away from home. Marcus, what does this mean for their cup chances?
+[RIO]: That's cup football for you! It's not about pretty patterns or possession percentages - it's about taking your moments. Beitar did that, Kiryat Shmona didn't.
 
-[MARCUS]: This is exactly the kind of performance that wins cups, Sarah. They absorbed pressure, stayed disciplined, and took their chances. Teams that can win ugly away from home often go deep in knockout competitions.
+[SARAH]: [PAUSE:short] And those moments came at crucial times - the first goal right in the middle of the first half, the second deep into the game to kill it off. 
 
-[RIO]: Absolutely right. You don't win cups by playing pretty football every week. Sometimes you need to go to difficult places, do a professional job, and move on. That's exactly what Beitar did today.
+[MARCUS]: The timing was perfect tactically. Score just before halftime to deflate the home crowd, then seal it when legs get heavy in the final fifteen minutes.
 
-[SARAH]: [PAUSE:short] And for Kiryat Shmona, their cup journey ends with more questions than answers about their home form. Gentlemen, thank you for breaking that down. Stay with three six five Scores as we look ahead to tomorrow's quarter-final draw!
+[RIO]: [PAUSE:medium] You know what this reminds me of? Arsenal away to some lower league team in ninety-eight. We were expected to win, but cup football doesn't care about expectations. Beitar treated this with the respect it deserved.
+
+[SARAH]: Rio's absolutely right about that cup mentality. Marcus, what do the numbers tell us about Beitar's chances going forward in this competition?
+
+[MARCUS]: Well, they've shown they can be clinical under pressure, and their recent form suggests they're finding the net regularly. If they maintain this efficiency, they'll be dangerous for anyone.
+
+[RIO]: Cup runs are built on moments like this. Beat the teams you should beat, stay professional, keep your nerve. Beitar ticked all those boxes today.
+
+[SARAH]: [PAUSE:long] Brilliant insights from both of you. A clinical cup performance from Beitar Jerusalem, capitalizing on Kiryat Shmona's home struggles to book their place in the quarterfinals. Keep following the cup action on three six five Scores - we'll be back with more knockout drama soon!
+    "created_at": "2026-01-14T22:57:11.835717+00:00"
+}
