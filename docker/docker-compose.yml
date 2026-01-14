@@ -1,0 +1,97 @@
+version: "3.8"
+
+services:
+  # ============================================
+  # Main Podcast Generation Service
+  # ============================================
+  podcast-service:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: production
+    ports:
+      - "8000:8000"
+    environment:
+      # API Configuration
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - DEBUG=false
+
+      # 365Scores API
+      - SCORES_API_BASE_URL=https://mobileapi.365scores.com
+      - SCORES_API_LANGUAGE=1
+      - SCORES_API_TIMEZONE=0
+
+      # External APIs (set via .env file)
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - ELEVENLABS_API_KEY=${ELEVENLABS_API_KEY}
+
+      # Storage
+      - STORAGE_TYPE=local
+      - LOCAL_STORAGE_PATH=/tmp/podcasts
+
+      # Redis
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - podcast-storage:/tmp/podcasts
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+  # ============================================
+  # Redis for Job Queue
+  # ============================================
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ============================================
+  # Development Service (optional)
+  # ============================================
+  podcast-service-dev:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: development
+    ports:
+      - "8001:8000"
+    environment:
+      - DEBUG=true
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - ELEVENLABS_API_KEY=${ELEVENLABS_API_KEY}
+      - STORAGE_TYPE=local
+      - LOCAL_STORAGE_PATH=/tmp/podcasts
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - ../src:/app/src:ro
+      - ../prompts:/app/prompts:ro
+      - podcast-storage-dev:/tmp/podcasts
+    depends_on:
+      - redis
+    profiles:
+      - dev
+
+volumes:
+  podcast-storage:
+  podcast-storage-dev:
+  redis-data:
+
+networks:
+  default:
+    name: podcast-network
