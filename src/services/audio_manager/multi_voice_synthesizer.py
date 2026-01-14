@@ -3,14 +3,14 @@
 import io
 import logging
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional
 
 from elevenlabs import ElevenLabs
 
 from src.config import Settings, get_settings
 from src.exceptions import AudioSynthesisError
-from src.models.characters import DEFAULT_CHARACTERS, Character, get_all_voice_ids
+from src.models.characters import DEFAULT_CHARACTERS, Character, VoiceSettings, get_all_voice_ids
 
 logger = logging.getLogger(__name__)
 
@@ -21,6 +21,7 @@ class DialogueLine:
     character: str
     text: str
     voice_id: str
+    voice_settings: VoiceSettings = field(default_factory=VoiceSettings)
 
 
 class MultiVoiceSynthesizer:
@@ -48,8 +49,11 @@ class MultiVoiceSynthesizer:
         self.client = ElevenLabs(api_key=self.settings.elevenlabs_api_key)
         self.model = self.settings.elevenlabs_model
 
-        # Build voice mapping from characters
-        self.voice_map = {char.name.upper(): char.voice_id for char in self.characters}
+        # Build voice mapping from characters (includes voice settings)
+        self.voice_map: dict[str, tuple[str, VoiceSettings]] = {
+            char.name.upper(): (char.voice_id, char.voice_settings)
+            for char in self.characters
+        }
 
         logger.info(f"MultiVoiceSynthesizer initialized with voices: {list(self.voice_map.keys())}")
 
@@ -75,16 +79,21 @@ class MultiVoiceSynthesizer:
             if not text:
                 continue
 
-            # Get voice ID for character
-            voice_id = self.voice_map.get(character)
-            if not voice_id:
+            # Get voice ID and settings for character
+            voice_data = self.voice_map.get(character)
+            if not voice_data:
                 logger.warning(f"Unknown character '{character}', using default host voice")
-                voice_id = self.voice_map.get("ALEX", self.settings.elevenlabs_default_voice)
+                voice_data = self.voice_map.get("SARAH", self.voice_map.get("ALEX"))
+                if not voice_data:
+                    voice_data = (self.settings.elevenlabs_default_voice, VoiceSettings())
+
+            voice_id, voice_settings = voice_data
 
             lines.append(DialogueLine(
                 character=character,
                 text=text,
                 voice_id=voice_id,
+                voice_settings=voice_settings,
             ))
 
         logger.info(f"Parsed {len(lines)} dialogue lines from script")
@@ -106,12 +115,21 @@ class MultiVoiceSynthesizer:
 
             logger.debug(f"Synthesizing {line.character}: {clean_text[:50]}...")
 
-            # Generate audio
+            # Apply voice settings for more expressive/stable output
+            vs = line.voice_settings
+
+            # Generate audio with voice settings
             audio_generator = self.client.text_to_speech.convert(
                 voice_id=line.voice_id,
                 model_id=self.model,
                 text=clean_text,
                 output_format="mp3_44100_128",
+                voice_settings={
+                    "stability": vs.stability,
+                    "similarity_boost": vs.similarity_boost,
+                    "style": vs.style,
+                    "use_speaker_boost": vs.use_speaker_boost,
+                },
             )
 
             # Collect chunks
@@ -172,6 +190,10 @@ class MultiVoiceSynthesizer:
         """Clean text for TTS processing."""
         # Remove [PAUSE] markers - we handle pauses between speakers
         text = re.sub(r'\[PAUSE(?::\w+)?\]', '', text)
+
+        # Convert *emphasis* markdown to plain text (TTS reads asterisks weirdly)
+        # The emphasis is conveyed through the voice/context, not markers
+        text = re.sub(r'\*([^*]+)\*', r'\1', text)
 
         # Clean up multiple spaces
         text = re.sub(r'\s+', ' ', text)

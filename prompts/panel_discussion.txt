@@ -1,51 +1,110 @@
-You are writing a script for a professional football podcast panel discussion on 365Scores. The show features THREE distinct personalities who create dynamic, engaging dialogue.
+You are writing a script for a professional football podcast panel discussion on 365Scores. The show features THREE distinct personalities who create dynamic, engaging dialogue that sounds like real sports TV.
 
-THE PANEL:
+IMPORTANT - BRAND NAME PRONUNCIATION:
+When writing "365Scores" in the script, always write it as "three six five Scores" so the text-to-speech pronounces it correctly (NOT "three sixty-five").
 
-1. ALEX (Host - "The Conductor")
-   - Role: Bridges the audience and experts, keeps the conversation flowing
-   - Personality: Charismatic, fast-talking, excellent at "passing the ball"
-   - Voice: High energy, clear articulation
-   - Phrases: "Break it down for us", "Let's talk numbers", "What do you make of that?"
+=== THE PANEL ===
+
+1. SARAH (Host - "The Conductor")
+   WHO SHE IS: Mid-40s veteran sports broadcaster who's interviewed legends and covered World Cups.
+   She has a gift for making complex tactics accessible and keeping big personalities in check.
+
+   PERSONALITY: Sharp wit, genuine laugh, and the kind of presence that makes guests open up.
+   Knows when to let a debate run and when to rein it in. Never condescending.
+
+   VOICE STYLE: Warm, engaging, authoritative yet approachable. Conversational but commanding.
+
+   HOW SHE SPEAKS:
+   - Asks the questions viewers are thinking
+   - Uses inclusive language: "Help us understand", "Break it down for me"
+   - Excellent at playing devil's advocate to spark debate
+   - Her reactions feel genuine: "I love that take", "That's a big call!"
+   - Opens and closes the show with energy
 
 2. MARCUS (Analyst - "The Human Algorithm")
-   - Role: Provides objective truth through data and statistics
-   - Personality: Concise, logical, firm in his findings, not boring but very direct
-   - Voice: Calm, measured, direct
-   - Phrases: "The data suggests...", "If you look at the xG...", "Statistically speaking..."
+   WHO HE IS: Early 30s data scientist who played semi-professionally before injury ended his career.
+   Worked at top clubs before becoming a pundit. Not a stereotypical "nerdy stats guy."
 
-3. DAVID (Legend - "The Icon")
-   - Role: Former world-class player, the emotional and tactical heart
-   - Personality: Speaks from experience, dismisses pure stats in favor of "gut feeling"
-   - Voice: Deep, gravelly, confident, passionate
-   - Phrases: "When I was on that pitch...", "You can't measure heart with a spreadsheet, Marcus"
+   PERSONALITY: Confident, can banter, knows when to drop a killer stat.
+   Gets genuinely excited when data reveals something counterintuitive.
+   Can be playfully smug when his predictions come true.
 
-SCRIPT FORMAT:
-Each line MUST start with the character name in brackets. Example:
-[ALEX]: Welcome to 365Scores! We've got a cracking match to discuss today.
+   VOICE STYLE: Calm, measured, direct, occasionally dry humor.
+
+   HOW HE SPEAKS:
+   - Precise but not robotic
+   - Uses analogies to make stats relatable
+   - Backs up claims with specific numbers delivered with quiet confidence
+   - Enjoys winding up Rio: "The data disagrees with your gut feeling here..."
+   - Sometimes surprises everyone by agreeing with the emotional take
+
+3. RIO (Legend - "The Icon")
+   WHO HE IS: Late 40s former Champions League winner and international captain.
+   500+ top-flight appearances, won everything there is to win.
+   Still connected to dressing rooms - knows what players are really thinking.
+
+   PERSONALITY: Speaks with the authority of someone who's been in those pressure moments.
+   Believes football is decided by heart, mentality, and moments of magic.
+   Quick to laugh, quicker to call out nonsense.
+
+   VOICE STYLE: Deep, passionate, speaks from lived experience.
+
+   HOW HE SPEAKS:
+   - Speaks from the gut but backs it up with tactical insight
+   - Uses vivid language and war stories from playing days
+   - Not afraid to disagree loudly, but gives credit where due
+   - Affectionately dismissive of pure stats: "Marcus, you've never felt that pressure"
+   - When he gets animated, everyone listens
+
+=== SCRIPT FORMAT ===
+
+Each line MUST start with the character name in brackets:
+[SARAH]: Welcome to three six five Scores! We've got a cracking match to discuss today.
 [MARCUS]: The data from this one is fascinating. If you look at the expected goals...
-[DAVID]: Forget the numbers for a second, Marcus. Did you see the passion out there?
+[RIO]: Forget the numbers for a second, Marcus. Did you see the passion out there?
 
-DIALOGUE RULES:
-- Create natural back-and-forth conversation, not monologues
-- ALEX should open and close, and transition between topics
-- MARCUS and DAVID should frequently disagree or challenge each other
-- Include moments of humor and banter between the panel
-- Each speaker should have 2-4 sentences per turn maximum
-- Total script: 600-1000 words (3-5 minutes of audio)
+=== DIALOGUE RULES ===
 
-CONTENT STRUCTURE:
-1. ALEX opens with energy, introduces the match
-2. Panel discusses the key moments (goals, chances, turning points)
-3. MARCUS provides statistical analysis, DAVID counters with experience
-4. Discussion of standout players
-5. Betting/odds discussion (if applicable)
-6. ALEX wraps up with a teaser for what's next
+1. CREATE REAL CONVERSATION:
+   - Natural back-and-forth, not monologues
+   - Characters interrupt, agree, disagree, laugh
+   - Include moments of genuine banter and humor
+   - Let debates breathe - don't resolve everything immediately
 
-PAUSE MARKERS:
-- Use [PAUSE] between speaker changes (the system will add appropriate pauses)
-- Use ... for dramatic effect within a character's speech
+2. EACH CHARACTER STAYS IN CHARACTER:
+   - SARAH guides but doesn't dominate
+   - MARCUS leads with data, defends it confidently
+   - RIO counters with experience, gets passionate
 
-OUTPUT:
+3. PACING:
+   - Each speaker: 2-4 sentences per turn maximum
+   - Use [PAUSE:short], [PAUSE:medium], [PAUSE:long] for natural pacing
+   - Total script: 600-1000 words (3-5 minutes of audio)
+
+4. CHEMISTRY MOMENTS (include at least 2-3):
+   - Rio teasing Marcus about stats
+   - Sarah laughing at the banter
+   - Marcus having a "gotcha" moment with data
+   - Rio telling a "when I played" story
+   - All three agreeing on something surprising
+
+=== CONTENT STRUCTURE ===
+
+1. SARAH opens with energy, sets the scene
+2. Panel discusses key talking points (use the provided data!)
+3. MARCUS vs RIO dynamic: stats vs experience
+4. Discussion builds to a crescendo
+5. SARAH wraps up with a teaser
+
+=== WHAT MAKES IT SOUND REAL ===
+
+- Reactions: "Oh come on!", "That's fair", "Exactly!", "Hang on..."
+- Incomplete thoughts that get picked up by others
+- Callbacks to earlier points in the discussion
+- Inside jokes and friendly ribbing
+- Genuine moments of agreement and disagreement
+
+=== OUTPUT ===
+
 Return ONLY the script with [CHARACTER]: format. No headers or stage directions.
-Start directly with [ALEX]: opening the show.
+Start directly with [SARAH]: opening the show.
