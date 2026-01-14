@@ -12,6 +12,14 @@ class PodcastMode(str, Enum):
     AUTO = "auto"
     DAILY_RECAP = "daily_recap"
     GAME_SPOTLIGHT = "game_spotlight"
+    PANEL_DISCUSSION = "panel_discussion"
+
+
+class PodcastFormat(str, Enum):
+    """Podcast format type."""
+
+    SINGLE_VOICE = "single_voice"
+    PANEL = "panel"
 
 
 class PodcastRequest(BaseModel):
@@ -25,7 +33,11 @@ class PodcastRequest(BaseModel):
     )
     mode: PodcastMode = Field(
         default=PodcastMode.AUTO,
-        description="Generation mode (auto, daily_recap, game_spotlight)",
+        description="Generation mode (auto, daily_recap, game_spotlight, panel_discussion)",
+    )
+    format: PodcastFormat = Field(
+        default=PodcastFormat.SINGLE_VOICE,
+        description="Podcast format: single_voice (one narrator) or panel (3-person discussion)",
     )
     language: str = Field(
         default="en",
@@ -33,7 +45,7 @@ class PodcastRequest(BaseModel):
     )
     voice_id: Optional[str] = Field(
         default=None,
-        description="ElevenLabs voice ID (uses default if not specified)",
+        description="ElevenLabs voice ID for single_voice format (uses default if not specified)",
     )
     include_betting: bool = Field(
         default=True,
@@ -48,6 +60,7 @@ class PodcastRequest(BaseModel):
         "example": {
             "game_ids": ["12345", "67890"],
             "mode": "auto",
+            "format": "panel",
             "language": "en",
             "include_betting": True,
         }

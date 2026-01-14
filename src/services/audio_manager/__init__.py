@@ -2,5 +2,6 @@
 
 from .synthesizer import AudioSynthesizer
 from .storage import AudioStorage
+from .multi_voice_synthesizer import MultiVoiceSynthesizer
 
-__all__ = ["AudioSynthesizer", "AudioStorage"]
+__all__ = ["AudioSynthesizer", "AudioStorage", "MultiVoiceSynthesizer"]

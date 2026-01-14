@@ -25,6 +25,7 @@ class PromptTemplates:
         ContentMode.DAILY_RECAP: "daily_recap_system.txt",
         ContentMode.GAME_SPOTLIGHT_PREGAME: "game_spotlight_pregame.txt",
         ContentMode.GAME_SPOTLIGHT_POSTGAME: "game_spotlight_postgame.txt",
+        ContentMode.PANEL_DISCUSSION: "panel_discussion.txt",
     }
 
     def __init__(self, prompts_dir: Optional[Path] = None):

@@ -9,7 +9,9 @@ from typing import Any, Optional
 from src.config import Settings, get_settings
 from src.exceptions import DataFetchError, PodcastGenerationError
 from src.models import ContentMode, Game, PodcastRequest
+from src.models.requests import PodcastFormat, PodcastMode
 from src.services.audio_manager import AudioStorage, AudioSynthesizer
+from src.services.audio_manager.multi_voice_synthesizer import MultiVoiceSynthesizer
 from src.services.retrieval import DataEnricher, GameFetcher
 from src.services.script_engine import ContentRouter, ScriptGenerator, SSMLProcessor
 
@@ -26,6 +28,7 @@ class PodcastResult:
     duration_seconds: Optional[float] = None
     script: Optional[str] = None
     mode: Optional[str] = None
+    format: Optional[str] = None
     games_count: int = 0
     created_at: str = ""
     error_message: Optional[str] = None
@@ -39,12 +42,16 @@ class PodcastOrchestrator:
     """
     Orchestrates the complete podcast generation workflow.
 
+    Supports two formats:
+    - Single voice: Traditional single narrator podcast
+    - Panel discussion: 3-person TV studio style with Host, Analyst, and Legend
+
     Workflow:
     1. Fetch game data from 365Scores API
-    2. Determine content mode (Daily Recap vs Game Spotlight)
+    2. Determine content mode and format
     3. Enrich data with additional context
     4. Generate script via Claude
-    5. Synthesize audio via ElevenLabs
+    5. Synthesize audio via ElevenLabs (single or multi-voice)
     6. Store and return audio URL
     """
 
@@ -56,6 +63,7 @@ class PodcastOrchestrator:
         content_router: Optional[ContentRouter] = None,
         script_generator: Optional[ScriptGenerator] = None,
         audio_synthesizer: Optional[AudioSynthesizer] = None,
+        multi_voice_synthesizer: Optional[MultiVoiceSynthesizer] = None,
         audio_storage: Optional[AudioStorage] = None,
     ):
         self.settings = settings or get_settings()
@@ -67,6 +75,7 @@ class PodcastOrchestrator:
         self.script_generator = script_generator or ScriptGenerator(self.settings)
         self.ssml_processor = SSMLProcessor()
         self.audio_synthesizer = audio_synthesizer or AudioSynthesizer(self.settings)
+        self.multi_voice_synthesizer = multi_voice_synthesizer or MultiVoiceSynthesizer(self.settings)
         self.audio_storage = audio_storage or AudioStorage(self.settings)
 
     async def generate_podcast(
@@ -86,7 +95,12 @@ class PodcastOrchestrator:
             PodcastGenerationError: If any step fails
         """
         job_id = self._generate_job_id()
-        logger.info(f"Starting podcast generation job {job_id} for {len(request.game_ids)} games")
+        is_panel = request.format == PodcastFormat.PANEL
+
+        logger.info(
+            f"Starting podcast generation job {job_id} for {len(request.game_ids)} games "
+            f"(format: {'panel' if is_panel else 'single_voice'})"
+        )
 
         try:
             # Step 1: Fetch game data
@@ -113,24 +127,40 @@ class PodcastOrchestrator:
             # Step 3: Enrich data
             context = await self.data_enricher.enrich_games(games, mode)
 
-            # Step 4: Generate script
-            script = await self.script_generator.generate_script(
-                context=context,
-                mode=mode,
-                include_betting=request.include_betting,
-            )
+            # Step 4: Generate script (use panel mode if panel format requested)
+            if is_panel:
+                script = await self.script_generator.generate_script(
+                    context=context,
+                    mode=ContentMode.PANEL_DISCUSSION,
+                    include_betting=request.include_betting,
+                )
+            else:
+                script = await self.script_generator.generate_script(
+                    context=context,
+                    mode=mode,
+                    include_betting=request.include_betting,
+                )
 
             # Step 5: Synthesize audio
-            voice_id = self.audio_synthesizer.get_voice_id(request.voice_id)
-            audio_bytes = await self.audio_synthesizer.synthesize(
-                script=script,
-                voice_id=voice_id,
-            )
+            if is_panel:
+                # Multi-voice panel discussion
+                logger.info("Synthesizing multi-voice panel discussion...")
+                audio_bytes = await self.multi_voice_synthesizer.synthesize_panel_discussion(script)
+                duration = self.multi_voice_synthesizer.estimate_duration(script)
+            else:
+                # Single voice
+                voice_id = self.audio_synthesizer.get_voice_id(request.voice_id)
+                audio_bytes = await self.audio_synthesizer.synthesize(
+                    script=script,
+                    voice_id=voice_id,
+                )
+                duration = self.ssml_processor.estimate_duration(script)
 
             # Step 6: Store audio
             metadata = {
                 "game_ids": [int(gid) for gid in request.game_ids],
                 "mode": mode.value,
+                "format": "panel" if is_panel else "single_voice",
                 "language": request.language,
             }
             audio_url = await self.audio_storage.store_audio(
@@ -138,9 +168,6 @@ class PodcastOrchestrator:
                 job_id=job_id,
                 metadata=metadata,
             )
-
-            # Calculate duration
-            duration = self.ssml_processor.estimate_duration(script)
 
             logger.info(f"Podcast generation complete: {job_id}")
 
@@ -151,6 +178,7 @@ class PodcastOrchestrator:
                 duration_seconds=duration,
                 script=script,
                 mode=mode.value,
+                format="panel" if is_panel else "single_voice",
                 games_count=len(games),
             )
 
@@ -189,7 +217,11 @@ class PodcastOrchestrator:
         request: PodcastRequest,
     ) -> ContentMode:
         """Determine content mode based on games and request."""
-        from src.models import PodcastMode
+        from src.models import GameStatus
+
+        # Panel discussion mode
+        if request.mode == PodcastMode.PANEL_DISCUSSION:
+            return ContentMode.PANEL_DISCUSSION
 
         # Check if mode is explicitly specified
         if request.mode == PodcastMode.DAILY_RECAP:
@@ -197,7 +229,6 @@ class PodcastOrchestrator:
         elif request.mode == PodcastMode.GAME_SPOTLIGHT:
             # Determine pre/post game for single game
             if games:
-                from src.models import GameStatus
                 if GameStatus.is_upcoming(games[0].gt):
                     return ContentMode.GAME_SPOTLIGHT_PREGAME
                 else:
@@ -227,6 +258,7 @@ async def generate_podcast(
     game_ids: list[str],
     include_betting: bool = True,
     voice_id: Optional[str] = None,
+    panel_format: bool = False,
 ) -> PodcastResult:
     """
     Simple interface for generating a podcast.
@@ -235,6 +267,7 @@ async def generate_podcast(
         game_ids: List of game IDs
         include_betting: Include betting insights
         voice_id: Optional ElevenLabs voice ID
+        panel_format: Use 3-person panel discussion format
 
     Returns:
         PodcastResult with audio URL
@@ -243,6 +276,7 @@ async def generate_podcast(
         game_ids=game_ids,
         include_betting=include_betting,
         voice_id=voice_id,
+        format=PodcastFormat.PANEL if panel_format else PodcastFormat.SINGLE_VOICE,
     )
 
     orchestrator = PodcastOrchestrator()

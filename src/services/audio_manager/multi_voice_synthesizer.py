@@ -1,0 +1,222 @@
+"""Multi-voice synthesis for panel discussion podcasts."""
+
+import io
+import logging
+import re
+from dataclasses import dataclass
+from typing import Optional
+
+from elevenlabs import ElevenLabs
+
+from src.config import Settings, get_settings
+from src.exceptions import AudioSynthesisError
+from src.models.characters import DEFAULT_CHARACTERS, Character, get_all_voice_ids
+
+logger = logging.getLogger(__name__)
+
+
+@dataclass
+class DialogueLine:
+    """A single line of dialogue from a character."""
+    character: str
+    text: str
+    voice_id: str
+
+
+class MultiVoiceSynthesizer:
+    """
+    Synthesizes multi-character podcast audio using ElevenLabs.
+
+    Parses scripts with [CHARACTER]: format and generates audio
+    with different voices for each character.
+    """
+
+    # Pattern to match [CHARACTER]: text
+    DIALOGUE_PATTERN = re.compile(r'\[([A-Z]+)\]:\s*(.+?)(?=\[[A-Z]+\]:|$)', re.DOTALL)
+
+    # Silence duration between speakers (in bytes for MP3)
+    # Approximately 0.5 seconds of silence
+    PAUSE_DURATION_MS = 500
+
+    def __init__(
+        self,
+        settings: Optional[Settings] = None,
+        characters: Optional[list[Character]] = None,
+    ):
+        self.settings = settings or get_settings()
+        self.characters = characters or DEFAULT_CHARACTERS
+        self.client = ElevenLabs(api_key=self.settings.elevenlabs_api_key)
+        self.model = self.settings.elevenlabs_model
+
+        # Build voice mapping from characters
+        self.voice_map = {char.name.upper(): char.voice_id for char in self.characters}
+
+        logger.info(f"MultiVoiceSynthesizer initialized with voices: {list(self.voice_map.keys())}")
+
+    def parse_script(self, script: str) -> list[DialogueLine]:
+        """
+        Parse a multi-character script into dialogue lines.
+
+        Args:
+            script: Script with [CHARACTER]: format
+
+        Returns:
+            List of DialogueLine objects
+        """
+        lines = []
+
+        # Find all dialogue matches
+        matches = self.DIALOGUE_PATTERN.findall(script)
+
+        for character, text in matches:
+            character = character.upper().strip()
+            text = text.strip()
+
+            if not text:
+                continue
+
+            # Get voice ID for character
+            voice_id = self.voice_map.get(character)
+            if not voice_id:
+                logger.warning(f"Unknown character '{character}', using default host voice")
+                voice_id = self.voice_map.get("ALEX", self.settings.elevenlabs_default_voice)
+
+            lines.append(DialogueLine(
+                character=character,
+                text=text,
+                voice_id=voice_id,
+            ))
+
+        logger.info(f"Parsed {len(lines)} dialogue lines from script")
+        return lines
+
+    async def synthesize_line(self, line: DialogueLine) -> bytes:
+        """
+        Synthesize a single dialogue line.
+
+        Args:
+            line: DialogueLine to synthesize
+
+        Returns:
+            Audio bytes (MP3)
+        """
+        try:
+            # Clean text for TTS
+            clean_text = self._clean_text_for_tts(line.text)
+
+            logger.debug(f"Synthesizing {line.character}: {clean_text[:50]}...")
+
+            # Generate audio
+            audio_generator = self.client.text_to_speech.convert(
+                voice_id=line.voice_id,
+                model_id=self.model,
+                text=clean_text,
+                output_format="mp3_44100_128",
+            )
+
+            # Collect chunks
+            chunks = []
+            for chunk in audio_generator:
+                chunks.append(chunk)
+
+            return b"".join(chunks)
+
+        except Exception as e:
+            logger.error(f"Failed to synthesize line for {line.character}: {e}")
+            raise AudioSynthesisError(
+                message=f"Failed to synthesize {line.character}'s line: {str(e)}",
+                voice_id=line.voice_id,
+            )
+
+    async def synthesize_panel_discussion(self, script: str) -> bytes:
+        """
+        Synthesize a complete panel discussion with multiple voices.
+
+        Args:
+            script: Full script with [CHARACTER]: format
+
+        Returns:
+            Complete audio bytes (MP3)
+        """
+        # Parse script into lines
+        lines = self.parse_script(script)
+
+        if not lines:
+            raise AudioSynthesisError(
+                message="No dialogue lines found in script",
+                details={"script_length": len(script)},
+            )
+
+        logger.info(f"Synthesizing {len(lines)} dialogue lines...")
+
+        # Generate audio for each line
+        audio_segments = []
+
+        for i, line in enumerate(lines):
+            logger.info(f"Processing line {i+1}/{len(lines)}: {line.character}")
+
+            # Synthesize the line
+            audio = await self.synthesize_line(line)
+            audio_segments.append(audio)
+
+        # Concatenate all segments
+        # Note: Simple concatenation works for MP3, but for production
+        # you might want to use pydub or ffmpeg for proper audio processing
+        combined = b"".join(audio_segments)
+
+        logger.info(f"Combined audio: {len(combined)} bytes from {len(audio_segments)} segments")
+
+        return combined
+
+    def _clean_text_for_tts(self, text: str) -> str:
+        """Clean text for TTS processing."""
+        # Remove [PAUSE] markers - we handle pauses between speakers
+        text = re.sub(r'\[PAUSE(?::\w+)?\]', '', text)
+
+        # Clean up multiple spaces
+        text = re.sub(r'\s+', ' ', text)
+
+        # Remove any remaining brackets
+        text = re.sub(r'\[.*?\]', '', text)
+
+        return text.strip()
+
+    def estimate_duration(self, script: str, words_per_minute: int = 150) -> float:
+        """
+        Estimate total audio duration.
+
+        Args:
+            script: Full script
+            words_per_minute: Average speaking rate
+
+        Returns:
+            Estimated duration in seconds
+        """
+        lines = self.parse_script(script)
+
+        total_words = sum(len(line.text.split()) for line in lines)
+        speech_time = (total_words / words_per_minute) * 60
+
+        # Add pause time between speakers (0.5s per transition)
+        pause_time = len(lines) * 0.5
+
+        return speech_time + pause_time
+
+    def get_character_stats(self, script: str) -> dict[str, int]:
+        """
+        Get word count per character.
+
+        Args:
+            script: Full script
+
+        Returns:
+            Dict of character name to word count
+        """
+        lines = self.parse_script(script)
+        stats: dict[str, int] = {}
+
+        for line in lines:
+            word_count = len(line.text.split())
+            stats[line.character] = stats.get(line.character, 0) + word_count
+
+        return stats

@@ -12,8 +12,17 @@ from .game import (
     ScoresData,
     Statistic,
 )
-from .requests import PodcastMode, PodcastRequest
+from .requests import PodcastFormat, PodcastMode, PodcastRequest
 from .responses import PodcastResponse, PodcastStatusResponse
+from .characters import (
+    Character,
+    CharacterRole,
+    DEFAULT_CHARACTERS,
+    ALEX_HOST,
+    MARCUS_ANALYST,
+    DAVID_LEGEND,
+    get_all_voice_ids,
+)
 
 __all__ = [
     # Enums
@@ -21,6 +30,7 @@ __all__ = [
     "GameStatus",
     "SportType",
     "PodcastMode",
+    "PodcastFormat",
     # Game models
     "Game",
     "Competitor",
@@ -35,4 +45,12 @@ __all__ = [
     "PodcastRequest",
     "PodcastResponse",
     "PodcastStatusResponse",
+    # Characters
+    "Character",
+    "CharacterRole",
+    "DEFAULT_CHARACTERS",
+    "ALEX_HOST",
+    "MARCUS_ANALYST",
+    "DAVID_LEGEND",
+    "get_all_voice_ids",
 ]

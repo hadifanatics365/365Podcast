@@ -57,6 +57,7 @@ class ContentMode(str, Enum):
     DAILY_RECAP = "daily_recap"
     GAME_SPOTLIGHT_PREGAME = "game_spotlight_pregame"
     GAME_SPOTLIGHT_POSTGAME = "game_spotlight_postgame"
+    PANEL_DISCUSSION = "panel_discussion"
 
 
 class BetType(IntEnum):
