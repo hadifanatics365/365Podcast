@@ -33,7 +33,7 @@ def with_retry(
         @wraps(func)
         async def async_wrapper(*args: Any, **kwargs: Any) -> T:
             delay = initial_delay
-            last_exception: Exception | None = None
+            last_exception: Optional[Exception] = None
 
             for attempt in range(max_attempts):
                 try:
@@ -59,7 +59,7 @@ def with_retry(
         @wraps(func)
         def sync_wrapper(*args: Any, **kwargs: Any) -> T:
             delay = initial_delay
-            last_exception: Exception | None = None
+            last_exception: Optional[Exception] = None
 
             for attempt in range(max_attempts):
                 try:

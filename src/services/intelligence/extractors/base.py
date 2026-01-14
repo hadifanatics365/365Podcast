@@ -2,7 +2,7 @@
 
 import hashlib
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import Any, Optional
 
 from src.services.intelligence.talking_points import StoryType, TalkingPoint
 
@@ -70,7 +70,7 @@ class BaseExtractor(ABC):
         team = game_data.get(team_key, {})
         return team.get("name", team.get("short_name", "Unknown"))
 
-    def _get_team_id(self, game_data: dict[str, Any], team_key: str) -> int | None:
+    def _get_team_id(self, game_data: dict[str, Any], team_key: str) -> Optional[int]:
         """Get team ID from game data."""
         team = game_data.get(team_key, {})
         return team.get("id")

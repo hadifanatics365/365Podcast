@@ -3,6 +3,7 @@
 from functools import lru_cache
 from typing import Optional
 
+from pydantic import Field
 from pydantic_settings import BaseSettings
 
 
@@ -29,6 +30,14 @@ class Settings(BaseSettings):
     elevenlabs_api_key: str = ""
     elevenlabs_model: str = "eleven_turbo_v2"
     elevenlabs_default_voice: str = "21m00Tcm4TlvDq8ikWAM"  # Rachel
+    skip_audio_synthesis: bool = Field(
+        default=True,
+        description="Skip ElevenLabs API calls and return script only (for testing)",
+    )
+    skip_audio_synthesis: bool = Field(
+        default=True,
+        description="Skip ElevenLabs API calls and return script only (for testing)",
+    )
 
     # Storage
     storage_type: str = "local"  # "s3" or "local"

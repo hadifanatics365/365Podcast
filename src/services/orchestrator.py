@@ -155,33 +155,41 @@ class PodcastOrchestrator:
                     include_betting=request.include_betting,
                 )
 
-            # Step 5: Synthesize audio
-            if is_panel:
-                # Multi-voice panel discussion
-                logger.info("Synthesizing multi-voice panel discussion...")
-                audio_bytes = await self.multi_voice_synthesizer.synthesize_panel_discussion(script)
-                duration = self.multi_voice_synthesizer.estimate_duration(script)
-            else:
-                # Single voice
-                voice_id = self.audio_synthesizer.get_voice_id(request.voice_id)
-                audio_bytes = await self.audio_synthesizer.synthesize(
-                    script=script,
-                    voice_id=voice_id,
-                )
+            # Step 5: Synthesize audio (skip if configured)
+            if self.settings.skip_audio_synthesis:
+                # Skip ElevenLabs API calls - return script only for testing
+                logger.info("Skipping audio synthesis (skip_audio_synthesis=True) - returning script only")
+                audio_bytes = None
+                audio_url = None
                 duration = self.ssml_processor.estimate_duration(script)
+            else:
+                # Normal audio synthesis flow
+                if is_panel:
+                    # Multi-voice panel discussion
+                    logger.info("Synthesizing multi-voice panel discussion...")
+                    audio_bytes = await self.multi_voice_synthesizer.synthesize_panel_discussion(script)
+                    duration = self.multi_voice_synthesizer.estimate_duration(script)
+                else:
+                    # Single voice
+                    voice_id = self.audio_synthesizer.get_voice_id(request.voice_id)
+                    audio_bytes = await self.audio_synthesizer.synthesize(
+                        script=script,
+                        voice_id=voice_id,
+                    )
+                    duration = self.ssml_processor.estimate_duration(script)
 
-            # Step 6: Store audio
-            metadata = {
-                "game_ids": [int(gid) for gid in request.game_ids],
-                "mode": mode.value,
-                "format": "panel" if is_panel else "single_voice",
-                "language": request.language,
-            }
-            audio_url = await self.audio_storage.store_audio(
-                audio_bytes=audio_bytes,
-                job_id=job_id,
-                metadata=metadata,
-            )
+                # Step 6: Store audio
+                metadata = {
+                    "game_ids": [int(gid) for gid in request.game_ids],
+                    "mode": mode.value,
+                    "format": "panel" if is_panel else "single_voice",
+                    "language": request.language,
+                }
+                audio_url = await self.audio_storage.store_audio(
+                    audio_bytes=audio_bytes,
+                    job_id=job_id,
+                    metadata=metadata,
+                )
 
             logger.info(f"Podcast generation complete: {job_id}")
 

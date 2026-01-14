@@ -1,7 +1,7 @@
 """Data enrichment service for adding additional context to games."""
 
 import logging
-from typing import Any
+from typing import Any, Optional
 
 from src.models import ContentMode, Game, GameStatus
 from src.services.retrieval.game_fetcher import GameFetcher
@@ -342,7 +342,7 @@ class DataEnricher:
             "over_under_line": bet_line.overunder,
         }
 
-    def _format_betting_result(self, bet_line, winner: int | None) -> dict[str, Any]:
+    def _format_betting_result(self, bet_line, winner: Optional[int]) -> dict[str, Any]:
         """Format betting result (which options won)."""
         return {
             "type": bet_line.type,
