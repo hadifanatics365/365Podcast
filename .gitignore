@@ -30,6 +30,7 @@ venv/
 ENV/
 env/
 .venv/
+myenv/
 
 # IDE
 .idea/
@@ -37,42 +38,23 @@ env/
 *.swp
 *.swo
 *~
-.project
-.pydevproject
-.settings/
 
 # Testing
-.tox/
-.nox/
-.coverage
-.coverage.*
-htmlcov/
 .pytest_cache/
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
+.coverage
+htmlcov/
 
-# mypy
+# mypy / ruff
 .mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Ruff
 .ruff_cache/
 
 # Generated audio files
-/tmp/podcasts/
 *.mp3
 *.wav
 
 # Logs
 *.log
-logs/
 
 # OS
 .DS_Store
 Thumbs.db
-
-# Poetry
-poetry.lock
