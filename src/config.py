@@ -49,6 +49,17 @@ class Settings(BaseSettings):
     # Redis (for job queue)
     redis_url: str = "redis://localhost:6379"
 
+    # Demo mode - returns static audio URL instead of generating
+    demo_mode: bool = False
+    demo_audio_url: Optional[str] = None  # Static MP3 URL for demo
+
+    # Apple Push Notifications (APNs)
+    apns_key_id: Optional[str] = None  # Key ID from Apple Developer
+    apns_team_id: Optional[str] = None  # Team ID from Apple Developer
+    apns_key_path: Optional[str] = None  # Path to .p8 auth key file
+    apns_bundle_id: str = "com.scores365.app"  # Your app's bundle ID
+    apns_sandbox: bool = True  # Use sandbox for development
+
     # Retry Configuration
     max_retry_attempts: int = 3
     retry_initial_delay: float = 1.0
