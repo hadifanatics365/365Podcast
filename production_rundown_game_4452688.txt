@@ -1,0 +1,63 @@
+================================================================================
+PODCAST PRODUCTION RUNDOWN
+================================================================================
+
+📻 EPISODE: Arsenal 0-0 Liverpool -  Recap
+⏱️  DURATION: 5 minutes
+📊 STATUS: POST MATCH
+⭐ PRIORITY SCORE: 50.0/100
+
+--------------------------------------------------------------------------------
+SEGMENT BREAKDOWN
+--------------------------------------------------------------------------------
+
+🎬 SEGMENT 1: Introduction
+   ⏱️  Time: 15s (~37 words)
+   🎭 Tone: Energetic (excited, animated)
+   📌 PRODUCER NOTE: Keep it casual and conversational - discuss the feeling, maintain the 'pub vibe' between Moderator and Fan.
+
+🎬 SEGMENT 2: Arsenal 0-0 Liverpool: The Final Result
+   ⏱️  Time: 123s (~307 words)
+   🎭 Tone: High Octane (maximum energy, dramatic)
+   📝 Key Facts:
+      • Final score: Arsenal 0-0 Liverpool
+   📌 PRODUCER NOTE: POST-MATCH EMOTION: React to the result emotionally. If the Fan's team won, he should sound uplifted and proud. If they lost, he should be subtly deflated or frustrated (never toxic). Discuss the specific score/goal moment. Keep it reflective and emotional - 'The Day After' feeling. Maintain synchronized mood between Moderator and Fan.
+
+🎬 SEGMENT 3: Key Match Events: Goals & Decisive Moments
+   ⏱️  Time: 117s (~292 words)
+   🎭 Tone: Energetic (excited, animated)
+   📝 Key Facts:
+      • Match events if available
+   🔗 Transition from 'Arsenal 0-0 Liverpool: The Final Result':
+      Let's break down the key moments
+   📌 PRODUCER NOTE: Friendly dialogue style: Discuss 'Match events if available' in a conversational way. The Fan should react emotionally. The Moderator should ask for the Fan's take rather than just stating facts. Keep it casual - maintain the pub vibe.
+
+🎬 SEGMENT 4: The Final Ticket
+   ⭐ SPONSORED SEGMENT: THE FINAL TICKET ⭐
+   📊 Bookmaker: 365Scores
+   🎯 Market: Full-time Result
+   💰 Featured Odds:
+      • Home Win: {'current': 'N/A', 'original': 'N/A', 'trend': '→'}
+      • Draw: {'current': 'N/A', 'original': 'N/A', 'trend': '→'}
+      • Away Win: {'current': 'N/A', 'original': 'N/A', 'trend': '→'}
+   📈 Prediction Context: Based on match performance and next match preview
+   ⏱️  Time: 30s (~75 words)
+   🎭 Tone: Conversational (friendly, engaging)
+   📝 Key Facts:
+      • Home Win: N/A →
+      • Draw: N/A →
+      • Away Win: N/A →
+      • Market: Full-time Result (1X2)
+      • Panel Prediction Challenge: Predict next match for winning team
+   🔗 Transition from 'Key Match Events: Goals & Decisive Moments':
+      Now let's talk about where the smart money is going...
+   📌 PRODUCER NOTE: SPONSORED SEGMENT - THE FINAL TICKET: Create a friendly panel debate in 'pub vibe' style. One host makes a 'safe' pick based on data, another picks a 'wildcard' or 'upset' based on trends. Explicitly mention the bookmaker name and specific market. Detail the current, original, and moving odds rates. Use inviting, conversational tone ('What's your ticket looking like?') - keep it casual, not a hard sell.
+
+🎬 SEGMENT 5: Outro
+   ⏱️  Time: 15s (~37 words)
+   🎭 Tone: Conversational (friendly, engaging)
+   📌 PRODUCER NOTE: Keep it casual and conversational - discuss the feeling, maintain the 'pub vibe' between Moderator and Fan.
+
+--------------------------------------------------------------------------------
+TOTAL RUNTIME: 300 seconds (5.0 minutes)
+================================================================================

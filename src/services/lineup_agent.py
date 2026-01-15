@@ -61,6 +61,21 @@ class PodcastSegment(BaseModel):
     )
 
 
+class BettingCornerConfig(BaseModel):
+    """Configuration for 'The Final Ticket' betting segment."""
+
+    bookmaker_name: str = Field(default="", description="Name of the bookmaker to promote")
+    target_market: str = Field(default="Full-time Result", description="Betting market (e.g., 'Full-time Result', 'Over/Under 2.5')")
+    featured_odds: dict[str, Any] = Field(
+        default_factory=dict,
+        description="Dictionary of odds rates (current, original, moving rates)",
+    )
+    prediction_context: str = Field(
+        default="",
+        description="Short summary of data point used for prediction",
+    )
+
+
 class PodcastLineup(BaseModel):
     """Complete podcast episode lineup/plan."""
 
@@ -74,6 +89,10 @@ class PodcastLineup(BaseModel):
         ge=0.0,
         le=100.0,
         description="Overall priority/importance score for this episode",
+    )
+    betting_corner_config: Optional[BettingCornerConfig] = Field(
+        default=None,
+        description="Configuration for 'The Final Ticket' sponsored betting segment",
     )
 
     def to_human_rundown(self) -> str:
@@ -102,7 +121,24 @@ class PodcastLineup(BaseModel):
         for i, segment in enumerate(self.segments, 1):
             tone_desc = self._get_tone_description_for_rundown(segment.tone_level)
             
-            lines.append(f"🎬 SEGMENT {i}: {segment.topic}")
+            # Check if this is "The Final Ticket" segment
+            is_final_ticket = segment.topic == "The Final Ticket" or "Final Ticket" in segment.topic
+            
+            if is_final_ticket:
+                lines.append(f"🎬 SEGMENT {i}: {segment.topic}")
+                lines.append(f"   ⭐ SPONSORED SEGMENT: THE FINAL TICKET ⭐")
+                if self.betting_corner_config:
+                    lines.append(f"   📊 Bookmaker: {self.betting_corner_config.bookmaker_name}")
+                    lines.append(f"   🎯 Market: {self.betting_corner_config.target_market}")
+                    if self.betting_corner_config.featured_odds:
+                        lines.append(f"   💰 Featured Odds:")
+                        for key, value in self.betting_corner_config.featured_odds.items():
+                            lines.append(f"      • {key}: {value}")
+                    if self.betting_corner_config.prediction_context:
+                        lines.append(f"   📈 Prediction Context: {self.betting_corner_config.prediction_context}")
+            else:
+                lines.append(f"🎬 SEGMENT {i}: {segment.topic}")
+            
             lines.append(f"   ⏱️  Time: {segment.allocated_time}s (~{segment.estimated_word_count} words)")
             lines.append(f"   🎭 Tone: {tone_desc}")
             
@@ -117,7 +153,7 @@ class PodcastLineup(BaseModel):
                 lines.append(f"      {segment.transition_cue}")
             
             # Producer Note
-            producer_note = self._generate_producer_note(segment, i)
+            producer_note = self._generate_producer_note(segment, i, is_final_ticket)
             if producer_note:
                 lines.append(f"   📌 PRODUCER NOTE: {producer_note}")
             
@@ -143,25 +179,61 @@ class PodcastLineup(BaseModel):
         return descriptions.get(tone_level, "Conversational")
 
     @staticmethod
-    def _generate_producer_note(segment: PodcastSegment, segment_num: int) -> str:
-        """Generate a one-sentence producer note for the narrator."""
+    def _generate_producer_note(segment: PodcastSegment, segment_num: int, is_final_ticket: bool = False) -> str:
+        """
+        Generate producer note emphasizing conversational flow and tactical debates.
+        
+        Enhanced to focus on "Pub Vibe" - friendly dialogue, emotional reactions, and tactical discussions.
+        """
+        if is_final_ticket:
+            return (
+                "SPONSORED SEGMENT - THE FINAL TICKET: Create a friendly panel debate in 'pub vibe' style. "
+                "One host makes a 'safe' pick based on data, another picks a 'wildcard' or 'upset' based on trends. "
+                "Explicitly mention the bookmaker name and specific market. Detail the current, original, and moving odds rates. "
+                "Use inviting, conversational tone ('What's your ticket looking like?') - keep it casual, not a hard sell."
+            )
+        
         if not segment.key_data_points:
-            return "Emphasize the narrative flow and maintain listener engagement."
+            return "Keep it casual and conversational - discuss the feeling, maintain the 'pub vibe' between Moderator and Fan."
         
         # Pick the most impactful data point
         key_point = segment.key_data_points[0] if segment.key_data_points else ""
+        key_lower = key_point.lower()
         
-        # Generate context-specific note
-        if "score" in key_point.lower() or "goal" in key_point.lower():
-            return f"Emphasize the specific score or goal moment: '{key_point}' - make it dramatic."
-        elif "injury" in key_point.lower() or "suspension" in key_point.lower():
-            return f"Highlight the impact: '{key_point}' - explain how this affects the team's chances."
-        elif "formation" in key_point.lower() or "tactical" in key_point.lower():
-            return f"Break down the tactical element: '{key_point}' - explain why this matters."
-        elif "odds" in key_point.lower() or "betting" in key_point.lower():
-            return f"Present the betting angle clearly: '{key_point}' - explain what this means for bettors."
+        # Generate context-specific note with conversational emphasis
+        if "lineup" in key_lower or "formation" in key_lower or "xi" in key_lower or "starting" in key_lower:
+            return (
+                "TACTICAL DEBATE - Do NOT list the 11 players. Instead, have a friendly debate about the lineup choices. "
+                "Focus on talking points: surprising inclusions, major absences, or the coach's tactical gamble. "
+                "PRE-MATCH: 'Is this lineup too attacking for a big away game?' POST-MATCH: 'Did the starting XI choice cost them the game, or was it a masterstroke?' "
+                "Keep it conversational - react to the lineup, discuss the feeling, maintain the pub vibe."
+            )
+        elif "score" in key_lower or "goal" in key_lower:
+            return (
+                "POST-MATCH EMOTION: React to the result emotionally. If the Fan's team won, he should sound uplifted and proud. "
+                "If they lost, he should be subtly deflated or frustrated (never toxic). Discuss the specific score/goal moment. "
+                "Keep it reflective and emotional - 'The Day After' feeling. Maintain synchronized mood between Moderator and Fan."
+            )
+        elif "injury" in key_lower or "suspension" in key_lower:
+            return (
+                "Discuss the impact in a friendly, conversational way. How does this affect the team's chances? "
+                "The Fan should react with concern or relief depending on which team. Keep it casual - discuss the feeling, not just facts."
+            )
+        elif "odds" in key_lower or "betting" in key_lower:
+            return (
+                "Present the betting angle in a conversational, friendly way. Discuss what the odds tell us, not just state them. "
+                "Keep it casual - 'What's your take on these odds?' Maintain the pub vibe."
+            )
+        elif "form" in key_lower or "standings" in key_lower or "h2h" in key_lower:
+            return (
+                "Discuss the context in a friendly dialogue style. The Fan should react to the form/standings with emotion. "
+                "PRE-MATCH: High energy, butterflies, speculation. POST-MATCH: Reflective analysis. Keep it conversational - react to the data."
+            )
         else:
-            return f"Emphasize this key fact: '{key_point}' - make it memorable for listeners."
+            return (
+                f"Friendly dialogue style: Discuss '{key_point}' in a conversational way. The Fan should react emotionally. "
+                "The Moderator should ask for the Fan's take rather than just stating facts. Keep it casual - maintain the pub vibe."
+            )
 
 
 class LineupAgent:
@@ -187,6 +259,8 @@ class LineupAgent:
     def detect_status(self, game: Game) -> EpisodeStatus:
         """
         Detect if the game is PRE-MATCH or POST-MATCH.
+        
+        Enhanced logic: Checks for scores/results and compares match date to current time.
 
         Args:
             game: Game object
@@ -194,6 +268,17 @@ class LineupAgent:
         Returns:
             EpisodeStatus enum
         """
+        # Primary check: If score exists and is valid, it's POST-MATCH
+        if game.scrs and len(game.scrs) >= 2:
+            # Check if scores are non-zero (ignore -1 values which indicate no score)
+            valid_scores = [s for s in game.scrs if s >= 0]
+            if valid_scores and any(score > 0 for score in valid_scores):
+                return EpisodeStatus.POST_MATCH
+            # Also check if winner is set (even if 0-0 draw, winner might be 0)
+            if game.winner is not None and game.winner >= 0:
+                return EpisodeStatus.POST_MATCH
+        
+        # Secondary check: Game status enum
         if GameStatus.is_finished(game.gt):
             return EpisodeStatus.POST_MATCH
         elif GameStatus.is_upcoming(game.gt):
@@ -201,9 +286,55 @@ class LineupAgent:
         elif GameStatus.is_live(game.gt):
             # Live games treated as post-match for analysis
             return EpisodeStatus.POST_MATCH
-        else:
-            # Default to pre-match for unknown status
-            return EpisodeStatus.PRE_MATCH
+        
+        # Check for status codes that indicate finished games (99, 100, etc.)
+        # Status 99 often means "finished" in some API versions
+        if game.gt == 99 or (game.gt >= 90 and game.gt < 200):
+            # If game has started or has any completion indicators, treat as POST-MATCH
+            if game.is_started or (game.scrs and len(game.scrs) >= 2):
+                return EpisodeStatus.POST_MATCH
+        
+        # Tertiary check: Compare match date to current time
+        if game.stime:
+            from datetime import datetime, timezone
+            try:
+                # Try ISO format first
+                try:
+                    match_time = datetime.fromisoformat(game.stime.replace("Z", "+00:00"))
+                except ValueError:
+                    # Try DD-MM-YYYY HH:MM format
+                    try:
+                        match_time = datetime.strptime(game.stime, "%d-%m-%Y %H:%M")
+                        # Assume UTC if no timezone specified
+                        match_time = match_time.replace(tzinfo=timezone.utc)
+                    except ValueError:
+                        # Try other common formats
+                        for fmt in ["%Y-%m-%d %H:%M:%S", "%Y-%m-%dT%H:%M:%S", "%d/%m/%Y %H:%M"]:
+                            try:
+                                match_time = datetime.strptime(game.stime, fmt)
+                                match_time = match_time.replace(tzinfo=timezone.utc)
+                                break
+                            except ValueError:
+                                continue
+                        else:
+                            raise ValueError(f"Could not parse date: {game.stime}")
+                
+                current_time = datetime.now(timezone.utc)
+                
+                # If match time is in the past, likely POST-MATCH
+                if match_time < current_time:
+                    # Check if it's been more than 2 hours (enough time for a match to finish)
+                    time_diff = current_time - match_time
+                    if time_diff.total_seconds() > 7200:  # 2 hours
+                        return EpisodeStatus.POST_MATCH
+                    # Or if we have any indication of completion
+                    if game.scrs or (game.winner is not None and game.winner >= 0):
+                        return EpisodeStatus.POST_MATCH
+            except (ValueError, AttributeError) as e:
+                logger.debug(f"Could not parse match time '{game.stime}': {e}")
+        
+        # Default to pre-match for unknown status
+        return EpisodeStatus.PRE_MATCH
 
     async def create_lineup(
         self,
@@ -220,41 +351,67 @@ class LineupAgent:
         Returns:
             PodcastLineup with planned segments
         """
-        # Extract game data
-        game_data = game_context.get("game") or (game_context.get("games", [{}])[0] if game_context.get("games") else {})
+        # Extract game data - check for Game object first, then dict
+        game_obj = None
+        game_data = None
         
-        # Detect status
-        # Try to get game status from context - check if we have a Game object or just dict
-        game_status = 0  # Default to upcoming
-        
-        # Check if game_context has a Game object directly
-        if "game" in game_context and isinstance(game_context["game"], Game):
-            status = self.detect_status(game_context["game"])
-        elif "games" in game_context and game_context["games"]:
-            # Check if first game is a Game object
-            first_game = game_context["games"][0]
-            if isinstance(first_game, Game):
-                status = self.detect_status(first_game)
+        # Priority 1: Check if game_context has a Game object directly (stored by DataEnricher)
+        if "game" in game_context:
+            if isinstance(game_context["game"], Game):
+                game_obj = game_context["game"]
             else:
-                # Extract from dict
-                game_status = game_data.get("game_status") or game_data.get("gt", 0)
-                game_id = game_data.get("game_id") or game_data.get("gid", 0)
-                minimal_game = Game(
-                    gid=game_id,
-                    gt=game_status,
-                    stime=game_data.get("start_time"),
-                )
-                status = self.detect_status(minimal_game)
-        else:
-            # Extract from dict
+                game_data = game_context["game"]
+        
+        # Priority 2: Check games array for Game object
+        if game_obj is None and "games" in game_context and game_context["games"]:
+            first_item = game_context["games"][0]
+            if isinstance(first_item, Game):
+                game_obj = first_item
+            else:
+                game_data = first_item
+        
+        # Priority 3: Use game_data dict if we have it
+        if game_obj is None and game_data is None:
+            game_data = game_context.get("game_data") or game_context.get("game") or (game_context.get("games", [{}])[0] if game_context.get("games") else {})
+        
+        # Detect status from Game object if available
+        if game_obj:
+            status = self.detect_status(game_obj)
+            logger.info(f"Detected game status from Game object: {status.value} (game_id={game_obj.gid}, gt={game_obj.gt})")
+        elif game_data and isinstance(game_data, dict):
+            # Construct Game object from dict data
             game_status = game_data.get("game_status") or game_data.get("gt", 0)
             game_id = game_data.get("game_id") or game_data.get("gid", 0)
+            stime = game_data.get("start_time") or game_data.get("stime")
+            scrs = game_data.get("scrs") or game_data.get("scores") or []
+            winner = game_data.get("winner")
+            is_started = game_data.get("is_started") or game_data.get("IsStarted", False)
+            
+            # Also check for final_score in dict format
+            final_score = game_data.get("final_score")
+            if final_score and isinstance(final_score, dict):
+                # Convert final_score to scrs format
+                home_score = final_score.get("home", 0)
+                away_score = final_score.get("away", 0)
+                if home_score is not None and away_score is not None:
+                    scrs = [home_score, away_score]
+            
+            # Create minimal Game object with all available data
             minimal_game = Game(
                 gid=game_id,
                 gt=game_status,
-                stime=game_data.get("start_time"),
+                stime=stime,
+                scrs=scrs if isinstance(scrs, list) else [],
+                winner=winner,
+                is_started=is_started,
             )
             status = self.detect_status(minimal_game)
+            game_obj = minimal_game
+            logger.info(f"Detected game status from dict data: {status.value} (game_id={game_id}, gt={game_status})")
+        else:
+            # Fallback: default to PRE_MATCH
+            status = EpisodeStatus.PRE_MATCH
+            logger.warning("Could not detect game status - defaulting to PRE_MATCH")
 
         logger.info(f"Creating lineup for {status.value} episode (duration: {total_duration_minutes} min)")
 
@@ -269,6 +426,9 @@ class LineupAgent:
 
         # Calculate overall priority score
         priority_score = self._calculate_priority_score(game_context, prioritized_data)
+        
+        # Extract betting corner config
+        betting_config = self._extract_betting_corner_config(game_context, status)
 
         return PodcastLineup(
             episode_title=episode_title,
@@ -277,6 +437,7 @@ class LineupAgent:
             total_duration_minutes=total_duration_minutes,
             segments=segments,
             priority_score=priority_score,
+            betting_corner_config=betting_config,
         )
 
     async def _analyze_with_claude(
@@ -340,16 +501,33 @@ class LineupAgent:
 
         system_prompt = """You are a professional sports producer for a podcast. Your job is to analyze game data and create a prioritized content plan.
 
-CRITICAL REQUIREMENTS - STRICT DATA GROUNDING & STATUS-SPECIFIC FILTERING:
-1. ONLY use facts present in the provided GameContext JSON
-2. DO NOT invent, assume, or hallucinate any data points
-3. STATUS-SPECIFIC DATA FILTERING (CRITICAL):
+🚨 CRITICAL REQUIREMENTS - STRICT DATA GROUNDING & ZERO-TOLERANCE FOR MISSING DATA:
+
+1. ZERO-TOLERANCE FOR MISSING DATA (THE "NO-N/A" RULE):
+   - If a data point (Lineups, Odds, Injuries, Stats) is missing or labeled "NOT_AVAILABLE", DO NOT create a segment for it
+   - NO "Information Voids": Never mention that data is missing
+   - If a segment exists in the rundown, it MUST be because there is rich, factual data to discuss
+   - If there is no data, skip to the next topic naturally - do not create empty segments
+
+2. STATUS-SPECIFIC DATA FILTERING (CRITICAL):
    - If status is PRE_MATCH: ONLY use pre-game data (form, H2H, probable lineups, injuries, pre-game odds, standings, pre-game news)
    - If status is POST_MATCH: ONLY use post-match data (events, final score, post-game stats, MOTM, standings update, post-match news)
    - FORBIDDEN: Do NOT mention pre-game data in post-match pods, and vice-versa
-4. If a specific data point is missing, pivot to another available data point from the correct status category
+   - STRICT TIMELINE ALIGNMENT: Never treat a past game as a future event
+
+3. ONLY use facts present in the provided GameContext JSON
+4. DO NOT invent, assume, or hallucinate any data points
 5. For each data point you use, reference the exact JSON key/path where it comes from
-6. If data is not in JSON, explicitly state "NOT_AVAILABLE" and move to next available point
+
+🎭 PERSONA CHEMISTRY & "THE PUB VIBE":
+
+The Moderator (Host): She is a "Football Geek," not a news anchor. Her tone must be casual, inquisitive, and warm. She should lead the conversation by asking for the Fan's take rather than just stating facts.
+
+The Fan (Guest): He speaks with the heart of someone in the stands. He is passionate but maintains "football proportion"—loving the game but keeping it respectful.
+
+Shared Mood & Atmosphere:
+- PRE-MATCH: High energy, butterflies, and speculation about the "vibe" on the ground
+- POST-MATCH: Reflective and emotional. If the Fan's team lost, his tone should be subtly "deflated" or frustrated (never toxic). If they won, he should sound "uplifted" and proud.
 
 NARRATIVE CONTEXTUALIZATION - NO GENERIC TITLES:
 - Generate SPECIFIC, DATA-DRIVEN segment titles based on actual data
@@ -364,7 +542,7 @@ Follow the standardized narrative flow exactly as specified. Do not deviate from
 TONE SCALE (1-5):
 1: Cold/Analytical (pure stats, no emotion)
 2: Informative (factual but accessible)
-3: Conversational (friendly, engaging)
+3: Conversational (friendly, engaging) - DEFAULT for "Pub Vibe"
 4: Energetic (excited, animated)
 5: High Octane/Excited (maximum energy, dramatic)
 
@@ -372,6 +550,12 @@ TRANSITION RULES:
 - Cannot jump more than 2 tone levels between consecutive segments
 - If moving from Level 5 to Level 1, insert a bridge segment at Level 3
 - Ensure smooth tonal transitions for natural listening experience
+
+⚽ TACTICAL LINEUP UPGRADE:
+- Do NOT instruct hosts to list the 11 players
+- Focus on "Tactical Debate" - surprising inclusions, major absences, or the coach's tactical gamble
+- PRE-MATCH: "Is this lineup too attacking for a big away game?"
+- POST-MATCH: "Did the starting XI choice cost them the game, or was it a masterstroke?"
 
 Focus on:
 - Breaking news (injuries, lineup changes) - ONLY if in JSON and appropriate for status
@@ -398,12 +582,14 @@ TOTAL DURATION: {total_duration_minutes} minutes
 Your task:
 1. Follow the standardized narrative flow EXACTLY
 2. STATUS-SPECIFIC FILTERING: Only use data appropriate for {status.value.upper()} status
-3. Generate SPECIFIC, DATA-DRIVEN segment titles (use player names, specific moments, not generic titles)
-4. For each data point, reference the JSON key/path (e.g., "game.home_team.name", "standings.home_team.position")
-5. If data is missing, explicitly note "NOT_AVAILABLE" and use alternative available data from correct status category
-6. Assign tone_level (1-5) to each segment
-7. Ensure tone transitions don't jump more than 2 levels
-8. Create transition_cue for each segment (except first)
+3. ZERO-TOLERANCE FOR MISSING DATA: If a data point is missing or "NOT_AVAILABLE", DO NOT create a segment for it. Skip to the next topic naturally.
+4. Generate SPECIFIC, DATA-DRIVEN segment titles (use player names, specific moments, not generic titles)
+5. For each data point, reference the JSON key/path (e.g., "game.home_team.name", "standings.home_team.position")
+6. If data is missing, DO NOT create a segment - only create segments with rich, factual data
+7. Assign tone_level (1-5) to each segment - default to 3 (Conversational) for "Pub Vibe"
+8. Ensure tone transitions don't jump more than 2 levels
+9. Create transition_cue for each segment (except first) - use natural, conversational phrases
+10. For lineup segments: Focus on TACTICAL DEBATE, not listing players. Emphasize surprising inclusions, absences, or tactical gambles.
 
 Return a JSON object with this EXACT structure:
 {{
@@ -476,9 +662,18 @@ Return a JSON object with this EXACT structure:
         status: EpisodeStatus,
     ) -> dict[str, Any]:
         """Create a fallback prioritization if Claude fails - uses status-specific data only."""
-        game_data = game_context.get("game") or (game_context.get("games", [{}])[0] if game_context.get("games") else {})
-        home_team = game_data.get("home_team", {}).get("name", "Home Team") if game_data else "Home Team"
-        away_team = game_data.get("away_team", {}).get("name", "Away Team") if game_data else "Away Team"
+        # Get game data - could be Game object or dict
+        game_obj_or_dict = game_context.get("game") or (game_context.get("games", [{}])[0] if game_context.get("games") else {})
+        
+        # Extract team names - handle both Game object and dict
+        if isinstance(game_obj_or_dict, Game):
+            home_team = game_obj_or_dict.home_team.name if game_obj_or_dict.home_team else "Home Team"
+            away_team = game_obj_or_dict.away_team.name if game_obj_or_dict.away_team else "Away Team"
+            game_data = {}  # Use empty dict for other data
+        else:
+            game_data = game_obj_or_dict if isinstance(game_obj_or_dict, dict) else {}
+            home_team = game_data.get("home_team", {}).get("name", "Home Team") if game_data else "Home Team"
+            away_team = game_data.get("away_team", {}).get("name", "Away Team") if game_data else "Away Team"
 
         if status == EpisodeStatus.PRE_MATCH:
             # PRE-MATCH: Only pre-game data
@@ -489,7 +684,7 @@ Return a JSON object with this EXACT structure:
                     "suggested_duration_seconds": 60,
                     "key_facts": [
                         f"{home_team} vs {away_team}",
-                        f"Competition: {game_data.get('competition', 'Unknown')}",
+                        f"Competition: {game_data.get('competition', 'Unknown') if isinstance(game_data, dict) else 'Unknown'}",
                     ],
                     "tone_level": 4,
                     "source_refs": ["game.home_team", "game.away_team", "game.competition"],
@@ -507,9 +702,14 @@ Return a JSON object with this EXACT structure:
             ]
         else:
             # POST-MATCH: Only post-game data
-            final_score = game_data.get("final_score", {}) if game_data else {}
-            home_score = final_score.get("home", 0) if final_score else 0
-            away_score = final_score.get("away", 0) if final_score else 0
+            # Extract scores from Game object or dict
+            if isinstance(game_obj_or_dict, Game):
+                home_score = game_obj_or_dict.home_score if hasattr(game_obj_or_dict, 'home_score') else (game_obj_or_dict.scrs[0] if game_obj_or_dict.scrs and len(game_obj_or_dict.scrs) > 0 else 0)
+                away_score = game_obj_or_dict.away_score if hasattr(game_obj_or_dict, 'away_score') else (game_obj_or_dict.scrs[1] if game_obj_or_dict.scrs and len(game_obj_or_dict.scrs) > 1 else 0)
+            else:
+                final_score = game_data.get("final_score", {}) if isinstance(game_data, dict) else {}
+                home_score = final_score.get("home", 0) if isinstance(final_score, dict) else 0
+                away_score = final_score.get("away", 0) if isinstance(final_score, dict) else 0
             
             segments = [
                 {
@@ -606,13 +806,22 @@ Return a JSON object with this EXACT structure:
         allocated_segments = []
         allocated_time = 0
 
-        # Reserve time for intro/outro (30 seconds total)
-        intro_outro_time = 30
-        available_time = total_seconds - intro_outro_time
+        # Reserve time for intro/outro and "The Final Ticket" segment
+        intro_outro_time = 30  # 15s intro + 15s outro
+        final_ticket_time = 30  # Reserve 30s for "The Final Ticket"
+        available_time = total_seconds - intro_outro_time - final_ticket_time
 
         previous_tone_level = 4  # Start at energetic for intro (level 4)
 
         for i, seg_data in enumerate(segments_data):
+            # ZERO-TOLERANCE FOR MISSING DATA: Skip segments with NOT_AVAILABLE data
+            key_facts = seg_data.get("key_facts", [])
+            has_available_data = self._has_available_data(key_facts, seg_data)
+            
+            if not has_available_data:
+                logger.debug(f"Skipping segment '{seg_data.get('topic')}' - no available data")
+                continue  # Skip this segment entirely
+            
             priority = seg_data.get("priority", 50)
             suggested_duration = seg_data.get("suggested_duration_seconds", 0)
             tone_level = seg_data.get("tone_level", 3)  # Default to conversational
@@ -642,9 +851,15 @@ Return a JSON object with this EXACT structure:
             # Map tone_level to legacy tone enum
             tone = self._tone_level_to_enum(tone_level)
 
+            # Filter out NOT_AVAILABLE from key_data_points
+            filtered_key_facts = [
+                fact for fact in key_facts 
+                if "NOT_AVAILABLE" not in fact.upper() and "N/A" not in fact.upper()
+            ]
+
             segment = PodcastSegment(
                 topic=seg_data.get("topic", f"Segment {i+1}"),
-                key_data_points=seg_data.get("key_facts", []),
+                key_data_points=filtered_key_facts,
                 tone_level=tone_level,
                 tone=tone,
                 allocated_time=duration,
@@ -680,14 +895,28 @@ Return a JSON object with this EXACT structure:
             transition_cue="",
         )
 
-        # Insert intro at start, outro at end
+        # Insert intro at start
         allocated_segments.insert(0, intro_segment)
+        
+        # Create and insert "The Final Ticket" betting segment before outro
+        # Use reserved time for final ticket
+        final_ticket_segment = self._create_final_ticket_segment(
+            status, game_context, final_ticket_time
+        )
+        
+        if final_ticket_segment:
+            # Ensure final ticket uses reserved time
+            final_ticket_segment.allocated_time = final_ticket_time
+            final_ticket_segment.estimated_word_count = int(final_ticket_time * self.WORDS_PER_SECOND)
+            allocated_segments.append(final_ticket_segment)
+        
+        # Insert outro at end (uses reserved time)
         allocated_segments.append(outro_segment)
 
-        # Verify total time matches
+        # Verify total time matches - adjust outro if needed
         total_allocated = sum(seg.allocated_time for seg in allocated_segments)
         if total_allocated != total_seconds:
-            # Adjust the last segment to match exactly
+            # Adjust the last segment (outro) to match exactly
             difference = total_seconds - total_allocated
             if allocated_segments:
                 allocated_segments[-1].allocated_time += difference
@@ -904,27 +1133,44 @@ Return a JSON object with this EXACT structure:
         Returns:
             Episode title string
         """
-        game_data = game_context.get("game") or (game_context.get("games", [{}])[0] if game_context.get("games") else {})
-        home_team = game_data.get("home_team", {}).get("name", "Home")
-        away_team = game_data.get("away_team", {}).get("name", "Away")
-        competition = game_data.get("competition", "")
+        # Get game data - could be Game object or dict
+        game_obj_or_dict = game_context.get("game") or (game_context.get("games", [{}])[0] if game_context.get("games") else {})
+        
+        # Extract team names - handle both Game object and dict
+        if isinstance(game_obj_or_dict, Game):
+            home_team = game_obj_or_dict.home_team.name if game_obj_or_dict.home_team else "Home"
+            away_team = game_obj_or_dict.away_team.name if game_obj_or_dict.away_team else "Away"
+            competition = game_obj_or_dict.competition_display_name or ""
+        else:
+            game_data = game_obj_or_dict if isinstance(game_obj_or_dict, dict) else {}
+            home_team = game_data.get("home_team", {}).get("name", "Home") if isinstance(game_data.get("home_team"), dict) else "Home"
+            away_team = game_data.get("away_team", {}).get("name", "Away") if isinstance(game_data.get("away_team"), dict) else "Away"
+            competition = game_data.get("competition", "") if isinstance(game_data, dict) else ""
 
         # Try to use explosive quotes or high-priority stories for title
-        explosive_quotes = prioritized_data.get("explosive_quotes", [])
-        priority_stories = prioritized_data.get("priority_stories", [])
+        explosive_quotes = prioritized_data.get("explosive_quotes", []) if isinstance(prioritized_data, dict) else []
+        priority_stories = prioritized_data.get("priority_stories", []) if isinstance(prioritized_data, dict) else []
 
-        if priority_stories and priority_stories[0].get("score", 0) > 80:
-            # Use high-priority story for title
-            story = priority_stories[0].get("story", "")
-            if story:
-                return f"{home_team} vs {away_team}: {story}"
+        if priority_stories and len(priority_stories) > 0:
+            first_story = priority_stories[0] if isinstance(priority_stories[0], dict) else {}
+            if first_story.get("score", 0) > 80:
+                # Use high-priority story for title
+                story = first_story.get("story", "")
+                if story:
+                    return f"{home_team} vs {away_team}: {story}"
 
         if status == EpisodeStatus.PRE_MATCH:
             return f"{home_team} vs {away_team} - {competition} Preview"
         else:
-            final_score = game_data.get("final_score", {})
-            home_score = final_score.get("home", 0)
-            away_score = final_score.get("away", 0)
+            # Extract final score - handle both Game object and dict
+            if isinstance(game_obj_or_dict, Game):
+                home_score = game_obj_or_dict.home_score if hasattr(game_obj_or_dict, 'home_score') else (game_obj_or_dict.scrs[0] if game_obj_or_dict.scrs and len(game_obj_or_dict.scrs) > 0 else 0)
+                away_score = game_obj_or_dict.away_score if hasattr(game_obj_or_dict, 'away_score') else (game_obj_or_dict.scrs[1] if game_obj_or_dict.scrs and len(game_obj_or_dict.scrs) > 1 else 0)
+            else:
+                game_data = game_obj_or_dict if isinstance(game_obj_or_dict, dict) else {}
+                final_score = game_data.get("final_score", {}) if isinstance(game_data, dict) else {}
+                home_score = final_score.get("home", 0) if isinstance(final_score, dict) else 0
+                away_score = final_score.get("away", 0) if isinstance(final_score, dict) else 0
             return f"{home_team} {home_score}-{away_score} {away_team} - {competition} Recap"
 
     def _calculate_priority_score(
@@ -942,7 +1188,7 @@ Return a JSON object with this EXACT structure:
         Returns:
             Priority score (0-100)
         """
-        priority_stories = prioritized_data.get("priority_stories", [])
+        priority_stories = prioritized_data.get("priority_stories", []) if isinstance(prioritized_data, dict) else []
         
         if not priority_stories:
             return 50.0  # Default medium priority
@@ -976,6 +1222,9 @@ Return a JSON object with this EXACT structure:
         total_time = 0
 
         for i, segment in enumerate(lineup.segments, 1):
+            # Check if this is "The Final Ticket" segment
+            is_final_ticket = segment.topic == "The Final Ticket" or "Final Ticket" in segment.topic
+            
             # Build data points with source references
             data_points_text = ""
             if segment.key_data_points:
@@ -1026,13 +1275,31 @@ Return a JSON object with this EXACT structure:
   • Maintain narrative flow and logical progression
 """
 
+            # Add special instructions for "The Final Ticket" segment
+            final_ticket_instructions = ""
+            if is_final_ticket and lineup.betting_corner_config:
+                final_ticket_instructions = f"""
+- SPONSORED SEGMENT - THE FINAL TICKET (CRITICAL INSTRUCTIONS):
+  • Bookmaker: {lineup.betting_corner_config.bookmaker_name}
+  • Market: {lineup.betting_corner_config.target_market}
+  • Featured Odds: {json.dumps(lineup.betting_corner_config.featured_odds, indent=2)}
+  • Panel Prediction Challenge:
+    - Create a back-and-forth panel debate
+    - One host makes a "safe" pick based on data (e.g., "{lineup.betting_corner_config.prediction_context}")
+    - Another host picks a "wildcard" or "upset" based on trends
+    - Each prediction MUST be supported by at least one specific data point from GameContext
+    - Use inviting tone: "What's your ticket looking like?" (NOT a hard sell)
+  • Explicitly mention the bookmaker name and specific market
+  • Detail the current, original, and moving odds rates from featured_odds above
+  • Make it conversational and engaging - this is a panel discussion, not an ad"""
+
             segments_text.append(
                 f"""
 SEGMENT {i}: {segment.topic}
 - Duration: {segment.allocated_time} seconds (~{segment.estimated_word_count} words)
 - Tone Level: {segment.tone_level}/5 ({self._get_tone_description(segment.tone_level)})
 - Key Data Points (ONLY use if present in JSON):
-{data_points_text}{source_refs_text}{transition_section}"""
+{data_points_text}{source_refs_text}{transition_section}{final_ticket_instructions}"""
             )
             total_time += segment.allocated_time
 
@@ -1111,29 +1378,29 @@ Generate the complete script following the segment structure above, using ONLY d
         import copy
         filtered = copy.deepcopy(game_context)
 
-        # Get game data
-        game_data = filtered.get("game")
-        if not game_data and filtered.get("games"):
-            game_data = filtered["games"][0] if filtered["games"] else {}
+        # Get game data - handle both Game object and dict
+        game_obj_or_dict = filtered.get("game")
+        if not game_obj_or_dict and filtered.get("games"):
+            game_obj_or_dict = filtered["games"][0] if filtered["games"] else {}
         
-        if status == EpisodeStatus.PRE_MATCH:
-            # Remove post-match data
-            if isinstance(game_data, dict):
-                game_data.pop("final_score", None)
-                game_data.pop("winner", None)
-                game_data.pop("events", None)
-                game_data.pop("statistics", None)  # Post-game stats
-                game_data.pop("top_performers", None)
-                game_data.pop("actual_play_time", None)
-                game_data.pop("betting_result", None)
-                game_data.pop("detailed_statistics", None)
+        # Only filter dict data, not Game objects (Game objects are immutable)
+        if isinstance(game_obj_or_dict, dict):
+            if status == EpisodeStatus.PRE_MATCH:
+                # Remove post-match data
+                game_obj_or_dict.pop("final_score", None)
+                game_obj_or_dict.pop("winner", None)
+                game_obj_or_dict.pop("events", None)
+                game_obj_or_dict.pop("statistics", None)  # Post-game stats
+                game_obj_or_dict.pop("top_performers", None)
+                game_obj_or_dict.pop("actual_play_time", None)
+                game_obj_or_dict.pop("betting_result", None)
+                game_obj_or_dict.pop("detailed_statistics", None)
                 # Keep: lineups, pre_game_stats, form, betting (pre-game), standings, news (pre-game)
-        else:
-            # Remove pre-match data
-            if isinstance(game_data, dict):
-                game_data.pop("pre_game_stats", None)
+            else:
+                # Remove pre-match data
+                game_obj_or_dict.pop("pre_game_stats", None)
                 # Note: Keep lineups for post-match (actual lineups used)
-                game_data.pop("lineups_status", None)
+                game_obj_or_dict.pop("lineups_status", None)
                 # Keep: final_score, events, statistics, top_performers, standings (updated), news (post-game)
 
         # Filter games array if present
@@ -1151,3 +1418,252 @@ Generate the complete script following the segment structure above, using ONLY d
                         game.pop("lineups_status", None)
 
         return filtered
+
+    def _has_available_data(self, key_facts: list[str], seg_data: dict[str, Any]) -> bool:
+        """
+        Check if segment has available data (not NOT_AVAILABLE).
+        
+        Zero-tolerance rule: If all data is NOT_AVAILABLE, return False to skip segment.
+        
+        Args:
+            key_facts: List of key facts for the segment
+            seg_data: Full segment data dictionary
+            
+        Returns:
+            True if segment has available data, False if all data is missing
+        """
+        # Check key facts
+        if key_facts:
+            available_facts = [
+                fact for fact in key_facts 
+                if "NOT_AVAILABLE" not in fact.upper() 
+                and "N/A" not in fact.upper()
+                and fact.strip()  # Not empty
+            ]
+            if available_facts:
+                return True
+        
+        # Check source refs - if we have valid source references, we might have data
+        source_refs = seg_data.get("source_refs", [])
+        if source_refs:
+            # If we have source refs, assume data might be available
+            return True
+        
+        # If no key facts and no source refs, skip this segment
+        return False
+
+    def _create_final_ticket_segment(
+        self,
+        status: EpisodeStatus,
+        game_context: Optional[dict[str, Any]],
+        available_time: int,
+    ) -> Optional[PodcastSegment]:
+        """
+        Create "The Final Ticket" betting segment (penultimate, before Outro).
+
+        Args:
+            status: Episode status (PRE_MATCH or POST_MATCH)
+            game_context: Game context for extracting betting data
+            available_time: Available time in seconds
+
+        Returns:
+            PodcastSegment for "The Final Ticket" or None if no betting data
+        """
+        if not game_context:
+            return None
+
+        # Extract betting data - try multiple paths
+        game_obj_or_dict = game_context.get("game") or (game_context.get("games", [{}])[0] if game_context.get("games") else {})
+        
+        # Try different betting data paths
+        betting_data = None
+        
+        # If game_obj_or_dict is a Game object, try to access main_odds attribute
+        if isinstance(game_obj_or_dict, Game):
+            if game_obj_or_dict.main_odds:
+                betting_data = game_obj_or_dict.main_odds
+        elif isinstance(game_obj_or_dict, dict):
+            betting_data = (
+                game_obj_or_dict.get("betting") 
+                or game_obj_or_dict.get("main_odds") 
+                or game_obj_or_dict.get("MainOdds")
+                or game_obj_or_dict.get("mainOdds")
+            )
+        
+        # Try context-level betting data
+        if not betting_data:
+            betting_data = game_context.get("betting") or game_context.get("relevant_odds")
+        
+        # If still no betting data, create segment anyway with placeholder data
+        # This ensures "The Final Ticket" always appears
+        if not betting_data:
+            logger.warning("No betting data found for 'The Final Ticket' segment - creating with placeholder")
+            # Create segment with placeholder betting info
+            betting_data = {
+                "type": 1,  # 1X2 market
+                "options": [
+                    {"name": "Home Win", "rate": "N/A", "trend": 0},
+                    {"name": "Draw", "rate": "N/A", "trend": 0},
+                    {"name": "Away Win", "rate": "N/A", "trend": 0},
+                ]
+            }
+
+        # Allocate time (30-45 seconds for betting segment)
+        duration = min(max(30, available_time // 8), 45)
+        word_count = int(duration * self.WORDS_PER_SECOND)
+
+        # Build key data points from betting data
+        key_points = []
+        source_refs = ["betting", "main_odds"]
+        
+        # Extract odds information
+        if isinstance(betting_data, dict):
+            if "options" in betting_data:
+                for option in betting_data.get("options", [])[:3]:  # Top 3 options
+                    name = option.get("name") or option.get("Name", "")
+                    rate = option.get("rate") or option.get("Rate", "")
+                    trend = option.get("trend") or option.get("Trend", 0)
+                    if name and rate:
+                        trend_text = "↑" if trend == 1 else "↓" if trend == -1 else "→"
+                        key_points.append(f"{name}: {rate} {trend_text}")
+            
+            # Add market type
+            market_type = betting_data.get("type") or betting_data.get("Type", "")
+            if market_type:
+                if market_type == 1 or market_type == "1X2":
+                    key_points.append("Market: Full-time Result (1X2)")
+                elif market_type == 2 or "over" in str(market_type).lower():
+                    over_under = betting_data.get("overunder") or betting_data.get("P", "")
+                    key_points.append(f"Market: Over/Under {over_under or '2.5'}")
+        
+        # Add prediction context based on status
+        if status == EpisodeStatus.PRE_MATCH:
+            key_points.append("Panel Prediction Challenge: Predict current match outcome")
+        else:
+            key_points.append("Panel Prediction Challenge: Predict next match for winning team")
+
+        return PodcastSegment(
+            topic="The Final Ticket",
+            key_data_points=key_points,
+            tone_level=3,  # Conversational for betting discussion
+            tone=SegmentTone.CONVERSATIONAL,
+            allocated_time=duration,
+            estimated_word_count=word_count,
+            source_data_refs=source_refs,
+            transition_cue="Now let's talk about where the smart money is going...",
+        )
+
+    def _extract_betting_corner_config(
+        self,
+        game_context: dict[str, Any],
+        status: EpisodeStatus,
+    ) -> Optional[BettingCornerConfig]:
+        """
+        Extract betting corner configuration from game context.
+
+        Args:
+            game_context: Game context
+            status: Episode status
+
+        Returns:
+            BettingCornerConfig or None if no betting data
+        """
+        game_obj_or_dict = game_context.get("game") or (game_context.get("games", [{}])[0] if game_context.get("games") else {})
+        
+        # Try different betting data paths
+        betting_data = None
+        
+        # If game_obj_or_dict is a Game object, try to access main_odds attribute
+        if isinstance(game_obj_or_dict, Game):
+            if game_obj_or_dict.main_odds:
+                betting_data = game_obj_or_dict.main_odds
+        elif isinstance(game_obj_or_dict, dict):
+            betting_data = (
+                game_obj_or_dict.get("betting") 
+                or game_obj_or_dict.get("main_odds") 
+                or game_obj_or_dict.get("MainOdds")
+                or game_obj_or_dict.get("mainOdds")
+            )
+        
+        # Try context-level betting data
+        if not betting_data:
+            betting_data = game_context.get("betting") or game_context.get("relevant_odds")
+        
+        # If no betting data, create default config
+        if not betting_data:
+            logger.warning("No betting data found - creating default BettingCornerConfig")
+            betting_data = {
+                "type": 1,
+                "options": [
+                    {"name": "Home Win", "rate": "N/A", "trend": 0},
+                    {"name": "Draw", "rate": "N/A", "trend": 0},
+                    {"name": "Away Win", "rate": "N/A", "trend": 0},
+                ]
+            }
+
+        # Extract bookmaker name (default if not available)
+        bookmaker_name = "365Scores"  # Default bookmaker
+        if isinstance(betting_data, dict):
+            bookmaker_name = betting_data.get("bookmaker") or betting_data.get("Bookmaker", bookmaker_name)
+
+        # Determine target market
+        market_type = betting_data.get("type") or betting_data.get("Type", "")
+        if market_type == 1 or market_type == "1X2" or str(market_type) == "1":
+            target_market = "Full-time Result"
+        elif market_type == 2 or "over" in str(market_type).lower():
+            over_under = betting_data.get("overunder") or betting_data.get("P", "2.5")
+            target_market = f"Over/Under {over_under}"
+        else:
+            target_market = "Full-time Result"  # Default
+
+        # Extract featured odds
+        featured_odds = {}
+        if isinstance(betting_data, dict) and "options" in betting_data:
+            for option in betting_data.get("options", [])[:3]:
+                name = option.get("name") or option.get("Name", "")
+                rate = option.get("rate") or option.get("Rate", "")
+                trend = option.get("trend") or option.get("Trend", 0)
+                original_rate = option.get("original_rate") or option.get("OriginalRate", rate)
+                
+                if name and rate:
+                    featured_odds[name] = {
+                        "current": rate,
+                        "original": original_rate,
+                        "trend": "↑" if trend == 1 else "↓" if trend == -1 else "→",
+                    }
+
+        # Build prediction context
+        prediction_context = ""
+        if status == EpisodeStatus.PRE_MATCH:
+            # Use H2H, form, or standings data
+            if isinstance(game_obj_or_dict, dict):
+                h2h = game_obj_or_dict.get("head_to_head") or game_context.get("head_to_head")
+                form = game_obj_or_dict.get("form") or game_context.get("form")
+            else:
+                h2h = game_context.get("head_to_head")
+                form = game_context.get("form")
+            if h2h:
+                prediction_context = "Based on head-to-head records and recent form"
+            elif form:
+                prediction_context = "Based on recent team form and league standings"
+            else:
+                prediction_context = "Based on available match data"
+        else:
+            # Post-match: Use match result and next match data
+            if isinstance(game_obj_or_dict, Game):
+                winner = game_obj_or_dict.winner
+            elif isinstance(game_obj_or_dict, dict):
+                winner = game_obj_or_dict.get("winner") or game_obj_or_dict.get("Winner")
+            else:
+                winner = None
+            if winner is not None and winner >= 0:
+                prediction_context = "Based on match result and upcoming fixture analysis"
+            else:
+                prediction_context = "Based on match performance and next match preview"
+
+        return BettingCornerConfig(
+            bookmaker_name=bookmaker_name,
+            target_market=target_market,
+            featured_odds=featured_odds,
+            prediction_context=prediction_context,
+        )

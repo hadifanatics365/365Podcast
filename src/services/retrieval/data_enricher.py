@@ -147,6 +147,8 @@ class DataEnricher:
         game: Game,
         context: dict[str, Any],
     ) -> dict[str, Any]:
+        # Store the Game object in context for LineupAgent
+        context["game"] = game
         """Enrich single game for pre-game spotlight."""
         enriched = self._extract_pregame_data(game)
 
@@ -176,8 +178,11 @@ class DataEnricher:
             enriched["news"] = []
             enriched["news_count"] = 0
 
-        context["game"] = enriched
+        # Store enriched data
+        context["game_data"] = enriched  # Store enriched dict separately
         context["games"] = [enriched]
+        # Keep original Game object for LineupAgent status detection
+        # (don't overwrite if it was already set)
 
         return context
 
@@ -186,6 +191,8 @@ class DataEnricher:
         game: Game,
         context: dict[str, Any],
     ) -> dict[str, Any]:
+        # Store the Game object in context for LineupAgent
+        context["game"] = game
         """Enrich single game for post-game spotlight."""
         enriched = self._extract_postgame_data(game)
 
@@ -221,8 +228,11 @@ class DataEnricher:
             enriched["news"] = []
             enriched["news_count"] = 0
 
-        context["game"] = enriched
+        # Store enriched data
+        context["game_data"] = enriched  # Store enriched dict separately
         context["games"] = [enriched]
+        # Keep original Game object for LineupAgent status detection
+        # (don't overwrite if it was already set)
 
         return context
 

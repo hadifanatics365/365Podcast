@@ -16,6 +16,9 @@ class GameStatus(IntEnum):
     @classmethod
     def is_finished(cls, status: int) -> bool:
         """Check if game is finished or just ended."""
+        # Status 99 and other high values (90-200) often indicate finished games in some API versions
+        if status == 99 or (status >= 90 and status < 200):
+            return True
         return status in (cls.FINISHED, cls.JUST_ENDED)
 
     @classmethod
