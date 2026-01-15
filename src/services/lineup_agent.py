@@ -188,9 +188,12 @@ class PodcastLineup(BaseModel):
         if is_final_ticket:
             return (
                 "SPONSORED SEGMENT - THE FINAL TICKET: Create a friendly panel debate in 'pub vibe' style. "
-                "One host makes a 'safe' pick based on data, another picks a 'wildcard' or 'upset' based on trends. "
-                "Explicitly mention the bookmaker name and specific market. Detail the current, original, and moving odds rates. "
-                "Use inviting, conversational tone ('What's your ticket looking like?') - keep it casual, not a hard sell."
+                "One host makes a 'safe' pick based on data (e.g., H2H dominance, form trends), another host picks a 'wildcard' or 'upset' based on trends or patterns. "
+                "Explicitly mention the bookmaker name and specific market (e.g., 'Full-time Result', 'Over/Under 2.5'). "
+                "Detail the current, original, and moving odds rates from the featured_odds data. "
+                "Each prediction MUST be supported by at least one specific data point from GameContext (e.g., 'I'm going with Over 2.5 because the last 3 derbies averaged 4 goals'). "
+                "Use inviting, conversational tone ('What's your ticket looking like?') - keep it casual, not a hard sell. "
+                "This is a panel discussion, not an advertisement."
             )
         
         if not segment.key_data_points:
@@ -1278,20 +1281,31 @@ Return a JSON object with this EXACT structure:
             # Add special instructions for "The Final Ticket" segment
             final_ticket_instructions = ""
             if is_final_ticket and lineup.betting_corner_config:
+                # Determine prediction target based on status
+                if lineup.status == EpisodeStatus.PRE_MATCH:
+                    prediction_target = "the outcome of the current game"
+                else:
+                    prediction_target = "the outcome of the next match for the winning team (extract from 'next matches mini-recap' data if available)"
+                
                 final_ticket_instructions = f"""
 - SPONSORED SEGMENT - THE FINAL TICKET (CRITICAL INSTRUCTIONS):
   • Bookmaker: {lineup.betting_corner_config.bookmaker_name}
   • Market: {lineup.betting_corner_config.target_market}
   • Featured Odds: {json.dumps(lineup.betting_corner_config.featured_odds, indent=2)}
-  • Panel Prediction Challenge:
-    - Create a back-and-forth panel debate
+  • Panel Prediction Challenge: Predict {prediction_target}
+  • Panel Debate Requirements:
+    - Create a back-and-forth panel debate in conversational style
     - One host makes a "safe" pick based on data (e.g., "{lineup.betting_corner_config.prediction_context}")
-    - Another host picks a "wildcard" or "upset" based on trends
+    - Another host picks a "wildcard" or "upset" based on trends or patterns
     - Each prediction MUST be supported by at least one specific data point from GameContext
-    - Use inviting tone: "What's your ticket looking like?" (NOT a hard sell)
-  • Explicitly mention the bookmaker name and specific market
-  • Detail the current, original, and moving odds rates from featured_odds above
-  • Make it conversational and engaging - this is a panel discussion, not an ad"""
+    - Example: "I'm going with Over 2.5 because the last 3 derbies averaged 4 goals"
+  • Scripting Requirements:
+    - Explicitly mention the bookmaker name: "{lineup.betting_corner_config.bookmaker_name}"
+    - Explicitly mention the specific market: "{lineup.betting_corner_config.target_market}"
+    - Detail the current, original, and moving odds rates from featured_odds above
+    - Use inviting, conversational tone: "What's your ticket looking like?" (NOT a hard sell)
+    - Make it conversational and engaging - this is a panel discussion, not an advertisement
+    - Keep the "pub vibe" - friendly debate, not a sales pitch"""
 
             segments_text.append(
                 f"""
@@ -1538,9 +1552,10 @@ Generate the complete script following the segment structure above, using ONLY d
         
         # Add prediction context based on status
         if status == EpisodeStatus.PRE_MATCH:
-            key_points.append("Panel Prediction Challenge: Predict current match outcome")
+            key_points.append("Panel Prediction Challenge: Predict the outcome of the current game")
         else:
-            key_points.append("Panel Prediction Challenge: Predict next match for winning team")
+            # POST-MATCH: Look ahead to next match for winning team
+            key_points.append("Panel Prediction Challenge: Predict the outcome of the next match for the winning team (extract from 'next matches mini-recap' data)")
 
         return PodcastSegment(
             topic="The Final Ticket",
@@ -1649,15 +1664,20 @@ Generate the complete script following the segment structure above, using ONLY d
             else:
                 prediction_context = "Based on available match data"
         else:
-            # Post-match: Use match result and next match data
+            # POST-MATCH: Look ahead to next match for winning team
             if isinstance(game_obj_or_dict, Game):
                 winner = game_obj_or_dict.winner
             elif isinstance(game_obj_or_dict, dict):
                 winner = game_obj_or_dict.get("winner") or game_obj_or_dict.get("Winner")
             else:
                 winner = None
-            if winner is not None and winner >= 0:
-                prediction_context = "Based on match result and upcoming fixture analysis"
+            
+            # Try to extract next match data for winning team
+            next_matches = game_context.get("next_matches") or game_context.get("upcoming_fixtures")
+            if winner is not None and winner >= 0 and next_matches:
+                prediction_context = "Based on match result and next match preview for the winning team (from next matches mini-recap)"
+            elif winner is not None and winner >= 0:
+                prediction_context = "Based on match result and upcoming fixture analysis for the winning team"
             else:
                 prediction_context = "Based on match performance and next match preview"
 

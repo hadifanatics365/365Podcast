@@ -10,7 +10,7 @@ from src.config import Settings, get_settings
 from src.exceptions import DataFetchError, PodcastGenerationError
 from src.models import ContentMode, Game, PodcastRequest
 from src.models.requests import PodcastFormat, PodcastMode
-from src.services.audio_manager import AudioStorage, AudioSynthesizer
+from src.services.audio_manager import AudioMerger, AudioStorage, AudioSynthesizer
 from src.services.audio_manager.multi_voice_synthesizer import MultiVoiceSynthesizer
 from src.services.intelligence import ContentIntelligence
 from src.services.retrieval import DataEnricher, GameFetcher
@@ -80,6 +80,7 @@ class PodcastOrchestrator:
         self.audio_synthesizer = audio_synthesizer or AudioSynthesizer(self.settings)
         self.multi_voice_synthesizer = multi_voice_synthesizer or MultiVoiceSynthesizer(self.settings)
         self.audio_storage = audio_storage or AudioStorage(self.settings)
+        self.audio_merger = AudioMerger(self.settings)
 
     async def generate_podcast(
         self,
@@ -178,7 +179,21 @@ class PodcastOrchestrator:
                     )
                     duration = self.ssml_processor.estimate_duration(script)
 
-                # Step 6: Store audio
+                # Step 6: Merge with intro/outro
+                logger.info("Merging audio with intro and outro...")
+                try:
+                    merged_audio_bytes = self.audio_merger.merge_audio(
+                        content_audio_bytes=audio_bytes,
+                        include_intro=True,
+                        include_outro=True,
+                    )
+                    logger.info("Successfully merged audio with intro and outro")
+                    audio_bytes = merged_audio_bytes
+                except Exception as e:
+                    logger.warning(f"Failed to merge intro/outro, using original audio: {e}")
+                    # Continue with original audio if merging fails
+
+                # Step 7: Store audio
                 metadata = {
                     "game_ids": [int(gid) for gid in request.game_ids],
                     "mode": mode.value,
