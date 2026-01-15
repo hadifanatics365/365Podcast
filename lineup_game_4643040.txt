@@ -1,0 +1,56 @@
+================================================================================
+PODCAST LINEUP
+================================================================================
+
+Episode Title: Hapoel Tel Aviv vs Maccabi Tel Aviv: Tel Aviv Derby Reignites in FA Cup - Classic Rivalry Renewed
+Status: PRE_MATCH
+Total Duration: 5 minutes
+Priority Score: 88.3/100
+
+--------------------------------------------------------------------------------
+SEGMENTS
+--------------------------------------------------------------------------------
+
+Segment 1: Introduction
+  Duration: 15 seconds (~37 words)
+  Tone: EXCITED
+
+Segment 2: Derby Day Drama - Tel Aviv's Biggest Rivalry
+  Duration: 77 seconds (~192 words)
+  Tone: EXCITED
+  Key Data Points:
+    • Over 100 years of rivalry history
+    • FA Cup Round of 16 knockout stakes
+    • Maccabi's recent dominance vs Hapoel's desperate search for revenge
+
+Segment 3: The Numbers Don't Lie - Maccabi's Crushing Advantage
+  Duration: 69 seconds (~172 words)
+  Tone: ANALYTICAL
+  Key Data Points:
+    • 11 wins in last 16 meetings for Maccabi
+    • 5-0 and 4-0 recent demolition jobs
+    • Hapoel's 4-2 victory in 2024 - their only bright spot
+
+Segment 4: Cup Magic - Can Lightning Strike Twice?
+  Duration: 65 seconds (~162 words)
+  Tone: DRAMATIC
+  Key Data Points:
+    • Maccabi won the 2021 FA Cup Final against Hapoel 2-1
+    • Recent meeting ended 1-1, Maccabi advanced on penalties
+    • Knockout football changes everything
+
+Segment 5: Tactical Preview - The Formation Mystery
+  Duration: 59 seconds (~147 words)
+  Tone: ANALYTICAL
+  Key Data Points:
+    • Maccabi set up in 4-2-3-1 formation
+    • Hapoel's tactical approach remains unknown
+    • Key player matchups still to be revealed
+
+Segment 6: Outro
+  Duration: 15 seconds (~37 words)
+  Tone: CONVERSATIONAL
+
+--------------------------------------------------------------------------------
+Total Allocated Time: 300 seconds (5.0 minutes)
+================================================================================

@@ -1,0 +1,2511 @@
+Generate a podcast script following this EXACT structure and timing:
+
+EPISODE TITLE: Hapoel Tel Aviv vs Maccabi Tel Aviv: Tel Aviv Derby in FA Cup Round of 16 - Historic rivalry meets knockout football
+STATUS: PRE_MATCH
+TOTAL DURATION: 5 minutes (300 seconds)
+
+SEGMENT BREAKDOWN:
+
+SEGMENT 1: Introduction
+- Duration: 15 seconds (~37 words)
+- Tone Level: 4/5 (Energetic)
+- Key Data Points (ONLY use if present in JSON):
+  • Use relevant data from context
+- Transition: This is the opening segment. Start with energy and hook the listener immediately.
+
+SEGMENT 2: The Hook - Derby Day Drama in the Cup
+- Duration: 54 seconds (~135 words)
+- Tone Level: 5/5 (High Octane/Excited)
+- Key Data Points (ONLY use if present in JSON):
+  • Tel Aviv Derby in FA Cup Round of 16
+  • Hapoel Tel Aviv hosting Maccabi Tel Aviv
+  • January 14, 2026 kickoff at 18:30
+- Source Data References (verify these exist in JSON): game.home_team.name, game.away_team.name, game.competition, game.start_time
+- Transition from Previous Segment:
+  • Previous Topic: Introduction
+  • Create a natural bridge from the previous segment to this one
+  • Maintain narrative flow and logical progression
+
+SEGMENT 3: Contextual Landscape - Recent Derby History
+- Duration: 51 seconds (~127 words)
+- Tone Level: 4/5 (Energetic)
+- Key Data Points (ONLY use if present in JSON):
+  • Maccabi's recent 3-0 victory in October 2025
+  • Historical pattern showing Maccabi dominance
+  • Mix of high-scoring affairs and tight contests
+  • Previous FA Cup meeting in 2021 won by Maccabi 2-1
+- Source Data References (verify these exist in JSON): game.form[1].Scrs, game.form[2].Scrs, game.form[3].Scrs, game.form[11].Scrs, game.form[11].Comp
+- Transition from Previous Segment:
+  • Previous Topic: The Hook - Derby Day Drama in the Cup
+  • Previous Tone: 5/5 (High Octane/Excited)
+  • Current Tone: 4/5 (Energetic) (decreasing energy by 1 level)
+  • Transition Instruction: But let's dig deeper into the recent form between these sides...
+  • IMPORTANT: Create a smooth bridge that naturally flows from "The Hook - Derby Day Drama in the Cup" to "Contextual Landscape - Recent Derby History". 
+    Use connecting phrases, callbacks, or narrative threads to make the transition feel organic.
+    If tone is changing, gradually shift the energy level - don't make abrupt jumps.
+
+SEGMENT 4: The Personnel - Team Setup and Missing Pieces
+- Duration: 39 seconds (~97 words)
+- Tone Level: 2/5 (Informative)
+- Key Data Points (ONLY use if present in JSON):
+  • Maccabi confirmed in 4-2-3-1 formation
+  • Hapoel's lineup still to be announced
+  • Player details currently unavailable
+- Source Data References (verify these exist in JSON): game.lineups.away.formation, game.lineups.home, game.lineups.away.players[0].name
+- Transition from Previous Segment:
+  • Previous Topic: Contextual Landscape - Recent Derby History
+  • Previous Tone: 4/5 (Energetic)
+  • Current Tone: 2/5 (Informative) (decreasing energy by 2 levels)
+  • Transition Instruction: Speaking of team news, let's look at what we know about the lineups...
+  • IMPORTANT: Create a smooth bridge that naturally flows from "Contextual Landscape - Recent Derby History" to "The Personnel - Team Setup and Missing Pieces". 
+    Use connecting phrases, callbacks, or narrative threads to make the transition feel organic.
+    If tone is changing, gradually shift the energy level - don't make abrupt jumps.
+
+SEGMENT 5: The X-Factor - Tactical Battle and Key Dynamics
+- Duration: 42 seconds (~105 words)
+- Tone Level: 3/5 (Conversational)
+- Key Data Points (ONLY use if present in JSON):
+  • Maccabi's structured 4-2-3-1 approach
+  • Home advantage for Hapoel
+  • Derby intensity factor in knockout competition
+- Source Data References (verify these exist in JSON): game.lineups.away.formation, game.home_team.name
+- Transition from Previous Segment:
+  • Previous Topic: The Personnel - Team Setup and Missing Pieces
+  • Previous Tone: 2/5 (Informative)
+  • Current Tone: 3/5 (Conversational) (increasing energy by 1 level)
+  • Transition Instruction: Now, tactically speaking, this sets up as a fascinating contest...
+  • IMPORTANT: Create a smooth bridge that naturally flows from "The Personnel - Team Setup and Missing Pieces" to "The X-Factor - Tactical Battle and Key Dynamics". 
+    Use connecting phrases, callbacks, or narrative threads to make the transition feel organic.
+    If tone is changing, gradually shift the energy level - don't make abrupt jumps.
+
+SEGMENT 6: The Smart Money - Historical Patterns
+- Duration: 34 seconds (~85 words)
+- Tone Level: 2/5 (Informative)
+- Key Data Points (ONLY use if present in JSON):
+  • Maccabi won 3 of last 4 meetings
+  • Recent matches show goal-heavy affairs
+  • Cup context adds unpredictability
+- Source Data References (verify these exist in JSON): game.form[1].Winner, game.form[2].Winner, game.form[3].Winner
+- Transition from Previous Segment:
+  • Previous Topic: The X-Factor - Tactical Battle and Key Dynamics
+  • Previous Tone: 3/5 (Conversational)
+  • Current Tone: 2/5 (Informative) (decreasing energy by 1 level)
+  • Transition Instruction: Looking at the betting picture and what history tells us...
+  • IMPORTANT: Create a smooth bridge that naturally flows from "The X-Factor - Tactical Battle and Key Dynamics" to "The Smart Money - Historical Patterns". 
+    Use connecting phrases, callbacks, or narrative threads to make the transition feel organic.
+    If tone is changing, gradually shift the energy level - don't make abrupt jumps.
+
+SEGMENT 7: The Wrap-up - Derby Expectations
+- Duration: 50 seconds (~125 words)
+- Tone Level: 4/5 (Energetic)
+- Key Data Points (ONLY use if present in JSON):
+  • Cup knockout stakes raise the tension
+  • Tel Aviv Derby never disappoints
+  • Winner advances to FA Cup quarterfinals
+- Source Data References (verify these exist in JSON): game.competition
+- Transition from Previous Segment:
+  • Previous Topic: The Smart Money - Historical Patterns
+  • Previous Tone: 2/5 (Informative)
+  • Current Tone: 4/5 (Energetic) (increasing energy by 2 levels)
+  • Transition Instruction: So as we wrap up this preview...
+  • IMPORTANT: Create a smooth bridge that naturally flows from "The Smart Money - Historical Patterns" to "The Wrap-up - Derby Expectations". 
+    Use connecting phrases, callbacks, or narrative threads to make the transition feel organic.
+    If tone is changing, gradually shift the energy level - don't make abrupt jumps.
+
+SEGMENT 8: Outro
+- Duration: 15 seconds (~37 words)
+- Tone Level: 3/5 (Conversational)
+- Key Data Points (ONLY use if present in JSON):
+  • Use relevant data from context
+- Transition from Previous Segment:
+  • Previous Topic: The Wrap-up - Derby Expectations
+  • Create a natural bridge from the previous segment to this one
+  • Maintain narrative flow and logical progression
+
+
+CRITICAL REQUIREMENTS - STRICT DATA GROUNDING:
+1. ONLY use facts present in the GameContext JSON below
+2. DO NOT invent, assume, or hallucinate any data points
+3. If a data point is referenced but not in JSON, skip it and use alternative available data
+4. For each fact you mention, verify it exists in the JSON first
+5. Follow the segment structure EXACTLY - each segment must match its allocated time
+6. Use the specified tone level for each segment (1=Cold/Analytical, 5=High Octane/Excited)
+7. TRANSITION REQUIREMENTS - CRITICAL:
+   - Read and follow the transition instructions for EACH segment carefully
+   - Create smooth bridges between segments using the provided transition cues
+   - If tone level is changing, gradually shift energy - don't make abrupt jumps
+   - Use connecting phrases, callbacks, or narrative threads to link segments naturally
+   - Example transition phrases: "Speaking of...", "But that's not all...", "Now let's shift focus to...", "Building on that..."
+8. Ensure the total script duration matches 5 minutes
+9. Make it FUN and ENJOYABLE - listeners should be engaged throughout
+10. Include [PAUSE:short/medium/long] markers for pacing, especially at segment transitions
+11. DO NOT use asterisks (*word*) for emphasis
+
+GAME CONTEXT (ONLY USE DATA FROM THIS JSON):
+{
+  "mode": "game_spotlight_pregame",
+  "games_count": 1,
+  "games": [
+    {
+      "game_id": 4643040,
+      "sport_type": 1,
+      "competition": "Israel, FA Cup - Round of 16",
+      "round": null,
+      "start_time": "14-01-2026 18:30",
+      "venue": null,
+      "home_team": {
+        "id": 567,
+        "name": "Hapoel Tel Aviv",
+        "short_name": ""
+      },
+      "away_team": {
+        "id": 566,
+        "name": "Maccabi Tel Aviv",
+        "short_name": ""
+      },
+      "lineups": {
+        "home": null,
+        "away": {
+          "formation": "4-2-3-1",
+          "players": [
+            {
+              "name": "",
+              "position": null,
+              "number": null,
+              "is_captain": false
+            },
+            {
+              "name": "",
+              "position": null,
+              "number": null,
+              "is_captain": false
+            },
+            {
+              "name": "",
+              "position": null,
+              "number": null,
+              "is_captain": false
+            },
+            {
+              "name": "",
+              "position": null,
+              "number": null,
+              "is_captain": false
+            },
+            {
+              "name": "",
+              "position": null,
+              "number": null,
+              "is_captain": false
+            },
+            {
+              "name": "",
+              "position": null,
+              "number": null,
+              "is_captain": false
+            },
+            {
+              "name": "",
+              "position": null,
+              "number": null,
+              "is_captain": false
+            },
+            {
+              "name": "",
+              "position": null,
+              "number": null,
+              "is_captain": false
+            },
+            {
+              "name": "",
+              "position": null,
+              "number": null,
+              "is_captain": false
+            },
+            {
+              "name": "",
+              "position": null,
+              "number": null,
+              "is_captain": false
+            },
+            {
+              "name": "",
+              "position": null,
+              "number": null,
+              "is_captain": false
+            },
+            {
+              "name": "",
+              "position": null,
+              "number": null,
+              "is_captain": false
+            },
+            {
+              "name": "",
+              "position": null,
+              "number": null,
+              "is_captain": false
+            },
+            {
+              "name": "",
+              "position": null,
+              "number": null,
+              "is_captain": false
+            },
+            {
+              "name": "",
+              "position": null,
+              "number": null,
+              "is_captain": false
+            },
+            {
+              "name": "",
+              "position": null,
+              "number": null,
+              "is_captain": false
+            },
+            {
+              "name": "",
+              "position": null,
+              "number": null,
+              "is_captain": false
+            },
+            {
+              "name": "",
+              "position": null,
+              "number": null,
+              "is_captain": false
+            },
+            {
+              "name": "",
+              "position": null,
+              "number": null,
+              "is_captain": false
+            },
+            {
+              "name": "",
+              "position": null,
+              "number": null,
+              "is_captain": false
+            }
+          ]
+        }
+      },
+      "pre_game_stats": [],
+      "betting": null,
+      "form": [
+        {
+          "MainOdds": {
+            "ID": 1698521170,
+            "EntID": 4643040,
+            "EntT": 3,
+            "Type": 1,
+            "BMID": 193,
+            "Link": "https://m.lvbetpartners.pl/Redirect.aspx?mid=65&sid=1344&cid=Screen-GameCenter_Placement-PrematchOdds__$GUID_device-$DeviceHashedId&pid=&affid=656804",
+            "IsConcluded": true,
+            "OutcomeOptionNum": 2,
+            "Options": [
+              {
+                "BMID": 193,
+                "Num": 1,
+                "Rate": 3.72,
+                "Fractional": "11/4",
+                "American": "+272",
+                "OriginalRate": 3.67
+              },
+              {
+                "BMID": 193,
+                "Num": 2,
+                "Rate": 3.57,
+                "Fractional": "13/5",
+                "American": "+257",
+                "OriginalRate": 3.47,
+                "Won": true
+              },
+              {
+                "BMID": 193,
+                "Num": 3,
+                "Rate": 1.78,
+                "Fractional": "7/9",
+                "American": "-128",
+                "OriginalRate": 1.78
+              }
+            ]
+          },
+          "SID": 1,
+          "ID": 4643040,
+          "Comp": 49,
+          "STime": "14-01-2026 18:30",
+          "Season": 80,
+          "Stage": 4,
+          "Comps": [
+            {
+              "ID": 567,
+              "Name": "Hapoel Tel Aviv",
+              "SymbolicName": "HTA",
+              "TitleName": "H. Tel Aviv",
+              "NameForURL": "hapoel-tel-aviv",
+              "CID": 6,
+              "SID": 1,
+              "Color": "#CC0000",
+              "Color2": "#FFFFFF",
+              "AwayColor": "#FFFFFF",
+              "AwayColor2": "#FF0000",
+              "ThirdColor": "#CC0000",
+              "TextColor": "#FFFFFF",
+              "MainComp": 42,
+              "CompetitionHasTexture": true,
+              "Outcome": 4,
+              "Founded": "Founded in 1923",
+              "HasSquad": true,
+              "Type": 1,
+              "PopularityRank": 769,
+              "ImgVer": 5
+            },
+            {
+              "ID": 566,
+              "Name": "Maccabi Tel Aviv",
+              "SymbolicName": "MTA",
+              "TitleName": "M. Tel Aviv",
+              "NameForURL": "maccabi-tel-aviv",
+              "CID": 6,
+              "SID": 1,
+              "Color": "#FFEE05",
+              "Color2": "#FFFFFF",
+              "AwayColor": "#1B2C60",
+              "ThirdColor": "#FFFFFF",
+              "TextColor": "#FFFFFF",
+              "MainComp": 42,
+              "CompetitionHasTexture": true,
+              "Outcome": 3,
+              "Founded": "Founded in 1906",
+              "HasSquad": true,
+              "Type": 1,
+              "PopularityRank": 2545,
+              "ImgVer": 11
+            }
+          ],
+          "STID": 155,
+          "Scrs": [
+            1.0,
+            1.0
+          ],
+          "Winner": 2,
+          "ToQualify": 2,
+          "HomeAwayTeamOrder": 1
+        },
+        {
+          "MainOdds": {
+            "ID": 1533074618,
+            "EntID": 4463514,
+            "EntT": 3,
+            "Type": 1,
+            "BMID": 193,
+            "Link": "https://m.lvbetpartners.pl/Redirect.aspx?mid=65&sid=1344&cid=Screen-GameCenter_Placement-PrematchOdds__$GUID_device-$DeviceHashedId&pid=&affid=656804",
+            "IsConcluded": true,
+            "OutcomeOptionNum": 3,
+            "Options": [
+              {
+                "BMID": 193,
+                "Num": 1,
+                "Rate": 3.99,
+                "Fractional": "3/1",
+                "American": "+299",
+                "OriginalRate": 4.74
+              },
+              {
+                "BMID": 193,
+                "Num": 2,
+                "Rate": 3.74,
+                "Fractional": "11/4",
+                "American": "+274",
+                "OriginalRate": 4.19
+              },
+              {
+                "BMID": 193,
+                "Num": 3,
+                "Rate": 1.8,
+                "Fractional": "4/5",
+                "American": "-125",
+                "OriginalRate": 1.6,
+                "Won": true
+              }
+            ]
+          },
+          "SID": 1,
+          "ID": 4463514,
+          "Comp": 42,
+          "STime": "19-10-2025 17:30",
+          "Season": 88,
+          "Stage": 1,
+          "Round": 7,
+          "Comps": [
+            {
+              "ID": 567,
+              "Name": "Hapoel Tel Aviv",
+              "SymbolicName": "HTA",
+              "TitleName": "H. Tel Aviv",
+              "NameForURL": "hapoel-tel-aviv",
+              "CID": 6,
+              "SID": 1,
+              "Color": "#CC0000",
+              "Color2": "#FFFFFF",
+              "AwayColor": "#FFFFFF",
+              "AwayColor2": "#FF0000",
+              "ThirdColor": "#CC0000",
+              "TextColor": "#FFFFFF",
+              "MainComp": 42,
+              "CompetitionHasTexture": true,
+              "Outcome": 0,
+              "Founded": "Founded in 1923",
+              "HasSquad": true,
+              "Type": 1,
+              "PopularityRank": 769,
+              "ImgVer": 5
+            },
+            {
+              "ID": 566,
+              "Name": "Maccabi Tel Aviv",
+              "SymbolicName": "MTA",
+              "TitleName": "M. Tel Aviv",
+              "NameForURL": "maccabi-tel-aviv",
+              "CID": 6,
+              "SID": 1,
+              "Color": "#FFEE05",
+              "Color2": "#FFFFFF",
+              "AwayColor": "#1B2C60",
+              "ThirdColor": "#FFFFFF",
+              "TextColor": "#FFFFFF",
+              "MainComp": 42,
+              "CompetitionHasTexture": true,
+              "Outcome": 6,
+              "Founded": "Founded in 1906",
+              "HasSquad": true,
+              "Type": 1,
+              "PopularityRank": 2545,
+              "ImgVer": 11
+            }
+          ],
+          "STID": 167,
+          "Scrs": [
+            0.0,
+            3.0
+          ],
+          "Winner": 2,
+          "HomeAwayTeamOrder": 1
+        },
+        {
+          "SID": 1,
+          "ID": 3828043,
+          "Comp": 42,
+          "STime": "17-01-2024 18:30",
+          "Season": 83,
+          "Stage": 1,
+          "Round": 17,
+          "Comps": [
+            {
+              "ID": 566,
+              "Name": "Maccabi Tel Aviv",
+              "SymbolicName": "MTA",
+              "TitleName": "M. Tel Aviv",
+              "NameForURL": "maccabi-tel-aviv",
+              "CID": 6,
+              "SID": 1,
+              "Color": "#FFEE05",
+              "Color2": "#FFFFFF",
+              "AwayColor": "#1B2C60",
+              "ThirdColor": "#FFFFFF",
+              "TextColor": "#FFFFFF",
+              "MainComp": 42,
+              "CompetitionHasTexture": true,
+              "Outcome": 1,
+              "Founded": "Founded in 1906",
+              "HasSquad": true,
+              "Type": 1,
+              "PopularityRank": 2545,
+              "ImgVer": 11
+            },
+            {
+              "ID": 567,
+              "Name": "Hapoel Tel Aviv",
+              "SymbolicName": "HTA",
+              "TitleName": "H. Tel Aviv",
+              "NameForURL": "hapoel-tel-aviv",
+              "CID": 6,
+              "SID": 1,
+              "Color": "#CC0000",
+              "Color2": "#FFFFFF",
+              "AwayColor": "#FFFFFF",
+              "AwayColor2": "#FF0000",
+              "ThirdColor": "#CC0000",
+              "TextColor": "#FFFFFF",
+              "MainComp": 42,
+              "CompetitionHasTexture": true,
+              "Outcome": 0,
+              "Founded": "Founded in 1923",
+              "HasSquad": true,
+              "Type": 1,
+              "PopularityRank": 769,
+              "ImgVer": 5
+            }
+          ],
+          "STID": 3,
+          "Scrs": [
+            4.0,
+            2.0
+          ],
+          "Winner": 1,
+          "HomeAwayTeamOrder": 1
+        },
+        {
+          "SID": 1,
+          "ID": 3827952,
+          "Comp": 42,
+          "STime": "26-09-2023 18:00",
+          "Season": 83,
+          "Stage": 1,
+          "Round": 4,
+          "Comps": [
+            {
+              "ID": 567,
+              "Name": "Hapoel Tel Aviv",
+              "SymbolicName": "HTA",
+              "TitleName": "H. Tel Aviv",
+              "NameForURL": "hapoel-tel-aviv",
+              "CID": 6,
+              "SID": 1,
+              "Color": "#CC0000",
+              "Color2": "#FFFFFF",
+              "AwayColor": "#FFFFFF",
+              "AwayColor2": "#FF0000",
+              "ThirdColor": "#CC0000",
+              "TextColor": "#FFFFFF",
+              "MainComp": 42,
+              "CompetitionHasTexture": true,
+              "Outcome": 0,
+              "Founded": "Founded in 1923",
+              "HasSquad": true,
+              "Type": 1,
+              "PopularityRank": 769,
+              "ImgVer": 5
+            },
+            {
+              "ID": 566,
+              "Name": "Maccabi Tel Aviv",
+              "SymbolicName": "MTA",
+              "TitleName": "M. Tel Aviv",
+              "NameForURL": "maccabi-tel-aviv",
+              "CID": 6,
+              "SID": 1,
+              "Color": "#FFEE05",
+              "Color2": "#FFFFFF",
+              "AwayColor": "#1B2C60",
+              "ThirdColor": "#FFFFFF",
+              "TextColor": "#FFFFFF",
+              "MainComp": 42,
+              "CompetitionHasTexture": true,
+              "Outcome": 1,
+              "Founded": "Founded in 1906",
+              "HasSquad": true,
+              "Type": 1,
+              "PopularityRank": 2545,
+              "ImgVer": 11
+            }
+          ],
+          "STID": 3,
+          "Scrs": [
+            0.0,
+            5.0
+          ],
+          "Winner": 2,
+          "HomeAwayTeamOrder": 1
+        },
+        {
+          "SID": 1,
+          "ID": 3563310,
+          "Comp": 42,
+          "STime": "28-01-2023 18:00",
+          "Season": 73,
+          "Stage": 1,
+          "Round": 20,
+          "Comps": [
+            {
+              "ID": 567,
+              "Name": "Hapoel Tel Aviv",
+              "SymbolicName": "HTA",
+              "TitleName": "H. Tel Aviv",
+              "NameForURL": "hapoel-tel-aviv",
+              "CID": 6,
+              "SID": 1,
+              "Color": "#CC0000",
+              "Color2": "#FFFFFF",
+              "AwayColor": "#FFFFFF",
+              "AwayColor2": "#FF0000",
+              "ThirdColor": "#CC0000",
+              "TextColor": "#FFFFFF",
+              "MainComp": 42,
+              "CompetitionHasTexture": true,
+              "Outcome": 2,
+              "Founded": "Founded in 1923",
+              "HasSquad": true,
+              "Type": 1,
+              "PopularityRank": 769,
+              "ImgVer": 5
+            },
+            {
+              "ID": 566,
+              "Name": "Maccabi Tel Aviv",
+              "SymbolicName": "MTA",
+              "TitleName": "M. Tel Aviv",
+              "NameForURL": "maccabi-tel-aviv",
+              "CID": 6,
+              "SID": 1,
+              "Color": "#FFEE05",
+              "Color2": "#FFFFFF",
+              "AwayColor": "#1B2C60",
+              "ThirdColor": "#FFFFFF",
+              "TextColor": "#FFFFFF",
+              "MainComp": 42,
+              "CompetitionHasTexture": true,
+              "Outcome": 2,
+              "Founded": "Founded in 1906",
+              "HasSquad": true,
+              "Type": 1,
+              "PopularityRank": 2545,
+              "ImgVer": 11
+            }
+          ],
+          "STID": 3,
+          "Scrs": [
+            0.0,
+            0.0
+          ],
+          "Winner": -1,
+          "HomeAwayTeamOrder": 1
+        },
+        {
+          "SID": 1,
+          "ID": 3563220,
+          "Comp": 42,
+          "STime": "10-10-2022 17:30",
+          "Season": 73,
+          "Stage": 1,
+          "Round": 7,
+          "Comps": [
+            {
+              "ID": 566,
+              "Name": "Maccabi Tel Aviv",
+              "SymbolicName": "MTA",
+              "TitleName": "M. Tel Aviv",
+              "NameForURL": "maccabi-tel-aviv",
+              "CID": 6,
+              "SID": 1,
+              "Color": "#FFEE05",
+              "Color2": "#FFFFFF",
+              "AwayColor": "#1B2C60",
+              "ThirdColor": "#FFFFFF",
+              "TextColor": "#FFFFFF",
+              "MainComp": 42,
+              "CompetitionHasTexture": true,
+              "Outcome": 1,
+              "Founded": "Founded in 1906",
+              "HasSquad": true,
+              "Type": 1,
+              "PopularityRank": 2545,
+              "ImgVer": 11
+            },
+            {
+              "ID": 567,
+              "Name": "Hapoel Tel Aviv",
+              "SymbolicName": "HTA",
+              "TitleName": "H. Tel Aviv",
+              "NameForURL": "hapoel-tel-aviv",
+              "CID": 6,
+              "SID": 1,
+              "Color": "#CC0000",
+              "Color2": "#FFFFFF",
+              "AwayColor": "#FFFFFF",
+              "AwayColor2": "#FF0000",
+              "ThirdColor": "#CC0000",
+              "TextColor": "#FFFFFF",
+              "MainComp": 42,
+              "CompetitionHasTexture": true,
+              "Outcome": 0,
+              "Founded": "Founded in 1923",
+              "HasSquad": true,
+              "Type": 1,
+              "PopularityRank": 769,
+              "ImgVer": 5
+            }
+          ],
+          "STID": 3,
+          "Scrs": [
+            3.0,
+            0.0
+          ],
+          "Winner": 1,
+          "HomeAwayTeamOrder": 1
+        },
+        {
+          "SID": 1,
+          "ID": 3533503,
+          "Comp": 42,
+          "STime": "21-05-2022 17:30",
+          "Season": 22,
+          "Stage": 2,
+          "Group": 1,
+          "Round": 10,
+          "Comps": [
+            {
+              "ID": 567,
+              "Name": "Hapoel Tel Aviv",
+              "SymbolicName": "HTA",
+              "TitleName": "H. Tel Aviv",
+              "NameForURL": "hapoel-tel-aviv",
+              "CID": 6,
+              "SID": 1,
+              "Color": "#CC0000",
+              "Color2": "#FFFFFF",
+              "AwayColor": "#FFFFFF",
+              "AwayColor2": "#FF0000",
+              "ThirdColor": "#CC0000",
+              "TextColor": "#FFFFFF",
+              "MainComp": 42,
+              "CompetitionHasTexture": true,
+              "Outcome": 0,
+              "Founded": "Founded in 1923",
+              "HasSquad": true,
+              "Type": 1,
+              "PopularityRank": 769,
+              "ImgVer": 5
+            },
+            {
+              "ID": 566,
+              "Name": "Maccabi Tel Aviv",
+              "SymbolicName": "MTA",
+              "TitleName": "M. Tel Aviv",
+              "NameForURL": "maccabi-tel-aviv",
+              "CID": 6,
+              "SID": 1,
+              "Color": "#FFEE05",
+              "Color2": "#FFFFFF",
+              "AwayColor": "#1B2C60",
+              "ThirdColor": "#FFFFFF",
+              "TextColor": "#FFFFFF",
+              "MainComp": 42,
+              "CompetitionHasTexture": true,
+              "Outcome": 1,
+              "Founded": "Founded in 1906",
+              "HasSquad": true,
+              "Type": 1,
+              "PopularityRank": 2545,
+              "ImgVer": 11
+            }
+          ],
+          "STID": 3,
+          "Scrs": [
+            0.0,
+            2.0
+          ],
+          "Winner": 2,
+          "HomeAwayTeamOrder": 1
+        },
+        {
+          "SID": 1,
+          "ID": 3533488,
+          "Comp": 42,
+          "STime": "25-04-2022 17:30",
+          "Season": 22,
+          "Stage": 2,
+          "Group": 1,
+          "Round": 5,
+          "Comps": [
+            {
+              "ID": 566,
+              "Name": "Maccabi Tel Aviv",
+              "SymbolicName": "MTA",
+              "TitleName": "M. Tel Aviv",
+              "NameForURL": "maccabi-tel-aviv",
+              "CID": 6,
+              "SID": 1,
+              "Color": "#FFEE05",
+              "Color2": "#FFFFFF",
+              "AwayColor": "#1B2C60",
+              "ThirdColor": "#FFFFFF",
+              "TextColor": "#FFFFFF",
+              "MainComp": 42,
+              "CompetitionHasTexture": true,
+              "Outcome": 1,
+              "Founded": "Founded in 1906",
+              "HasSquad": true,
+              "Type": 1,
+              "PopularityRank": 2545,
+              "ImgVer": 11
+            },
+            {
+              "ID": 567,
+              "Name": "Hapoel Tel Aviv",
+              "SymbolicName": "HTA",
+              "TitleName": "H. Tel Aviv",
+              "NameForURL": "hapoel-tel-aviv",
+              "CID": 6,
+              "SID": 1,
+              "Color": "#CC0000",
+              "Color2": "#FFFFFF",
+              "AwayColor": "#FFFFFF",
+              "AwayColor2": "#FF0000",
+              "ThirdColor": "#CC0000",
+              "TextColor": "#FFFFFF",
+              "MainComp": 42,
+              "CompetitionHasTexture": true,
+              "Outcome": 0,
+              "Founded": "Founded in 1923",
+              "HasSquad": true,
+              "Type": 1,
+              "PopularityRank": 769,
+              "ImgVer": 5
+            }
+          ],
+          "STID": 3,
+          "Scrs": [
+            5.0,
+            0.0
+          ],
+          "Winner": 1,
+          "HomeAwayTeamOrder": 1
+        },
+        {
+          "SID": 1,
+          "ID": 3047160,
+          "Comp": 42,
+          "STime": "12-02-2022 18:00",
+          "Season": 22,
+          "Stage": 1,
+          "Round": 22,
+          "Comps": [
+            {
+              "ID": 567,
+              "Name": "Hapoel Tel Aviv",
+              "SymbolicName": "HTA",
+              "TitleName": "H. Tel Aviv",
+              "NameForURL": "hapoel-tel-aviv",
+              "CID": 6,
+              "SID": 1,
+              "Color": "#CC0000",
+              "Color2": "#FFFFFF",
+              "AwayColor": "#FFFFFF",
+              "AwayColor2": "#FF0000",
+              "ThirdColor": "#CC0000",
+              "TextColor": "#FFFFFF",
+              "MainComp": 42,
+              "CompetitionHasTexture": true,
+              "Outcome": 0,
+              "Founded": "Founded in 1923",
+              "HasSquad": true,
+              "Type": 1,
+              "PopularityRank": 769,
+              "ImgVer": 5
+            },
+            {
+              "ID": 566,
+              "Name": "Maccabi Tel Aviv",
+              "SymbolicName": "MTA",
+              "TitleName": "M. Tel Aviv",
+              "NameForURL": "maccabi-tel-aviv",
+              "CID": 6,
+              "SID": 1,
+              "Color": "#FFEE05",
+              "Color2": "#FFFFFF",
+              "AwayColor": "#1B2C60",
+              "ThirdColor": "#FFFFFF",
+              "TextColor": "#FFFFFF",
+              "MainComp": 42,
+              "CompetitionHasTexture": true,
+              "Outcome": 1,
+              "Founded": "Founded in 1906",
+              "HasSquad": true,
+              "Type": 1,
+              "PopularityRank": 2545,
+              "ImgVer": 11
+            }
+          ],
+          "STID": 3,
+          "Scrs": [
+            2.0,
+            3.0
+          ],
+          "Winner": 2,
+          "HomeAwayTeamOrder": 1
+        },
+        {
+          "SID": 1,
+          "ID": 3047071,
+          "Comp": 42,
+          "STime": "07-11-2021 18:45",
+          "Season": 22,
+          "Stage": 1,
+          "Round": 9,
+          "Comps": [
+            {
+              "ID": 566,
+              "Name": "Maccabi Tel Aviv",
+              "SymbolicName": "MTA",
+              "TitleName": "M. Tel Aviv",
+              "NameForURL": "maccabi-tel-aviv",
+              "CID": 6,
+              "SID": 1,
+              "Color": "#FFEE05",
+              "Color2": "#FFFFFF",
+              "AwayColor": "#1B2C60",
+              "ThirdColor": "#FFFFFF",
+              "TextColor": "#FFFFFF",
+              "MainComp": 42,
+              "CompetitionHasTexture": true,
+              "Outcome": 2,
+              "Founded": "Founded in 1906",
+              "HasSquad": true,
+              "Type": 1,
+              "PopularityRank": 2545,
+              "ImgVer": 11
+            },
+            {
+              "ID": 567,
+              "Name": "Hapoel Tel Aviv",
+              "SymbolicName": "HTA",
+              "TitleName": "H. Tel Aviv",
+              "NameForURL": "hapoel-tel-aviv",
+              "CID": 6,
+              "SID": 1,
+              "Color": "#CC0000",
+              "Color2": "#FFFFFF",
+              "AwayColor": "#FFFFFF",
+              "AwayColor2": "#FF0000",
+              "ThirdColor": "#CC0000",
+              "TextColor": "#FFFFFF",
+              "MainComp": 42,
+              "CompetitionHasTexture": true,
+              "Outcome": 2,
+              "Founded": "Founded in 1923",
+              "HasSquad": true,
+              "Type": 1,
+              "PopularityRank": 769,
+              "ImgVer": 5
+            }
+          ],
+          "STID": 3,
+          "Scrs": [
+            1.0,
+            1.0
+          ],
+          "Winner": -1,
+          "HomeAwayTeamOrder": 1
+        },
+        {
+          "SID": 1,
+          "ID": 3026169,
+          "Comp": 49,
+          "STime": "02-06-2021 17:30",
+          "Season": 19,
+          "Stage": 7,
+          "Comps": [
+            {
+              "ID": 566,
+              "Name": "Maccabi Tel Aviv",
+              "SymbolicName": "MTA",
+              "TitleName": "M. Tel Aviv",
+              "NameForURL": "maccabi-tel-aviv",
+              "CID": 6,
+              "SID": 1,
+              "Color": "#FFEE05",
+              "Color2": "#FFFFFF",
+              "AwayColor": "#1B2C60",
+              "ThirdColor": "#FFFFFF",
+              "TextColor": "#FFFFFF",
+              "MainComp": 42,
+              "CompetitionHasTexture": true,
+              "Outcome": 3,
+              "Founded": "Founded in 1906",
+              "HasSquad": true,
+              "Type": 1,
+              "PopularityRank": 2545,
+              "ImgVer": 11
+            },
+            {
+              "ID": 567,
+              "Name": "Hapoel Tel Aviv",
+              "SymbolicName": "HTA",
+              "TitleName": "H. Tel Aviv",
+              "NameForURL": "hapoel-tel-aviv",
+              "CID": 6,
+              "SID": 1,
+              "Color": "#CC0000",
+              "Color2": "#FFFFFF",
+              "AwayColor": "#FFFFFF",
+              "AwayColor2": "#FF0000",
+              "ThirdColor": "#CC0000",
+              "TextColor": "#FFFFFF",
+              "MainComp": 42,
+              "CompetitionHasTexture": true,
+              "Outcome": 4,
+              "Founded": "Founded in 1923",
+              "HasSquad": true,
+              "Type": 1,
+              "PopularityRank": 769,
+              "ImgVer": 5
+            }
+          ],
+          "STID": 154,
+          "Scrs": [
+            2.0,
+            1.0
+          ],
+          "Winner": 1,
+          "ToQualify": 1,
+          "HomeAwayTeamOrder": 1
+        },
+        {
+          "SID": 1,
+          "ID": 2368329,
+          "Comp": 42,
+          "STime": "20-03-2021 19:00",
+          "Season": 21,
+          "Stage": 1,
+          "Round": 26,
+          "Comps": [
+            {
+              "ID": 566,
+              "Name": "Maccabi Tel Aviv",
+              "SymbolicName": "MTA",
+              "TitleName": "M. Tel Aviv",
+              "NameForURL": "maccabi-tel-aviv",
+              "CID": 6,
+              "SID": 1,
+              "Color": "#FFEE05",
+              "Color2": "#FFFFFF",
+              "AwayColor": "#1B2C60",
+              "ThirdColor": "#FFFFFF",
+              "TextColor": "#FFFFFF",
+              "MainComp": 42,
+              "CompetitionHasTexture": true,
+              "Outcome": 2,
+              "Founded": "Founded in 1906",
+              "HasSquad": true,
+              "Type": 1,
+              "PopularityRank": 2545,
+              "ImgVer": 11
+            },
+            {
+              "ID": 567,
+              "Name": "Hapoel Tel Aviv",
+              "SymbolicName": "HTA",
+              "TitleName": "H. Tel Aviv",
+              "NameForURL": "hapoel-tel-aviv",
+              "CID": 6,
+              "SID": 1,
+              "Color": "#CC0000",
+              "Color2": "#FFFFFF",
+              "AwayColor": "#FFFFFF",
+              "AwayColor2": "#FF0000",
+              "ThirdColor": "#CC0000",
+              "TextColor": "#FFFFFF",
+              "MainComp": 42,
+              "CompetitionHasTexture": true,
+              "Outcome": 2,
+              "Founded": "Founded in 1923",
+              "HasSquad": true,
+              "Type": 1,
+              "PopularityRank": 769,
+              "ImgVer": 5
+            }
+          ],
+          "STID": 3,
+          "Scrs": [
+            1.0,
+            1.0
+          ],
+          "Winner": -1,
+          "HomeAwayTeamOrder": 1
+        },
+        {
+          "SID": 1,
+          "ID": 2368236,
+          "Comp": 42,
+          "STime": "28-12-2020 18:45",
+          "Season": 21,
+          "Stage": 1,
+          "Round": 13,
+          "Comps": [
+            {
+              "ID": 567,
+              "Name": "Hapoel Tel Aviv",
+              "SymbolicName": "HTA",
+              "TitleName": "H. Tel Aviv",
+              "NameForURL": "hapoel-tel-aviv",
+              "CID": 6,
+              "SID": 1,
+              "Color": "#CC0000",
+              "Color2": "#FFFFFF",
+              "AwayColor": "#FFFFFF",
+              "AwayColor2": "#FF0000",
+              "ThirdColor": "#CC0000",
+              "TextColor": "#FFFFFF",
+              "MainComp": 42,
+              "CompetitionHasTexture": true,
+              "Outcome": 0,
+              "Founded": "Founded in 1923",
+              "HasSquad": true,
+              "Type": 1,
+              "PopularityRank": 769,
+              "ImgVer": 5
+            },
+            {
+              "ID": 566,
+              "Name": "Maccabi Tel Aviv",
+              "SymbolicName": "MTA",
+              "TitleName": "M. Tel Aviv",
+              "NameForURL": "maccabi-tel-aviv",
+              "CID": 6,
+              "SID": 1,
+              "Color": "#FFEE05",
+              "Color2": "#FFFFFF",
+              "AwayColor": "#1B2C60",
+              "ThirdColor": "#FFFFFF",
+              "TextColor": "#FFFFFF",
+              "MainComp": 42,
+              "CompetitionHasTexture": true,
+              "Outcome": 1,
+              "Founded": "Founded in 1906",
+              "HasSquad": true,
+              "Type": 1,
+              "PopularityRank": 2545,
+              "ImgVer": 11
+            }
+          ],
+          "STID": 3,
+          "Scrs": [
+            0.0,
+            4.0
+          ],
+          "Winner": 2,
+          "HomeAwayTeamOrder": 1
+        },
+        {
+          "SID": 1,
+          "ID": 2194232,
+          "Comp": 42,
+          "STime": "27-06-2020 18:00",
+          "Season": 11,
+          "Stage": 2,
+          "Group": 1,
+          "Round": 36,
+          "Comps": [
+            {
+              "ID": 566,
+              "Name": "Maccabi Tel Aviv",
+              "SymbolicName": "MTA",
+              "TitleName": "M. Tel Aviv",
+              "NameForURL": "maccabi-tel-aviv",
+              "CID": 6,
+              "SID": 1,
+              "Color": "#FFEE05",
+              "Color2": "#FFFFFF",
+              "AwayColor": "#1B2C60",
+              "ThirdColor": "#FFFFFF",
+              "TextColor": "#FFFFFF",
+              "MainComp": 42,
+              "CompetitionHasTexture": true,
+              "Outcome": 1,
+              "Founded": "Founded in 1906",
+              "HasSquad": true,
+              "Type": 1,
+              "PopularityRank": 2545,
+              "ImgVer": 11
+            },
+            {
+              "ID": 567,
+              "Name": "Hapoel Tel Aviv",
+              "SymbolicName": "HTA",
+              "TitleName": "H. Tel Aviv",
+              "NameForURL": "hapoel-tel-aviv",
+              "CID": 6,
+              "SID": 1,
+              "Color": "#CC0000",
+              "Color2": "#FFFFFF",
+              "AwayColor": "#FFFFFF",
+              "AwayColor2": "#FF0000",
+              "ThirdColor": "#CC0000",
+              "TextColor": "#FFFFFF",
+              "MainComp": 42,
+              "CompetitionHasTexture": true,
+              "Outcome": 0,
+              "Founded": "Founded in 1923",
+              "HasSquad": true,
+              "Type": 1,
+              "PopularityRank": 769,
+              "ImgVer": 5
+            }
+          ],
+          "STID": 3,
+          "Scrs": [
+            3.0,
+            0.0
+          ],
+          "Winner": 1,
+          "HomeAwayTeamOrder": 1
+        },
+        {
+          "SID": 1,
+          "ID": 2194215,
+          "Comp": 42,
+          "STime": "20-06-2020 18:00",
+          "Season": 11,
+          "Stage": 2,
+          "Group": 1,
+          "Round": 31,
+          "Comps": [
+            {
+              "ID": 567,
+              "Name": "Hapoel Tel Aviv",
+              "SymbolicName": "HTA",
+              "TitleName": "H. Tel Aviv",
+              "NameForURL": "hapoel-tel-aviv",
+              "CID": 6,
+              "SID": 1,
+              "Color": "#CC0000",
+              "Color2": "#FFFFFF",
+              "AwayColor": "#FFFFFF",
+              "AwayColor2": "#FF0000",
+              "ThirdColor": "#CC0000",
+              "TextColor": "#FFFFFF",
+              "MainComp": 42,
+              "CompetitionHasTexture": true,
+              "Outcome": 0,
+              "Founded": "Founded in 1923",
+              "HasSquad": true,
+              "Type": 1,
+              "PopularityRank": 769,
+              "ImgVer": 5
+            },
+            {
+              "ID": 566,
+              "Name": "Maccabi Tel Aviv",
+              "SymbolicName": "MTA",
+              "TitleName": "M. Tel Aviv",
+              "NameForURL": "maccabi-tel-aviv",
+              "CID": 6,
+              "SID": 1,
+              "Color": "#FFEE05",
+              "Color2": "#FFFFFF",
+              "AwayColor": "#1B2C60",
+              "ThirdColor": "#FFFFFF",
+              "TextColor": "#FFFFFF",
+              "MainComp": 42,
+              "CompetitionHasTexture": true,
+              "Outcome": 1,
+              "Founded": "Founded in 1906",
+              "HasSquad": true,
+              "Type": 1,
+              "PopularityRank": 2545,
+              "ImgVer": 11
+            }
+          ],
+          "STID": 3,
+          "Scrs": [
+            0.0,
+            2.0
+          ],
+          "Winner": 2,
+          "HomeAwayTeamOrder": 1
+        }
+      ],
+      "trends": null,
+      "lineups_status": "Lineups",
+      "standings": null,
+      "news": [],
+      "news_count": 0
+    }
+  ],
+  "game": {
+    "game_id": 4643040,
+    "sport_type": 1,
+    "competition": "Israel, FA Cup - Round of 16",
+    "round": null,
+    "start_time": "14-01-2026 18:30",
+    "venue": null,
+    "home_team": {
+      "id": 567,
+      "name": "Hapoel Tel Aviv",
+      "short_name": ""
+    },
+    "away_team": {
+      "id": 566,
+      "name": "Maccabi Tel Aviv",
+      "short_name": ""
+    },
+    "lineups": {
+      "home": null,
+      "away": {
+        "formation": "4-2-3-1",
+        "players": [
+          {
+            "name": "",
+            "position": null,
+            "number": null,
+            "is_captain": false
+          },
+          {
+            "name": "",
+            "position": null,
+            "number": null,
+            "is_captain": false
+          },
+          {
+            "name": "",
+            "position": null,
+            "number": null,
+            "is_captain": false
+          },
+          {
+            "name": "",
+            "position": null,
+            "number": null,
+            "is_captain": false
+          },
+          {
+            "name": "",
+            "position": null,
+            "number": null,
+            "is_captain": false
+          },
+          {
+            "name": "",
+            "position": null,
+            "number": null,
+            "is_captain": false
+          },
+          {
+            "name": "",
+            "position": null,
+            "number": null,
+            "is_captain": false
+          },
+          {
+            "name": "",
+            "position": null,
+            "number": null,
+            "is_captain": false
+          },
+          {
+            "name": "",
+            "position": null,
+            "number": null,
+            "is_captain": false
+          },
+          {
+            "name": "",
+            "position": null,
+            "number": null,
+            "is_captain": false
+          },
+          {
+            "name": "",
+            "position": null,
+            "number": null,
+            "is_captain": false
+          },
+          {
+            "name": "",
+            "position": null,
+            "number": null,
+            "is_captain": false
+          },
+          {
+            "name": "",
+            "position": null,
+            "number": null,
+            "is_captain": false
+          },
+          {
+            "name": "",
+            "position": null,
+            "number": null,
+            "is_captain": false
+          },
+          {
+            "name": "",
+            "position": null,
+            "number": null,
+            "is_captain": false
+          },
+          {
+            "name": "",
+            "position": null,
+            "number": null,
+            "is_captain": false
+          },
+          {
+            "name": "",
+            "position": null,
+            "number": null,
+            "is_captain": false
+          },
+          {
+            "name": "",
+            "position": null,
+            "number": null,
+            "is_captain": false
+          },
+          {
+            "name": "",
+            "position": null,
+            "number": null,
+            "is_captain": false
+          },
+          {
+            "name": "",
+            "position": null,
+            "number": null,
+            "is_captain": false
+          }
+        ]
+      }
+    },
+    "pre_game_stats": [],
+    "betting": null,
+    "form": [
+      {
+        "MainOdds": {
+          "ID": 1698521170,
+          "EntID": 4643040,
+          "EntT": 3,
+          "Type": 1,
+          "BMID": 193,
+          "Link": "https://m.lvbetpartners.pl/Redirect.aspx?mid=65&sid=1344&cid=Screen-GameCenter_Placement-PrematchOdds__$GUID_device-$DeviceHashedId&pid=&affid=656804",
+          "IsConcluded": true,
+          "OutcomeOptionNum": 2,
+          "Options": [
+            {
+              "BMID": 193,
+              "Num": 1,
+              "Rate": 3.72,
+              "Fractional": "11/4",
+              "American": "+272",
+              "OriginalRate": 3.67
+            },
+            {
+              "BMID": 193,
+              "Num": 2,
+              "Rate": 3.57,
+              "Fractional": "13/5",
+              "American": "+257",
+              "OriginalRate": 3.47,
+              "Won": true
+            },
+            {
+              "BMID": 193,
+              "Num": 3,
+              "Rate": 1.78,
+              "Fractional": "7/9",
+              "American": "-128",
+              "OriginalRate": 1.78
+            }
+          ]
+        },
+        "SID": 1,
+        "ID": 4643040,
+        "Comp": 49,
+        "STime": "14-01-2026 18:30",
+        "Season": 80,
+        "Stage": 4,
+        "Comps": [
+          {
+            "ID": 567,
+            "Name": "Hapoel Tel Aviv",
+            "SymbolicName": "HTA",
+            "TitleName": "H. Tel Aviv",
+            "NameForURL": "hapoel-tel-aviv",
+            "CID": 6,
+            "SID": 1,
+            "Color": "#CC0000",
+            "Color2": "#FFFFFF",
+            "AwayColor": "#FFFFFF",
+            "AwayColor2": "#FF0000",
+            "ThirdColor": "#CC0000",
+            "TextColor": "#FFFFFF",
+            "MainComp": 42,
+            "CompetitionHasTexture": true,
+            "Outcome": 4,
+            "Founded": "Founded in 1923",
+            "HasSquad": true,
+            "Type": 1,
+            "PopularityRank": 769,
+            "ImgVer": 5
+          },
+          {
+            "ID": 566,
+            "Name": "Maccabi Tel Aviv",
+            "SymbolicName": "MTA",
+            "TitleName": "M. Tel Aviv",
+            "NameForURL": "maccabi-tel-aviv",
+            "CID": 6,
+            "SID": 1,
+            "Color": "#FFEE05",
+            "Color2": "#FFFFFF",
+            "AwayColor": "#1B2C60",
+            "ThirdColor": "#FFFFFF",
+            "TextColor": "#FFFFFF",
+            "MainComp": 42,
+            "CompetitionHasTexture": true,
+            "Outcome": 3,
+            "Founded": "Founded in 1906",
+            "HasSquad": true,
+            "Type": 1,
+            "PopularityRank": 2545,
+            "ImgVer": 11
+          }
+        ],
+        "STID": 155,
+        "Scrs": [
+          1.0,
+          1.0
+        ],
+        "Winner": 2,
+        "ToQualify": 2,
+        "HomeAwayTeamOrder": 1
+      },
+      {
+        "MainOdds": {
+          "ID": 1533074618,
+          "EntID": 4463514,
+          "EntT": 3,
+          "Type": 1,
+          "BMID": 193,
+          "Link": "https://m.lvbetpartners.pl/Redirect.aspx?mid=65&sid=1344&cid=Screen-GameCenter_Placement-PrematchOdds__$GUID_device-$DeviceHashedId&pid=&affid=656804",
+          "IsConcluded": true,
+          "OutcomeOptionNum": 3,
+          "Options": [
+            {
+              "BMID": 193,
+              "Num": 1,
+              "Rate": 3.99,
+              "Fractional": "3/1",
+              "American": "+299",
+              "OriginalRate": 4.74
+            },
+            {
+              "BMID": 193,
+              "Num": 2,
+              "Rate": 3.74,
+              "Fractional": "11/4",
+              "American": "+274",
+              "OriginalRate": 4.19
+            },
+            {
+              "BMID": 193,
+              "Num": 3,
+              "Rate": 1.8,
+              "Fractional": "4/5",
+              "American": "-125",
+              "OriginalRate": 1.6,
+              "Won": true
+            }
+          ]
+        },
+        "SID": 1,
+        "ID": 4463514,
+        "Comp": 42,
+        "STime": "19-10-2025 17:30",
+        "Season": 88,
+        "Stage": 1,
+        "Round": 7,
+        "Comps": [
+          {
+            "ID": 567,
+            "Name": "Hapoel Tel Aviv",
+            "SymbolicName": "HTA",
+            "TitleName": "H. Tel Aviv",
+            "NameForURL": "hapoel-tel-aviv",
+            "CID": 6,
+            "SID": 1,
+            "Color": "#CC0000",
+            "Color2": "#FFFFFF",
+            "AwayColor": "#FFFFFF",
+            "AwayColor2": "#FF0000",
+            "ThirdColor": "#CC0000",
+            "TextColor": "#FFFFFF",
+            "MainComp": 42,
+            "CompetitionHasTexture": true,
+            "Outcome": 0,
+            "Founded": "Founded in 1923",
+            "HasSquad": true,
+            "Type": 1,
+            "PopularityRank": 769,
+            "ImgVer": 5
+          },
+          {
+            "ID": 566,
+            "Name": "Maccabi Tel Aviv",
+            "SymbolicName": "MTA",
+            "TitleName": "M. Tel Aviv",
+            "NameForURL": "maccabi-tel-aviv",
+            "CID": 6,
+            "SID": 1,
+            "Color": "#FFEE05",
+            "Color2": "#FFFFFF",
+            "AwayColor": "#1B2C60",
+            "ThirdColor": "#FFFFFF",
+            "TextColor": "#FFFFFF",
+            "MainComp": 42,
+            "CompetitionHasTexture": true,
+            "Outcome": 6,
+            "Founded": "Founded in 1906",
+            "HasSquad": true,
+            "Type": 1,
+            "PopularityRank": 2545,
+            "ImgVer": 11
+          }
+        ],
+        "STID": 167,
+        "Scrs": [
+          0.0,
+          3.0
+        ],
+        "Winner": 2,
+        "HomeAwayTeamOrder": 1
+      },
+      {
+        "SID": 1,
+        "ID": 3828043,
+        "Comp": 42,
+        "STime": "17-01-2024 18:30",
+        "Season": 83,
+        "Stage": 1,
+        "Round": 17,
+        "Comps": [
+          {
+            "ID": 566,
+            "Name": "Maccabi Tel Aviv",
+            "SymbolicName": "MTA",
+            "TitleName": "M. Tel Aviv",
+            "NameForURL": "maccabi-tel-aviv",
+            "CID": 6,
+            "SID": 1,
+            "Color": "#FFEE05",
+            "Color2": "#FFFFFF",
+            "AwayColor": "#1B2C60",
+            "ThirdColor": "#FFFFFF",
+            "TextColor": "#FFFFFF",
+            "MainComp": 42,
+            "CompetitionHasTexture": true,
+            "Outcome": 1,
+            "Founded": "Founded in 1906",
+            "HasSquad": true,
+            "Type": 1,
+            "PopularityRank": 2545,
+            "ImgVer": 11
+          },
+          {
+            "ID": 567,
+            "Name": "Hapoel Tel Aviv",
+            "SymbolicName": "HTA",
+            "TitleName": "H. Tel Aviv",
+            "NameForURL": "hapoel-tel-aviv",
+            "CID": 6,
+            "SID": 1,
+            "Color": "#CC0000",
+            "Color2": "#FFFFFF",
+            "AwayColor": "#FFFFFF",
+            "AwayColor2": "#FF0000",
+            "ThirdColor": "#CC0000",
+            "TextColor": "#FFFFFF",
+            "MainComp": 42,
+            "CompetitionHasTexture": true,
+            "Outcome": 0,
+            "Founded": "Founded in 1923",
+            "HasSquad": true,
+            "Type": 1,
+            "PopularityRank": 769,
+            "ImgVer": 5
+          }
+        ],
+        "STID": 3,
+        "Scrs": [
+          4.0,
+          2.0
+        ],
+        "Winner": 1,
+        "HomeAwayTeamOrder": 1
+      },
+      {
+        "SID": 1,
+        "ID": 3827952,
+        "Comp": 42,
+        "STime": "26-09-2023 18:00",
+        "Season": 83,
+        "Stage": 1,
+        "Round": 4,
+        "Comps": [
+          {
+            "ID": 567,
+            "Name": "Hapoel Tel Aviv",
+            "SymbolicName": "HTA",
+            "TitleName": "H. Tel Aviv",
+            "NameForURL": "hapoel-tel-aviv",
+            "CID": 6,
+            "SID": 1,
+            "Color": "#CC0000",
+            "Color2": "#FFFFFF",
+            "AwayColor": "#FFFFFF",
+            "AwayColor2": "#FF0000",
+            "ThirdColor": "#CC0000",
+            "TextColor": "#FFFFFF",
+            "MainComp": 42,
+            "CompetitionHasTexture": true,
+            "Outcome": 0,
+            "Founded": "Founded in 1923",
+            "HasSquad": true,
+            "Type": 1,
+            "PopularityRank": 769,
+            "ImgVer": 5
+          },
+          {
+            "ID": 566,
+            "Name": "Maccabi Tel Aviv",
+            "SymbolicName": "MTA",
+            "TitleName": "M. Tel Aviv",
+            "NameForURL": "maccabi-tel-aviv",
+            "CID": 6,
+            "SID": 1,
+            "Color": "#FFEE05",
+            "Color2": "#FFFFFF",
+            "AwayColor": "#1B2C60",
+            "ThirdColor": "#FFFFFF",
+            "TextColor": "#FFFFFF",
+            "MainComp": 42,
+            "CompetitionHasTexture": true,
+            "Outcome": 1,
+            "Founded": "Founded in 1906",
+            "HasSquad": true,
+            "Type": 1,
+            "PopularityRank": 2545,
+            "ImgVer": 11
+          }
+        ],
+        "STID": 3,
+        "Scrs": [
+          0.0,
+          5.0
+        ],
+        "Winner": 2,
+        "HomeAwayTeamOrder": 1
+      },
+      {
+        "SID": 1,
+        "ID": 3563310,
+        "Comp": 42,
+        "STime": "28-01-2023 18:00",
+        "Season": 73,
+        "Stage": 1,
+        "Round": 20,
+        "Comps": [
+          {
+            "ID": 567,
+            "Name": "Hapoel Tel Aviv",
+            "SymbolicName": "HTA",
+            "TitleName": "H. Tel Aviv",
+            "NameForURL": "hapoel-tel-aviv",
+            "CID": 6,
+            "SID": 1,
+            "Color": "#CC0000",
+            "Color2": "#FFFFFF",
+            "AwayColor": "#FFFFFF",
+            "AwayColor2": "#FF0000",
+            "ThirdColor": "#CC0000",
+            "TextColor": "#FFFFFF",
+            "MainComp": 42,
+            "CompetitionHasTexture": true,
+            "Outcome": 2,
+            "Founded": "Founded in 1923",
+            "HasSquad": true,
+            "Type": 1,
+            "PopularityRank": 769,
+            "ImgVer": 5
+          },
+          {
+            "ID": 566,
+            "Name": "Maccabi Tel Aviv",
+            "SymbolicName": "MTA",
+            "TitleName": "M. Tel Aviv",
+            "NameForURL": "maccabi-tel-aviv",
+            "CID": 6,
+            "SID": 1,
+            "Color": "#FFEE05",
+            "Color2": "#FFFFFF",
+            "AwayColor": "#1B2C60",
+            "ThirdColor": "#FFFFFF",
+            "TextColor": "#FFFFFF",
+            "MainComp": 42,
+            "CompetitionHasTexture": true,
+            "Outcome": 2,
+            "Founded": "Founded in 1906",
+            "HasSquad": true,
+            "Type": 1,
+            "PopularityRank": 2545,
+            "ImgVer": 11
+          }
+        ],
+        "STID": 3,
+        "Scrs": [
+          0.0,
+          0.0
+        ],
+        "Winner": -1,
+        "HomeAwayTeamOrder": 1
+      },
+      {
+        "SID": 1,
+        "ID": 3563220,
+        "Comp": 42,
+        "STime": "10-10-2022 17:30",
+        "Season": 73,
+        "Stage": 1,
+        "Round": 7,
+        "Comps": [
+          {
+            "ID": 566,
+            "Name": "Maccabi Tel Aviv",
+            "SymbolicName": "MTA",
+            "TitleName": "M. Tel Aviv",
+            "NameForURL": "maccabi-tel-aviv",
+            "CID": 6,
+            "SID": 1,
+            "Color": "#FFEE05",
+            "Color2": "#FFFFFF",
+            "AwayColor": "#1B2C60",
+            "ThirdColor": "#FFFFFF",
+            "TextColor": "#FFFFFF",
+            "MainComp": 42,
+            "CompetitionHasTexture": true,
+            "Outcome": 1,
+            "Founded": "Founded in 1906",
+            "HasSquad": true,
+            "Type": 1,
+            "PopularityRank": 2545,
+            "ImgVer": 11
+          },
+          {
+            "ID": 567,
+            "Name": "Hapoel Tel Aviv",
+            "SymbolicName": "HTA",
+            "TitleName": "H. Tel Aviv",
+            "NameForURL": "hapoel-tel-aviv",
+            "CID": 6,
+            "SID": 1,
+            "Color": "#CC0000",
+            "Color2": "#FFFFFF",
+            "AwayColor": "#FFFFFF",
+            "AwayColor2": "#FF0000",
+            "ThirdColor": "#CC0000",
+            "TextColor": "#FFFFFF",
+            "MainComp": 42,
+            "CompetitionHasTexture": true,
+            "Outcome": 0,
+            "Founded": "Founded in 1923",
+            "HasSquad": true,
+            "Type": 1,
+            "PopularityRank": 769,
+            "ImgVer": 5
+          }
+        ],
+        "STID": 3,
+        "Scrs": [
+          3.0,
+          0.0
+        ],
+        "Winner": 1,
+        "HomeAwayTeamOrder": 1
+      },
+      {
+        "SID": 1,
+        "ID": 3533503,
+        "Comp": 42,
+        "STime": "21-05-2022 17:30",
+        "Season": 22,
+        "Stage": 2,
+        "Group": 1,
+        "Round": 10,
+        "Comps": [
+          {
+            "ID": 567,
+            "Name": "Hapoel Tel Aviv",
+            "SymbolicName": "HTA",
+            "TitleName": "H. Tel Aviv",
+            "NameForURL": "hapoel-tel-aviv",
+            "CID": 6,
+            "SID": 1,
+            "Color": "#CC0000",
+            "Color2": "#FFFFFF",
+            "AwayColor": "#FFFFFF",
+            "AwayColor2": "#FF0000",
+            "ThirdColor": "#CC0000",
+            "TextColor": "#FFFFFF",
+            "MainComp": 42,
+            "CompetitionHasTexture": true,
+            "Outcome": 0,
+            "Founded": "Founded in 1923",
+            "HasSquad": true,
+            "Type": 1,
+            "PopularityRank": 769,
+            "ImgVer": 5
+          },
+          {
+            "ID": 566,
+            "Name": "Maccabi Tel Aviv",
+            "SymbolicName": "MTA",
+            "TitleName": "M. Tel Aviv",
+            "NameForURL": "maccabi-tel-aviv",
+            "CID": 6,
+            "SID": 1,
+            "Color": "#FFEE05",
+            "Color2": "#FFFFFF",
+            "AwayColor": "#1B2C60",
+            "ThirdColor": "#FFFFFF",
+            "TextColor": "#FFFFFF",
+            "MainComp": 42,
+            "CompetitionHasTexture": true,
+            "Outcome": 1,
+            "Founded": "Founded in 1906",
+            "HasSquad": true,
+            "Type": 1,
+            "PopularityRank": 2545,
+            "ImgVer": 11
+          }
+        ],
+        "STID": 3,
+        "Scrs": [
+          0.0,
+          2.0
+        ],
+        "Winner": 2,
+        "HomeAwayTeamOrder": 1
+      },
+      {
+        "SID": 1,
+        "ID": 3533488,
+        "Comp": 42,
+        "STime": "25-04-2022 17:30",
+        "Season": 22,
+        "Stage": 2,
+        "Group": 1,
+        "Round": 5,
+        "Comps": [
+          {
+            "ID": 566,
+            "Name": "Maccabi Tel Aviv",
+            "SymbolicName": "MTA",
+            "TitleName": "M. Tel Aviv",
+            "NameForURL": "maccabi-tel-aviv",
+            "CID": 6,
+            "SID": 1,
+            "Color": "#FFEE05",
+            "Color2": "#FFFFFF",
+            "AwayColor": "#1B2C60",
+            "ThirdColor": "#FFFFFF",
+            "TextColor": "#FFFFFF",
+            "MainComp": 42,
+            "CompetitionHasTexture": true,
+            "Outcome": 1,
+            "Founded": "Founded in 1906",
+            "HasSquad": true,
+            "Type": 1,
+            "PopularityRank": 2545,
+            "ImgVer": 11
+          },
+          {
+            "ID": 567,
+            "Name": "Hapoel Tel Aviv",
+            "SymbolicName": "HTA",
+            "TitleName": "H. Tel Aviv",
+            "NameForURL": "hapoel-tel-aviv",
+            "CID": 6,
+            "SID": 1,
+            "Color": "#CC0000",
+            "Color2": "#FFFFFF",
+            "AwayColor": "#FFFFFF",
+            "AwayColor2": "#FF0000",
+            "ThirdColor": "#CC0000",
+            "TextColor": "#FFFFFF",
+            "MainComp": 42,
+            "CompetitionHasTexture": true,
+            "Outcome": 0,
+            "Founded": "Founded in 1923",
+            "HasSquad": true,
+            "Type": 1,
+            "PopularityRank": 769,
+            "ImgVer": 5
+          }
+        ],
+        "STID": 3,
+        "Scrs": [
+          5.0,
+          0.0
+        ],
+        "Winner": 1,
+        "HomeAwayTeamOrder": 1
+      },
+      {
+        "SID": 1,
+        "ID": 3047160,
+        "Comp": 42,
+        "STime": "12-02-2022 18:00",
+        "Season": 22,
+        "Stage": 1,
+        "Round": 22,
+        "Comps": [
+          {
+            "ID": 567,
+            "Name": "Hapoel Tel Aviv",
+            "SymbolicName": "HTA",
+            "TitleName": "H. Tel Aviv",
+            "NameForURL": "hapoel-tel-aviv",
+            "CID": 6,
+            "SID": 1,
+            "Color": "#CC0000",
+            "Color2": "#FFFFFF",
+            "AwayColor": "#FFFFFF",
+            "AwayColor2": "#FF0000",
+            "ThirdColor": "#CC0000",
+            "TextColor": "#FFFFFF",
+            "MainComp": 42,
+            "CompetitionHasTexture": true,
+            "Outcome": 0,
+            "Founded": "Founded in 1923",
+            "HasSquad": true,
+            "Type": 1,
+            "PopularityRank": 769,
+            "ImgVer": 5
+          },
+          {
+            "ID": 566,
+            "Name": "Maccabi Tel Aviv",
+            "SymbolicName": "MTA",
+            "TitleName": "M. Tel Aviv",
+            "NameForURL": "maccabi-tel-aviv",
+            "CID": 6,
+            "SID": 1,
+            "Color": "#FFEE05",
+            "Color2": "#FFFFFF",
+            "AwayColor": "#1B2C60",
+            "ThirdColor": "#FFFFFF",
+            "TextColor": "#FFFFFF",
+            "MainComp": 42,
+            "CompetitionHasTexture": true,
+            "Outcome": 1,
+            "Founded": "Founded in 1906",
+            "HasSquad": true,
+            "Type": 1,
+            "PopularityRank": 2545,
+            "ImgVer": 11
+          }
+        ],
+        "STID": 3,
+        "Scrs": [
+          2.0,
+          3.0
+        ],
+        "Winner": 2,
+        "HomeAwayTeamOrder": 1
+      },
+      {
+        "SID": 1,
+        "ID": 3047071,
+        "Comp": 42,
+        "STime": "07-11-2021 18:45",
+        "Season": 22,
+        "Stage": 1,
+        "Round": 9,
+        "Comps": [
+          {
+            "ID": 566,
+            "Name": "Maccabi Tel Aviv",
+            "SymbolicName": "MTA",
+            "TitleName": "M. Tel Aviv",
+            "NameForURL": "maccabi-tel-aviv",
+            "CID": 6,
+            "SID": 1,
+            "Color": "#FFEE05",
+            "Color2": "#FFFFFF",
+            "AwayColor": "#1B2C60",
+            "ThirdColor": "#FFFFFF",
+            "TextColor": "#FFFFFF",
+            "MainComp": 42,
+            "CompetitionHasTexture": true,
+            "Outcome": 2,
+            "Founded": "Founded in 1906",
+            "HasSquad": true,
+            "Type": 1,
+            "PopularityRank": 2545,
+            "ImgVer": 11
+          },
+          {
+            "ID": 567,
+            "Name": "Hapoel Tel Aviv",
+            "SymbolicName": "HTA",
+            "TitleName": "H. Tel Aviv",
+            "NameForURL": "hapoel-tel-aviv",
+            "CID": 6,
+            "SID": 1,
+            "Color": "#CC0000",
+            "Color2": "#FFFFFF",
+            "AwayColor": "#FFFFFF",
+            "AwayColor2": "#FF0000",
+            "ThirdColor": "#CC0000",
+            "TextColor": "#FFFFFF",
+            "MainComp": 42,
+            "CompetitionHasTexture": true,
+            "Outcome": 2,
+            "Founded": "Founded in 1923",
+            "HasSquad": true,
+            "Type": 1,
+            "PopularityRank": 769,
+            "ImgVer": 5
+          }
+        ],
+        "STID": 3,
+        "Scrs": [
+          1.0,
+          1.0
+        ],
+        "Winner": -1,
+        "HomeAwayTeamOrder": 1
+      },
+      {
+        "SID": 1,
+        "ID": 3026169,
+        "Comp": 49,
+        "STime": "02-06-2021 17:30",
+        "Season": 19,
+        "Stage": 7,
+        "Comps": [
+          {
+            "ID": 566,
+            "Name": "Maccabi Tel Aviv",
+            "SymbolicName": "MTA",
+            "TitleName": "M. Tel Aviv",
+            "NameForURL": "maccabi-tel-aviv",
+            "CID": 6,
+            "SID": 1,
+            "Color": "#FFEE05",
+            "Color2": "#FFFFFF",
+            "AwayColor": "#1B2C60",
+            "ThirdColor": "#FFFFFF",
+            "TextColor": "#FFFFFF",
+            "MainComp": 42,
+            "CompetitionHasTexture": true,
+            "Outcome": 3,
+            "Founded": "Founded in 1906",
+            "HasSquad": true,
+            "Type": 1,
+            "PopularityRank": 2545,
+            "ImgVer": 11
+          },
+          {
+            "ID": 567,
+            "Name": "Hapoel Tel Aviv",
+            "SymbolicName": "HTA",
+            "TitleName": "H. Tel Aviv",
+            "NameForURL": "hapoel-tel-aviv",
+            "CID": 6,
+            "SID": 1,
+            "Color": "#CC0000",
+            "Color2": "#FFFFFF",
+            "AwayColor": "#FFFFFF",
+            "AwayColor2": "#FF0000",
+            "ThirdColor": "#CC0000",
+            "TextColor": "#FFFFFF",
+            "MainComp": 42,
+            "CompetitionHasTexture": true,
+            "Outcome": 4,
+            "Founded": "Founded in 1923",
+            "HasSquad": true,
+            "Type": 1,
+            "PopularityRank": 769,
+            "ImgVer": 5
+          }
+        ],
+        "STID": 154,
+        "Scrs": [
+          2.0,
+          1.0
+        ],
+        "Winner": 1,
+        "ToQualify": 1,
+        "HomeAwayTeamOrder": 1
+      },
+      {
+        "SID": 1,
+        "ID": 2368329,
+        "Comp": 42,
+        "STime": "20-03-2021 19:00",
+        "Season": 21,
+        "Stage": 1,
+        "Round": 26,
+        "Comps": [
+          {
+            "ID": 566,
+            "Name": "Maccabi Tel Aviv",
+            "SymbolicName": "MTA",
+            "TitleName": "M. Tel Aviv",
+            "NameForURL": "maccabi-tel-aviv",
+            "CID": 6,
+            "SID": 1,
+            "Color": "#FFEE05",
+            "Color2": "#FFFFFF",
+            "AwayColor": "#1B2C60",
+            "ThirdColor": "#FFFFFF",
+            "TextColor": "#FFFFFF",
+            "MainComp": 42,
+            "CompetitionHasTexture": true,
+            "Outcome": 2,
+            "Founded": "Founded in 1906",
+            "HasSquad": true,
+            "Type": 1,
+            "PopularityRank": 2545,
+            "ImgVer": 11
+          },
+          {
+            "ID": 567,
+            "Name": "Hapoel Tel Aviv",
+            "SymbolicName": "HTA",
+            "TitleName": "H. Tel Aviv",
+            "NameForURL": "hapoel-tel-aviv",
+            "CID": 6,
+            "SID": 1,
+            "Color": "#CC0000",
+            "Color2": "#FFFFFF",
+            "AwayColor": "#FFFFFF",
+            "AwayColor2": "#FF0000",
+            "ThirdColor": "#CC0000",
+            "TextColor": "#FFFFFF",
+            "MainComp": 42,
+            "CompetitionHasTexture": true,
+            "Outcome": 2,
+            "Founded": "Founded in 1923",
+            "HasSquad": true,
+            "Type": 1,
+            "PopularityRank": 769,
+            "ImgVer": 5
+          }
+        ],
+        "STID": 3,
+        "Scrs": [
+          1.0,
+          1.0
+        ],
+        "Winner": -1,
+        "HomeAwayTeamOrder": 1
+      },
+      {
+        "SID": 1,
+        "ID": 2368236,
+        "Comp": 42,
+        "STime": "28-12-2020 18:45",
+        "Season": 21,
+        "Stage": 1,
+        "Round": 13,
+        "Comps": [
+          {
+            "ID": 567,
+            "Name": "Hapoel Tel Aviv",
+            "SymbolicName": "HTA",
+            "TitleName": "H. Tel Aviv",
+            "NameForURL": "hapoel-tel-aviv",
+            "CID": 6,
+            "SID": 1,
+            "Color": "#CC0000",
+            "Color2": "#FFFFFF",
+            "AwayColor": "#FFFFFF",
+            "AwayColor2": "#FF0000",
+            "ThirdColor": "#CC0000",
+            "TextColor": "#FFFFFF",
+            "MainComp": 42,
+            "CompetitionHasTexture": true,
+            "Outcome": 0,
+            "Founded": "Founded in 1923",
+            "HasSquad": true,
+            "Type": 1,
+            "PopularityRank": 769,
+            "ImgVer": 5
+          },
+          {
+            "ID": 566,
+            "Name": "Maccabi Tel Aviv",
+            "SymbolicName": "MTA",
+            "TitleName": "M. Tel Aviv",
+            "NameForURL": "maccabi-tel-aviv",
+            "CID": 6,
+            "SID": 1,
+            "Color": "#FFEE05",
+            "Color2": "#FFFFFF",
+            "AwayColor": "#1B2C60",
+            "ThirdColor": "#FFFFFF",
+            "TextColor": "#FFFFFF",
+            "MainComp": 42,
+            "CompetitionHasTexture": true,
+            "Outcome": 1,
+            "Founded": "Founded in 1906",
+            "HasSquad": true,
+            "Type": 1,
+            "PopularityRank": 2545,
+            "ImgVer": 11
+          }
+        ],
+        "STID": 3,
+        "Scrs": [
+          0.0,
+          4.0
+        ],
+        "Winner": 2,
+        "HomeAwayTeamOrder": 1
+      },
+      {
+        "SID": 1,
+        "ID": 2194232,
+        "Comp": 42,
+        "STime": "27-06-2020 18:00",
+        "Season": 11,
+        "Stage": 2,
+        "Group": 1,
+        "Round": 36,
+        "Comps": [
+          {
+            "ID": 566,
+            "Name": "Maccabi Tel Aviv",
+            "SymbolicName": "MTA",
+            "TitleName": "M. Tel Aviv",
+            "NameForURL": "maccabi-tel-aviv",
+            "CID": 6,
+            "SID": 1,
+            "Color": "#FFEE05",
+            "Color2": "#FFFFFF",
+            "AwayColor": "#1B2C60",
+            "ThirdColor": "#FFFFFF",
+            "TextColor": "#FFFFFF",
+            "MainComp": 42,
+            "CompetitionHasTexture": true,
+            "Outcome": 1,
+            "Founded": "Founded in 1906",
+            "HasSquad": true,
+            "Type": 1,
+            "PopularityRank": 2545,
+            "ImgVer": 11
+          },
+          {
+            "ID": 567,
+            "Name": "Hapoel Tel Aviv",
+            "SymbolicName": "HTA",
+            "TitleName": "H. Tel Aviv",
+            "NameForURL": "hapoel-tel-aviv",
+            "CID": 6,
+            "SID": 1,
+            "Color": "#CC0000",
+            "Color2": "#FFFFFF",
+            "AwayColor": "#FFFFFF",
+            "AwayColor2": "#FF0000",
+            "ThirdColor": "#CC0000",
+            "TextColor": "#FFFFFF",
+            "MainComp": 42,
+            "CompetitionHasTexture": true,
+            "Outcome": 0,
+            "Founded": "Founded in 1923",
+            "HasSquad": true,
+            "Type": 1,
+            "PopularityRank": 769,
+            "ImgVer": 5
+          }
+        ],
+        "STID": 3,
+        "Scrs": [
+          3.0,
+          0.0
+        ],
+        "Winner": 1,
+        "HomeAwayTeamOrder": 1
+      },
+      {
+        "SID": 1,
+        "ID": 2194215,
+        "Comp": 42,
+        "STime": "20-06-2020 18:00",
+        "Season": 11,
+        "Stage": 2,
+        "Group": 1,
+        "Round": 31,
+        "Comps": [
+          {
+            "ID": 567,
+            "Name": "Hapoel Tel Aviv",
+            "SymbolicName": "HTA",
+            "TitleName": "H. Tel Aviv",
+            "NameForURL": "hapoel-tel-aviv",
+            "CID": 6,
+            "SID": 1,
+            "Color": "#CC0000",
+            "Color2": "#FFFFFF",
+            "AwayColor": "#FFFFFF",
+            "AwayColor2": "#FF0000",
+            "ThirdColor": "#CC0000",
+            "TextColor": "#FFFFFF",
+            "MainComp": 42,
+            "CompetitionHasTexture": true,
+            "Outcome": 0,
+            "Founded": "Founded in 1923",
+            "HasSquad": true,
+            "Type": 1,
+            "PopularityRank": 769,
+            "ImgVer": 5
+          },
+          {
+            "ID": 566,
+            "Name": "Maccabi Tel Aviv",
+            "SymbolicName": "MTA",
+            "TitleName": "M. Tel Aviv",
+            "NameForURL": "maccabi-tel-aviv",
+            "CID": 6,
+            "SID": 1,
+            "Color": "#FFEE05",
+            "Color2": "#FFFFFF",
+            "AwayColor": "#1B2C60",
+            "ThirdColor": "#FFFFFF",
+            "TextColor": "#FFFFFF",
+            "MainComp": 42,
+            "CompetitionHasTexture": true,
+            "Outcome": 1,
+            "Founded": "Founded in 1906",
+            "HasSquad": true,
+            "Type": 1,
+            "PopularityRank": 2545,
+            "ImgVer": 11
+          }
+        ],
+        "STID": 3,
+        "Scrs": [
+          0.0,
+          2.0
+        ],
+        "Winner": 2,
+        "HomeAwayTeamOrder": 1
+      }
+    ],
+    "trends": null,
+    "lineups_status": "Lineups",
+    "standings": null,
+    "news": [],
+    "news_count": 0
+  }
+}
+
+Remember: This is a pre_match episode. Focus on the appropriate content type.
+The priority score for this episode is 85.0/100 - ensure the script reflects this importance level.
+
+Generate the complete script following the segment structure above, using ONLY data from the JSON.
