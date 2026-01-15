@@ -1,4 +1,5 @@
 """Story extractors for content intelligence."""
+from typing import Optional
 
 from .base import BaseExtractor
 from .betting_extractor import BettingExtractor

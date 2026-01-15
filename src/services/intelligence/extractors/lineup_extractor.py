@@ -1,7 +1,7 @@
 """Extracts lineup-related talking points (debuts, returns, key absences)."""
 
 import logging
-from typing import Any
+from typing import Any, Optional
 
 from src.services.intelligence.talking_points import Priority, StoryType, TalkingPoint
 
@@ -79,9 +79,9 @@ class LineupExtractor(BaseExtractor):
         self,
         lineup: dict[str, Any],
         team_name: str,
-        team_id: int | None,
-        competition: str | None,
-        game_id: int | None,
+        team_id: Optional[int],
+        competition: Optional[str],
+        game_id: Optional[int],
     ) -> list[TalkingPoint]:
         """Check for players making their debut."""
         points = []
@@ -152,8 +152,8 @@ class LineupExtractor(BaseExtractor):
         self,
         lineup: dict[str, Any],
         team_name: str,
-        team_id: int | None,
-        game_id: int | None,
+        team_id: Optional[int],
+        game_id: Optional[int],
     ) -> list[TalkingPoint]:
         """Check for players returning from absence."""
         points = []
@@ -198,8 +198,8 @@ class LineupExtractor(BaseExtractor):
         self,
         lineup: dict[str, Any],
         team_name: str,
-        game_id: int | None,
-    ) -> TalkingPoint | None:
+        game_id: Optional[int],
+    ) -> Optional[TalkingPoint]:
         """Check for notable formation."""
         formation = lineup.get("formation", "")
         if not formation:
@@ -226,8 +226,8 @@ class LineupExtractor(BaseExtractor):
         self,
         lineup: dict[str, Any],
         team_name: str,
-        game_id: int | None,
-    ) -> TalkingPoint | None:
+        game_id: Optional[int],
+    ) -> Optional[TalkingPoint]:
         """Check for new/unusual captain."""
         for player in lineup.get("players", []):
             is_captain = player.get("is_captain", player.get("isCaptain", False))

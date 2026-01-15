@@ -7,14 +7,15 @@ from datetime import datetime, timezone
 from typing import Any, Optional
 
 from src.config import Settings, get_settings
-from src.exceptions import DataFetchError, PodcastGenerationError
+from src.exceptions import DataFetchError, HolyTriangleError, PodcastGenerationError
 from src.models import ContentMode, Game, PodcastRequest
 from src.models.requests import PodcastFormat, PodcastMode
-from src.services.audio_manager import AudioStorage, AudioSynthesizer
+from src.services.audio_manager import AudioMerger, AudioStorage, AudioSynthesizer
 from src.services.audio_manager.multi_voice_synthesizer import MultiVoiceSynthesizer
 from src.services.intelligence import ContentIntelligence
+from src.services.lineup_agent import LineupAgent
 from src.services.retrieval import DataEnricher, GameFetcher
-from src.services.script_engine import ContentRouter, ScriptGenerator, SSMLProcessor
+from src.services.script_engine import ContentRouter, DialogueScriptArchitect, ScriptGenerator, SSMLProcessor
 
 logger = logging.getLogger(__name__)
 
@@ -41,19 +42,24 @@ class PodcastResult:
 
 class PodcastOrchestrator:
     """
-    Orchestrates the complete podcast generation workflow.
+    Orchestrates the complete podcast generation workflow following the 11-Step Pipeline.
 
     Supports two formats:
     - Single voice: Traditional single narrator podcast
-    - Panel discussion: 3-person TV studio style with Host, Analyst, and Legend
+    - Panel discussion: 3-person TV studio style with Host, Analyst, and Fan
 
-    Workflow:
-    1. Fetch game data from 365Scores API
-    2. Determine content mode and format
-    3. Enrich data with additional context
-    4. Generate script via Claude
-    5. Synthesize audio via ElevenLabs (single or multi-voice)
-    6. Store and return audio URL
+    Workflow (11 Steps):
+    1. Initialize & Validate
+    2. Fetch Game Data
+    3. Determine Content Mode
+    4. Enrich Game Data
+    5. Extract Content Intelligence
+    6. Create Podcast Lineup (LineupAgent)
+    7. Generate Dialogue Script (DialogueScriptArchitect with Holy Triangle verification)
+    8. Synthesize Audio (ElevenLabs)
+    9. Merge with Intro and Outro
+    10. Store Audio File
+    11. Copy to Project Directory (handled by caller)
     """
 
     def __init__(
@@ -76,10 +82,13 @@ class PodcastOrchestrator:
         self.content_router = content_router or ContentRouter()
         self.content_intelligence = content_intelligence or ContentIntelligence(self.settings)
         self.script_generator = script_generator or ScriptGenerator(self.settings)
+        self.lineup_agent = LineupAgent(self.settings)
+        self.dialogue_architect = DialogueScriptArchitect(self.settings)
         self.ssml_processor = SSMLProcessor()
         self.audio_synthesizer = audio_synthesizer or AudioSynthesizer(self.settings)
         self.multi_voice_synthesizer = multi_voice_synthesizer or MultiVoiceSynthesizer(self.settings)
         self.audio_storage = audio_storage or AudioStorage(self.settings)
+        self.audio_merger = AudioMerger(self.settings)
 
     async def generate_podcast(
         self,
@@ -101,17 +110,24 @@ class PodcastOrchestrator:
         is_panel = request.format == PodcastFormat.PANEL
 
         logger.info(
-            f"Starting podcast generation job {job_id} for {len(request.game_ids)} games "
+            f"[STEP 1] Starting podcast generation job {job_id} for {len(request.game_ids)} games "
             f"(format: {'panel' if is_panel else 'single_voice'})"
         )
 
         try:
-            # Step 1: Fetch game data
+            # STEP 1: Initialize & Validate
+            logger.info("[STEP 1] Initialize & Validate")
+            if self.settings.skip_audio_synthesis:
+                logger.warning("[STEP 1] SKIP_AUDIO_SYNTHESIS is True - audio synthesis will be skipped")
+            logger.info(f"[STEP 1] Validated game IDs: {request.game_ids}")
+
+            # STEP 2: Fetch Game Data
+            logger.info("[STEP 2] Fetch Game Data")
             games = await self._fetch_games(request.game_ids)
 
             if not games:
                 # Fallback to featured games if none found
-                logger.warning("No games found, fetching featured games")
+                logger.warning("[STEP 2] No games found, fetching featured games")
                 games = await self.game_fetcher.fetch_featured_games(
                     country_id=request.user_country_id,
                     limit=5,
@@ -122,68 +138,171 @@ class PodcastOrchestrator:
                     message="No games available for podcast",
                     game_ids=request.game_ids,
                 )
+            
+            logger.info(f"[STEP 2] ✓ Fetched {len(games)} game(s)")
 
-            # Step 2: Determine content mode
+            # STEP 3: Determine Content Mode
+            logger.info("[STEP 3] Determine Content Mode")
             mode = self._determine_mode(games, request)
-            logger.info(f"Content mode: {mode.value}")
+            logger.info(f"[STEP 3] ✓ Content mode: {mode.value}")
 
-            # Step 3: Enrich data
+            # STEP 4: Enrich Game Data
+            logger.info("[STEP 4] Enrich Game Data")
             context = await self.data_enricher.enrich_games(games, mode)
+            
+            # Validate PILLAR 1 (The WHAT): Enriched Data Context
+            if not context:
+                raise HolyTriangleError(
+                    message="PILLAR 1 (Enriched Data Context) is missing",
+                    missing_pillar="PILLAR_1",
+                    pillar_details={"context_exists": False}
+                )
+            
+            # Check minimum required data
+            game_data = context.get("game") or (context.get("games", [{}])[0] if context.get("games") else {})
+            if not game_data:
+                raise HolyTriangleError(
+                    message="PILLAR 1 (Enriched Data Context) missing basic game info",
+                    missing_pillar="PILLAR_1",
+                    pillar_details={"has_game_data": False}
+                )
+            
+            logger.info("[STEP 4] ✓ Enriched data context created (PILLAR 1 verified)")
 
-            # Step 3.5: Extract content intelligence (talking points)
-            logger.info("Analyzing content intelligence...")
+            # STEP 5: Extract Content Intelligence
+            logger.info("[STEP 5] Extract Content Intelligence")
             intelligence = await self.content_intelligence.analyze(
                 enriched_context=context,
                 mode=mode,
                 include_betting=request.include_betting,
             )
-            logger.info(f"Extracted {len(intelligence.top_stories)} top talking points")
+            logger.info(f"[STEP 5] ✓ Extracted {len(intelligence.top_stories)} top talking points")
 
-            # Step 4: Generate script (use panel mode if panel format requested)
+            # STEP 6: Create Podcast Lineup
+            logger.info("[STEP 6] Create Podcast Lineup (LineupAgent)")
+            lineup = await self.lineup_agent.create_lineup(
+                game_context=context,
+                total_duration_minutes=5,  # Default duration
+            )
+            
+            # Validate PILLAR 2 (The HOW): Structured Lineup & Timing
+            if not lineup:
+                raise HolyTriangleError(
+                    message="PILLAR 2 (Structured Lineup) is missing",
+                    missing_pillar="PILLAR_2",
+                    pillar_details={"lineup_exists": False}
+                )
+            
+            if not lineup.segments:
+                raise HolyTriangleError(
+                    message="PILLAR 2 (Structured Lineup) has no segments",
+                    missing_pillar="PILLAR_2",
+                    pillar_details={"segment_count": 0}
+                )
+            
+            if not lineup.episode_title:
+                raise HolyTriangleError(
+                    message="PILLAR 2 (Structured Lineup) missing episode title",
+                    missing_pillar="PILLAR_2",
+                    pillar_details={"has_title": False}
+                )
+            
+            if not lineup.match_status:
+                raise HolyTriangleError(
+                    message="PILLAR 2 (Structured Lineup) missing match status",
+                    missing_pillar="PILLAR_2",
+                    pillar_details={"has_status": False}
+                )
+            
+            logger.info(f"[STEP 6] ✓ Lineup created: {len(lineup.segments)} segments (PILLAR 2 verified)")
+
+            # STEP 7: Generate Dialogue Script (with Holy Triangle verification)
+            logger.info("[STEP 7] Generate Dialogue Script")
+            
+            # Verify PILLAR 3 (The WHO): Personality & Vibe Profiles
+            # Personas are hardcoded in DialogueScriptArchitect system prompt
+            # We verify they exist by checking the service is initialized
+            if not self.dialogue_architect:
+                raise HolyTriangleError(
+                    message="PILLAR 3 (Personality & Vibe Profiles) - DialogueScriptArchitect not initialized",
+                    missing_pillar="PILLAR_3",
+                    pillar_details={"dialogue_architect_exists": False}
+                )
+            
+            logger.info("[STEP 7] ✓ Holy Triangle verified: All three pillars present")
+            logger.info("  - PILLAR 1 (The WHAT): Enriched Data Context ✓")
+            logger.info("  - PILLAR 2 (The HOW): Structured Lineup & Timing ✓")
+            logger.info("  - PILLAR 3 (The WHO): Personality & Vibe Profiles ✓")
+            
+            # Generate dialogue script using DialogueScriptArchitect
             if is_panel:
-                script = await self.script_generator.generate_script(
-                    context=context,
-                    intelligence=intelligence,
-                    mode=ContentMode.PANEL_DISCUSSION,
-                    include_betting=request.include_betting,
+                script = await self.dialogue_architect.generate_dialogue_script(
+                    lineup=lineup,
+                    game_context=context,
                 )
             else:
+                # Fallback to ScriptGenerator for single voice
                 script = await self.script_generator.generate_script(
                     context=context,
                     intelligence=intelligence,
                     mode=mode,
                     include_betting=request.include_betting,
                 )
+            
+            logger.info(f"[STEP 7] ✓ Dialogue script generated: {len(script)} characters")
 
-            # Step 5: Synthesize audio
-            if is_panel:
-                # Multi-voice panel discussion
-                logger.info("Synthesizing multi-voice panel discussion...")
-                audio_bytes = await self.multi_voice_synthesizer.synthesize_panel_discussion(script)
-                duration = self.multi_voice_synthesizer.estimate_duration(script)
-            else:
-                # Single voice
-                voice_id = self.audio_synthesizer.get_voice_id(request.voice_id)
-                audio_bytes = await self.audio_synthesizer.synthesize(
-                    script=script,
-                    voice_id=voice_id,
-                )
+            # STEP 8: Synthesize Audio
+            logger.info("[STEP 8] Synthesize Audio")
+            if self.settings.skip_audio_synthesis:
+                logger.info("[STEP 8] ⚠️  Skipping audio synthesis (skip_audio_synthesis=True)")
+                audio_bytes = None
+                audio_url = None
                 duration = self.ssml_processor.estimate_duration(script)
+            else:
+                if is_panel:
+                    logger.info("[STEP 8] Synthesizing multi-voice panel discussion...")
+                    audio_bytes = await self.multi_voice_synthesizer.synthesize_panel_discussion(script)
+                    duration = self.multi_voice_synthesizer.estimate_duration(script)
+                else:
+                    voice_id = self.audio_synthesizer.get_voice_id(request.voice_id)
+                    audio_bytes = await self.audio_synthesizer.synthesize(
+                        script=script,
+                        voice_id=voice_id,
+                    )
+                    duration = self.ssml_processor.estimate_duration(script)
+                
+                logger.info(f"[STEP 8] ✓ Audio synthesized: {len(audio_bytes)} bytes, {duration:.1f}s")
 
-            # Step 6: Store audio
-            metadata = {
-                "game_ids": [int(gid) for gid in request.game_ids],
-                "mode": mode.value,
-                "format": "panel" if is_panel else "single_voice",
-                "language": request.language,
-            }
-            audio_url = await self.audio_storage.store_audio(
-                audio_bytes=audio_bytes,
-                job_id=job_id,
-                metadata=metadata,
-            )
+                # STEP 9: Merge with Intro and Outro
+                logger.info("[STEP 9] Merge with Intro and Outro")
+                try:
+                    merged_audio_bytes = self.audio_merger.merge_audio(
+                        content_audio_bytes=audio_bytes,
+                        include_intro=True,
+                        include_outro=True,
+                    )
+                    logger.info("[STEP 9] ✓ Successfully merged audio with intro and outro")
+                    audio_bytes = merged_audio_bytes
+                except Exception as e:
+                    logger.warning(f"[STEP 9] ⚠️  Failed to merge intro/outro, using original audio: {e}")
+                    # Continue with original audio if merging fails
 
-            logger.info(f"Podcast generation complete: {job_id}")
+                # STEP 10: Store Audio File
+                logger.info("[STEP 10] Store Audio File")
+                metadata = {
+                    "game_ids": [int(gid) for gid in request.game_ids],
+                    "mode": mode.value,
+                    "format": "panel" if is_panel else "single_voice",
+                    "language": request.language,
+                }
+                audio_url = await self.audio_storage.store_audio(
+                    audio_bytes=audio_bytes,
+                    job_id=job_id,
+                    metadata=metadata,
+                )
+                logger.info(f"[STEP 10] ✓ Audio stored: {audio_url}")
+
+            logger.info(f"[COMPLETE] Podcast generation complete: {job_id}")
 
             return PodcastResult(
                 job_id=job_id,

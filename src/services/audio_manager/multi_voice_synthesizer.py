@@ -50,12 +50,39 @@ class MultiVoiceSynthesizer:
         self.model = self.settings.elevenlabs_model
 
         # Build voice mapping from characters (includes voice settings)
-        self.voice_map: dict[str, tuple[str, VoiceSettings]] = {
-            char.name.upper(): (char.voice_id, char.voice_settings)
-            for char in self.characters
-        }
+        # Map both character names and role labels to voices
+        self.voice_map: dict[str, tuple[str, VoiceSettings]] = {}
+        
+        for char in self.characters:
+            # Map character name (e.g., "SARAH", "MARCUS", "RIO")
+            self.voice_map[char.name.upper()] = (char.voice_id, char.voice_settings)
+            
+            # Map role labels (e.g., "HOST", "ANALYST", "FAN", "LEGEND")
+            role_label = char.role.value.upper()
+            self.voice_map[role_label] = (char.voice_id, char.voice_settings)
+        
+        # Explicit mappings for common labels
+        # HOST = SARAH (Female voice)
+        host_char = next((c for c in self.characters if c.role.value == "host"), None)
+        if host_char:
+            self.voice_map["HOST"] = (host_char.voice_id, host_char.voice_settings)
+        
+        # ANALYST = MARCUS (Male voice)
+        analyst_char = next((c for c in self.characters if c.role.value == "analyst"), None)
+        if analyst_char:
+            self.voice_map["ANALYST"] = (analyst_char.voice_id, analyst_char.voice_settings)
+        
+        # FAN/SUPPORTER = RIO (Male voice) - map both FAN and LEGEND to RIO
+        fan_char = next((c for c in self.characters if c.role.value == "legend"), None)
+        if fan_char:
+            self.voice_map["FAN"] = (fan_char.voice_id, fan_char.voice_settings)
+            self.voice_map["SUPPORTER"] = (fan_char.voice_id, fan_char.voice_settings)
+            self.voice_map["LEGEND"] = (fan_char.voice_id, fan_char.voice_settings)
 
         logger.info(f"MultiVoiceSynthesizer initialized with voices: {list(self.voice_map.keys())}")
+        logger.info(f"Voice mapping: HOST={host_char.name if host_char else 'N/A'} (Female), "
+                   f"ANALYST={analyst_char.name if analyst_char else 'N/A'} (Male), "
+                   f"FAN={fan_char.name if fan_char else 'N/A'} (Male)")
 
     def parse_script(self, script: str) -> list[DialogueLine]:
         """
@@ -82,12 +109,24 @@ class MultiVoiceSynthesizer:
             # Get voice ID and settings for character
             voice_data = self.voice_map.get(character)
             if not voice_data:
-                logger.warning(f"Unknown character '{character}', using default host voice")
-                voice_data = self.voice_map.get("SARAH", self.voice_map.get("ALEX"))
+                # Try common aliases
+                if character == "HOST":
+                    voice_data = self.voice_map.get("SARAH") or self.voice_map.get("ALEX")
+                elif character == "ANALYST":
+                    voice_data = self.voice_map.get("MARCUS")
+                elif character in ["FAN", "SUPPORTER", "LEGEND"]:
+                    voice_data = self.voice_map.get("RIO") or self.voice_map.get("DAVID")
+                
                 if not voice_data:
-                    voice_data = (self.settings.elevenlabs_default_voice, VoiceSettings())
+                    logger.warning(f"Unknown character '{character}', using default host voice (SARAH)")
+                    voice_data = self.voice_map.get("SARAH") or self.voice_map.get("HOST")
+                    if not voice_data:
+                        voice_data = (self.settings.elevenlabs_default_voice, VoiceSettings())
 
             voice_id, voice_settings = voice_data
+            
+            # Log voice assignment for verification
+            logger.debug(f"Character '{character}' → Voice ID: {voice_id[:8]}...")
 
             lines.append(DialogueLine(
                 character=character,
@@ -165,7 +204,32 @@ class MultiVoiceSynthesizer:
                 details={"script_length": len(script)},
             )
 
-        logger.info(f"Synthesizing {len(lines)} dialogue lines...")
+        # Verify voice assignments (each character should have distinct voice)
+        character_voices = {}
+        for line in lines:
+            if line.character in character_voices:
+                if character_voices[line.character] != line.voice_id:
+                    logger.warning(
+                        f"Character '{line.character}' has conflicting voice IDs: "
+                        f"{character_voices[line.character]} vs {line.voice_id}"
+                    )
+            else:
+                character_voices[line.character] = line.voice_id
+        
+        # Log voice assignments for verification
+        logger.info(f"[STEP 8] Voice assignments:")
+        for char, voice_id in character_voices.items():
+            char_name = next((c.name for c in self.characters if c.voice_id == voice_id), "Unknown")
+            logger.info(f"  - {char} → {char_name} (Voice ID: {voice_id[:8]}...)")
+        
+        # Verify all three characters are present
+        required_chars = {"HOST", "ANALYST", "FAN"}
+        found_chars = set(character_voices.keys())
+        missing_chars = required_chars - found_chars
+        if missing_chars:
+            logger.warning(f"[STEP 8] Missing characters in script: {missing_chars}")
+        
+        logger.info(f"[STEP 8] Synthesizing {len(lines)} dialogue lines...")
 
         # Generate audio for each line
         audio_segments = []

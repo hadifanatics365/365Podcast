@@ -1,7 +1,7 @@
 """Extracts form and streak talking points."""
 
 import logging
-from typing import Any
+from typing import Any, Optional
 
 from src.services.intelligence.talking_points import Priority, StoryType, TalkingPoint
 
@@ -76,7 +76,7 @@ class FormExtractor(BaseExtractor):
         self,
         form_data: list[dict[str, Any]],
         game_data: dict[str, Any],
-        game_id: int | None,
+        game_id: Optional[int],
     ) -> list[TalkingPoint]:
         """Extract streaks from last matches data."""
         points = []
@@ -108,7 +108,7 @@ class FormExtractor(BaseExtractor):
 
         return points
 
-    def _calculate_streak(self, matches: list[dict[str, Any]]) -> dict[str, Any] | None:
+    def _calculate_streak(self, matches: Optional[list[dict[str, Any]]]) -> Optional[dict[str, Any]]:
         """Calculate current win/loss/unbeaten streak from matches."""
         if not matches:
             return None
@@ -175,9 +175,9 @@ class FormExtractor(BaseExtractor):
         self,
         streak: dict[str, Any],
         team_name: str,
-        team_id: int | None,
-        game_id: int | None,
-    ) -> TalkingPoint | None:
+        team_id: Optional[int],
+        game_id: Optional[int],
+    ) -> Optional[TalkingPoint]:
         """Create a talking point from a streak."""
         streak_type = streak["type"]
         length = streak["length"]
@@ -232,7 +232,7 @@ class FormExtractor(BaseExtractor):
         self,
         trends_data: dict[str, Any],
         game_data: dict[str, Any],
-        game_id: int | None,
+        game_id: Optional[int],
     ) -> list[TalkingPoint]:
         """Extract from TeamTrendsData API response."""
         points = []
@@ -299,7 +299,7 @@ class FormExtractor(BaseExtractor):
         self,
         promoted_trends: list[dict[str, Any]],
         game_data: dict[str, Any],
-        game_id: int | None,
+        game_id: Optional[int],
     ) -> list[TalkingPoint]:
         """Extract from game.promotedTrends."""
         points = []

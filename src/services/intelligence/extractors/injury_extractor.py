@@ -1,7 +1,7 @@
 """Extracts injury, suspension, and return talking points."""
 
 import logging
-from typing import Any
+from typing import Any, Optional
 
 from src.services.intelligence.talking_points import Priority, StoryType, TalkingPoint
 
@@ -73,8 +73,8 @@ class InjuryExtractor(BaseExtractor):
         self,
         player_data: dict[str, Any],
         game_data: dict[str, Any],
-        game_id: int | None,
-    ) -> TalkingPoint | None:
+        game_id: Optional[int],
+    ) -> Optional[TalkingPoint]:
         """Process a single missing player entry."""
         player_name = player_data.get("player_name", player_data.get("name", ""))
         if not player_name:
@@ -102,7 +102,7 @@ class InjuryExtractor(BaseExtractor):
         player_data: dict[str, Any],
         player_name: str,
         team_name: str,
-        game_id: int | None,
+        game_id: Optional[int],
     ) -> TalkingPoint:
         """Create an injury talking point."""
         injury_type = player_data.get("injury_type", player_data.get("injuryType", ""))
@@ -149,7 +149,7 @@ class InjuryExtractor(BaseExtractor):
         player_data: dict[str, Any],
         player_name: str,
         team_name: str,
-        game_id: int | None,
+        game_id: Optional[int],
     ) -> TalkingPoint:
         """Create a suspension talking point."""
         suspension_type = player_data.get("suspension_type", "")
@@ -178,7 +178,7 @@ class InjuryExtractor(BaseExtractor):
         player_data: dict[str, Any],
         player_name: str,
         team_name: str,
-        game_id: int | None,
+        game_id: Optional[int],
     ) -> TalkingPoint:
         """Create a generic absence talking point."""
         reason = player_data.get("reason", player_data.get("did_not_play_reason", ""))
@@ -204,7 +204,7 @@ class InjuryExtractor(BaseExtractor):
         self,
         player: dict[str, Any],
         team_name: str,
-        game_id: int | None,
+        game_id: Optional[int],
     ) -> TalkingPoint:
         """Create a doubtful status talking point."""
         player_name = player.get("name", "Unknown")

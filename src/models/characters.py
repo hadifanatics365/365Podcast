@@ -108,7 +108,7 @@ Occasionally surprises everyone by agreeing with the emotional take over the dat
         "The xG model suggests",
         "Here's what the data doesn't show you",
     ],
-    voice_settings=VoiceSettings(stability=0.6, similarity_boost=0.75, style=0.0),
+    voice_settings=VoiceSettings(stability=0.35, similarity_boost=0.8, style=0.4, use_speaker_boost=True),
 )
 
 RIO_LEGEND = Character(

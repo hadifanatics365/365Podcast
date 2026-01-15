@@ -1,7 +1,7 @@
 """Extracts betting-related talking points."""
 
 import logging
-from typing import Any
+from typing import Any, Optional
 
 from src.services.intelligence.talking_points import Priority, StoryType, TalkingPoint
 
@@ -70,7 +70,7 @@ class BettingExtractor(BaseExtractor):
         self,
         insights_data: dict[str, Any],
         game_data: dict[str, Any],
-        game_id: int | None,
+        game_id: Optional[int],
     ) -> list[TalkingPoint]:
         """Extract from InsightData API response."""
         points = []
@@ -126,7 +126,7 @@ class BettingExtractor(BaseExtractor):
         self,
         predictions_data: dict[str, Any],
         game_data: dict[str, Any],
-        game_id: int | None,
+        game_id: Optional[int],
     ) -> list[TalkingPoint]:
         """Extract from PredictionsData API response."""
         points = []
@@ -216,7 +216,7 @@ class BettingExtractor(BaseExtractor):
         self,
         betting_data: dict[str, Any],
         game_data: dict[str, Any],
-        game_id: int | None,
+        game_id: Optional[int],
     ) -> list[TalkingPoint]:
         """Extract significant odds movements."""
         points = []

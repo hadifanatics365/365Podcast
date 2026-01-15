@@ -36,7 +36,7 @@ class PodcastRequest(BaseModel):
         description="Generation mode (auto, daily_recap, game_spotlight, panel_discussion)",
     )
     format: PodcastFormat = Field(
-        default=PodcastFormat.SINGLE_VOICE,
+        default=PodcastFormat.PANEL,
         description="Podcast format: single_voice (one narrator) or panel (3-person discussion)",
     )
     language: str = Field(
