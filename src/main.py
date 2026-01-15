@@ -30,15 +30,15 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     settings = get_settings()
     logger.info(f"Environment: debug={settings.debug}")
 
-    # Start the podcast pre-generation scheduler
-    scheduler = get_scheduler()
-    await scheduler.start()
-    logger.info("Podcast scheduler started")
+    # Scheduler disabled - podcasts are generated on-demand only
+    # scheduler = get_scheduler()
+    # await scheduler.start()
+    # logger.info("Podcast scheduler started")
 
     yield
 
     # Shutdown
-    await scheduler.stop()
+    # await scheduler.stop()
     logger.info("Shutting down Podcast Generation Service")
 
 

@@ -2,11 +2,14 @@
 
 import logging
 import uuid
+from pathlib import Path
 from typing import Optional
 
 from fastapi import APIRouter, BackgroundTasks, HTTPException
+from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
+from src.config import get_settings
 from src.models import PodcastRequest
 from src.services.job_store import get_job_store, JobStatus
 from src.services.push_notifications import get_apns_service, PushNotification
@@ -74,6 +77,19 @@ async def check_podcast_availability(game_id: int) -> PodcastAvailabilityRespons
         - available=true with audio_url if podcast exists
         - available=false if user needs to request generation
     """
+    settings = get_settings()
+
+    # Demo mode - return static URL for all games
+    if settings.demo_mode and settings.demo_audio_url:
+        logger.info(f"Demo mode: returning static URL for game {game_id}")
+        return PodcastAvailabilityResponse(
+            game_id=game_id,
+            available=True,
+            audio_url=settings.demo_audio_url,
+            duration_seconds=120.0,
+            generated_at="2025-01-15T00:00:00Z",
+        )
+
     job_store = get_job_store()
 
     # Check cache
@@ -239,6 +255,23 @@ async def refresh_podcast(
         "status": "processing",
         "message": "Podcast refresh started",
     }
+
+
+@router.get("/demo-audio")
+async def get_demo_audio() -> FileResponse:
+    """
+    Serve the demo podcast audio file.
+    """
+    demo_file = Path(__file__).parent.parent.parent.parent / "podcast_game_4452679_complete.mp3"
+
+    if not demo_file.exists():
+        raise HTTPException(status_code=404, detail="Demo audio file not found")
+
+    return FileResponse(
+        path=demo_file,
+        media_type="audio/mpeg",
+        filename="demo_podcast.mp3"
+    )
 
 
 # =============================================================================

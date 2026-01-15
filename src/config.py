@@ -40,6 +40,10 @@ class Settings(BaseSettings):
     # Redis (for job queue)
     redis_url: str = "redis://localhost:6379"
 
+    # Demo mode - returns static audio URL instead of generating
+    demo_mode: bool = False
+    demo_audio_url: Optional[str] = None  # Static MP3 URL for demo
+
     # Apple Push Notifications (APNs)
     apns_key_id: Optional[str] = None  # Key ID from Apple Developer
     apns_team_id: Optional[str] = None  # Team ID from Apple Developer
