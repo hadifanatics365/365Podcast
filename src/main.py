@@ -9,8 +9,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from src.api.routes import health_router, podcast_router
+from src.api.routes.mobile import router as mobile_router
 from src.config import get_settings
 from src.exceptions import PodcastGenerationError
+from src.services.scheduler import get_scheduler
 
 # Configure logging
 logging.basicConfig(
@@ -28,9 +30,15 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     settings = get_settings()
     logger.info(f"Environment: debug={settings.debug}")
 
+    # Start the podcast pre-generation scheduler
+    scheduler = get_scheduler()
+    await scheduler.start()
+    logger.info("Podcast scheduler started")
+
     yield
 
     # Shutdown
+    await scheduler.stop()
     logger.info("Shutting down Podcast Generation Service")
 
 
@@ -94,6 +102,7 @@ async def podcast_error_handler(
 # Include routers
 app.include_router(health_router, prefix="/api/v1")
 app.include_router(podcast_router, prefix="/api/v1")
+app.include_router(mobile_router, prefix="/api/v1")
 
 
 # Root endpoint
