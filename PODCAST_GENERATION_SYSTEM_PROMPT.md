@@ -324,29 +324,37 @@ This is a **Synthesis Step**. It MUST NOT begin until all three pillars are veri
    - Remove "NOT_AVAILABLE" and "N/A" markers
    - Only pass available data to Claude
 
-4. **Panel Dynamics (ENHANCED):**
+4. **Panel Dynamics (ENHANCED - TONE BALANCE):**
    - **HOST (The "Anchor"):**
      - Keeps time and pacing
      - Introduces segments and transitions
      - Mediates between Analyst and Fan
-     - Maintains professional energy
-     - Calibrated enthusiasm based on data importance
-   - **ANALYST (The "Brain") - ANTI-ROBOTIC:**
+     - **TONE: Natural, conversational, warm - NOT robotic or formal**
+     - Sound like a friend hosting a chat, not a news anchor
+     - Keep enthusiasm CALIBRATED: Casual for standard stats, genuinely interested for unusual stats, naturally surprised for historic stats
+     - NO formal announcements or scripted-sounding phrases
+     - Use natural speech: "So, lads..." not "Now, let's discuss..."
+     - Vary sentence structure, use natural pauses and fillers
+   - **ANALYST (The "Brain") - CALM & MEASURED:**
      - Uses stats, xG, tactical terms
      - Skeptical of "luck" - prefers data-driven arguments
-     - Explains numbers as "insider secrets" to friends
-     - Uses football slang when passionate
-     - Challenges emotional arguments with facts
-     - **CRITICAL: He's "one of the guys" - casual, relatable, natural**
-     - Avoid formal or robotic phrasing
-     - Sound conversational, like chatting with mates at a pub, not presenting data in a boardroom
-     - Keep lines SHORT unless explaining something important or telling a story
-   - **FAN (The "Heart"):**
+     - **TONE: CALM and MEASURED, not overly excited**
+     - Most of the time: Calm, analytical, conversational - "Yeah, the numbers show..."
+     - When passionate: Slightly more energy, but still controlled
+     - Avoid over-the-top excitement for standard stats
+     - Sound like a knowledgeable friend explaining tactics, not a hype man
+     - Casual, relatable, natural - chatting at a pub, not presenting data
+     - Keep tone balanced - not constantly excited
+   - **FAN (The "Heart") - REALISTIC EXCITEMENT:**
      - Passionate and biased towards one team (assigned dynamically at start)
      - Uses emotional arguments
-     - Reacts with gut feeling, not just stats
-     - Uses street-wise slang naturally
-     - Mood matches situation (buzzing if won, gutted if lost)
+     - **TONE: Keep excitement REALISTIC and CALIBRATED**
+     - If team won: Happy and proud, but not over-the-top
+     - If team lost: Disappointed but measured
+     - If PRE-MATCH: Nervous/excited, but controlled
+     - Avoid constant high-energy - match the actual emotional state
+     - Sound like a real fan, not a hype machine
+     - Keep excitement proportional to the situation
    - **Conflict Rule (CRITICAL):**
      - At least once per episode, especially in "The Final Ticket" segment
      - Fan and Analyst MUST have a friendly disagreement
@@ -380,7 +388,10 @@ This is a **Synthesis Step**. It MUST NOT begin until all three pillars are veri
    - Global football slang
    - N/A filter (ignore missing data)
    - Fan assignment (mandatory)
-   - Calibrated enthusiasm
+   - **TONE BALANCE (CRITICAL):**
+     - HOST: Natural, conversational, warm - NOT robotic or formal
+     - ANALYST: CALM and MEASURED, not overly excited
+     - FAN: Keep excitement REALISTIC and CALIBRATED, not constantly high-energy
    - **SHORT LINES RULE (CRITICAL - ANTI-ROBOTIC):**
      - Keep dialogue lines SHORT (1-2 sentences max) by default
      - Only use longer lines when:
@@ -391,6 +402,13 @@ This is a **Synthesis Step**. It MUST NOT begin until all three pillars are veri
      - Break longer thoughts into multiple short exchanges between characters
      - Example SHORT (preferred): "[HOST]: Mental result! [ANALYST]: Yeah, the xG was wild. [FAN]: Seriously? [ANALYST]: 2.3 to 0.8. They bottled it."
      - Example LONG (only when explaining important context): "[ANALYST]: Look, here's the thing - when you look at the pressing triggers, they were actually winning the ball back in dangerous areas, but the final pass was just off. The xG model shows 2.3 expected goals, but they only converted once. That's the difference between a good performance and a great one."
+   - **REALISTIC OVERLAPPING DIALOGUE (MANDATORY - 4-5 TIMES PER EPISODE):**
+     - Characters sometimes try to talk at the same time - this is REALISTIC and natural
+     - Include 4-5 instances of overlapping/interrupting dialogue throughout the episode
+     - Format: [HOST]: So, looking at-- [ANALYST]: [interrupting] Yeah, the xG-- [HOST]: [laughs] Let me finish!
+     - Use stage directions: [interrupting], [simultaneously], [talking over], [cuts in]
+     - Place overlaps at natural moments: when excited, when there's disagreement, when someone wants to add a point
+     - This creates authentic conversation flow - people don't wait perfectly for each other
    - Dynamic sentence flow (break monologues)
    - Conversational tennis (quick back-and-forth)
    - Trance kick-off energy (acknowledge intro music)

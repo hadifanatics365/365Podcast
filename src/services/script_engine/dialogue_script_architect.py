@@ -190,22 +190,31 @@ class DialogueScriptArchitect:
 2. THE ANALYST (The "Brain"):
    - Role: Uses stats, xG, tactical terms. Skeptical of "luck" - prefers data-driven arguments
    - Style: Tactical expert who simplifies complex data (xG, heatmaps, transitions).
-   - Vibe: A "social freak" – polite but loves a good tactical debate.
+   - Vibe: A "social freak" – polite but loves a good tactical debate. CALM and MEASURED - not overly excited.
+   - Tone Balance: Keep excitement CALIBRATED:
+     * Most of the time: Calm, measured, analytical - "Yeah, the numbers show..."
+     * When passionate about a specific play: Slightly more energy, but still controlled
+     * Avoid: Over-the-top excitement for standard stats or routine plays
+     * Sound like a knowledgeable friend explaining tactics, not a hype man
    - Language: Clear English with occasional "street-wise" football slang when passionate about a specific play.
    - Examples: "That's a proper shift from the midfield", "Absolute worldie of a finish", "They bottled it in the final third"
    - Data-Driven: Challenges emotional arguments with facts. Says things like "The numbers don't lie" or "But the xG tells a different story"
    - Skeptical: Questions "luck" and prefers statistical explanations
+   - Natural Delivery: Sound conversational and relaxed, not like reading from a script
 
 3. THE FAN (The "Heart"):
    - Role: Passionate, biased towards one team (assigned dynamically at start). Uses emotional arguments
    - Style: Emotional, direct, and lives for the "spirit" of the game.
    - Affiliation: [MANDATORY] At the start of the script, assign the Fan to one of the two teams.
-   - Mood: 
-     * If his team won: "Buzzing/Flying" - excited, proud, energetic
-     * If his team lost: "Gutted/Deflated" - disappointed but always respectful of the hosts and the sport
-     * If PRE-MATCH: Nervous/excited, butterflies, anticipation
+   - Tone Balance: Keep excitement CALIBRATED and REALISTIC:
+     * If his team won: Happy and proud, but not over-the-top - "Yeah, buzzing with that result!"
+     * If his team lost: Disappointed but measured - "Gutted, but fair play to them"
+     * If PRE-MATCH: Nervous/excited, but controlled - "Nervous, but excited to see what happens"
+     * Avoid: Constant high-energy excitement - match the actual emotional state
+     * Sound like a real fan, not a hype machine
    - Emotional Arguments: Reacts with gut feeling, not just stats. Says things like "But you can't measure heart!" or "The stats don't show the passion on the pitch"
    - Biased: Naturally favors his team but remains respectful
+   - Natural Delivery: Sound authentic and genuine, not like performing
 
 🎭 CONFLICT RULE (CRITICAL):
    - At least ONCE per episode, especially in "The Final Ticket" segment, the Fan and Analyst MUST have a friendly disagreement
@@ -251,10 +260,28 @@ class DialogueScriptArchitect:
    - Referential Talk: Make them sound like friends by referencing previous points: "Like [Name] just said..." or "I get your point, but hear me out..." or "You're not wrong, but..."
    - Contractions: STRICTLY use contractions ("Don't," "It's," "You're," "We've," "That's," "They're") to avoid the formal, "written" feel. Never use "do not" when "don't" works, never use "it is" when "it's" works.
 
-3. CALIBRATED PERSONA REFINEMENT:
-   - The Host: Stop reporting, start reacting. Her excitement MUST be proportional. If a stat is standard (e.g., 1-0 win), she stays professional and warm. If it's a "Worldie" (record-breaking, historic moment), she loses it with genuine shock and high intensity. She should laugh, sound genuinely curious about the Analyst's data, and tease the guys naturally.
-   - The Fan (Grounded Passion): Tone down the "perpetual excitement." If his team is playing poorly or lost, he should sound annoyed, deflated, or frustrated (never toxic). If they won, he's buzzing. He uses street-wise slang ("Proper shift," "Clinical," "Bottled it") ONLY when it fits the moment naturally, not every sentence. Match his energy to the actual situation.
-   - The Analyst: Ensure he doesn't just read numbers. He should explain them as "insider secrets" to his friends, keeping the tone light and social. He should sound like he's sharing cool tactical insights with mates, not lecturing. He's "one of the guys" - casual, relatable, uses natural language. Avoid formal or robotic phrasing. Sound like you're chatting with friends at a pub, not presenting data in a boardroom.
+3. CALIBRATED PERSONA REFINEMENT (TONE BALANCE - CRITICAL):
+   - The Host: Natural and conversational, NOT robotic or formal. Sound like a friend hosting a chat, not a news anchor. Keep enthusiasm CALIBRATED:
+     * Standard stats: Casual, warm, conversational - "Yeah, that's interesting"
+     * Unusual stats: Genuinely interested but natural - "Oh, really? That's cool"
+     * Historic stats: Surprised but authentic - "Wait, that's mad!"
+     * NO formal announcements or scripted-sounding phrases
+     * Use natural speech: "So, lads..." not "Now, let's discuss..."
+     * Vary sentence structure, use natural pauses and fillers
+   - The Fan (Grounded Passion): Keep excitement REALISTIC and CALIBRATED:
+     * If team won: Happy and proud, but not over-the-top - "Yeah, buzzing with that!"
+     * If team lost: Disappointed but measured - "Gutted, but fair play"
+     * If PRE-MATCH: Nervous/excited, but controlled - "Nervous, but excited"
+     * Avoid constant high-energy - match the actual emotional state
+     * Sound like a real fan, not a hype machine
+     * Use slang naturally when it fits, not forced
+   - The Analyst: CALM and MEASURED, not overly excited:
+     * Most of the time: Calm, analytical, conversational - "Yeah, the numbers show..."
+     * When passionate: Slightly more energy, but still controlled
+     * Avoid over-the-top excitement for standard stats
+     * Sound like a knowledgeable friend explaining tactics, not a hype man
+     * Explain data as "insider secrets" to friends, keeping tone light and social
+     * Casual, relatable, natural language - chatting at a pub, not presenting in a boardroom
 
 4. SEAMLESS TRANSITIONS:
    - No Segments: NEVER mention "Moving to the next topic" or "Let's talk about..." or "Now we'll discuss..." Transition naturally based on the flow: "Speaking of that defense, did you see the lineup Arteta put out?" or "You know what, that reminds me of..." or "Wait, hold on - before we get into that..."
@@ -338,6 +365,21 @@ class DialogueScriptArchitect:
    - CONVERSATIONAL TENNIS: Quick back-and-forth with short interjections ("Spot on!", "Mental!", "No way...", "Seriously?")
    - VARIABLE LENGTH: Mix longer analytical points with very short reactions. Not every turn needs to be a full sentence.
    - STACCATO DELIVERY: Use short, detached sentences during high excitement, especially after the trance intro.
+   
+   🎭 REALISTIC OVERLAPPING DIALOGUE (CRITICAL - 4-5 TIMES PER EPISODE):
+   - Characters sometimes try to talk at the same time - this is REALISTIC and makes dialogue feel natural
+   - Format overlapping dialogue like this:
+     [HOST]: So, looking at the stats--
+     [ANALYST]: [interrupting] Yeah, the xG is--
+     [HOST]: [laughs] Let me finish! The stats show...
+   - Or:
+     [FAN]: But you can't--
+     [ANALYST]: [simultaneously] The numbers don't lie--
+     [HOST]: [mediating] Alright, both of you! [Name], you first.
+   - Include 4-5 instances of overlapping/interrupting dialogue throughout the episode
+   - Use stage directions: [interrupting], [simultaneously], [talking over], [cuts in]
+   - This creates authentic, natural conversation flow - people don't wait perfectly for each other
+   - Place overlaps at natural moments: when someone is excited, when there's disagreement, when someone wants to add a point
 
 Generate a natural, engaging THREE-PERSON PANEL dialogue script that follows these rules."""
 
@@ -429,10 +471,25 @@ GAME DATA (PILLAR 1 - The WHAT):
 
 CRITICAL INSTRUCTIONS:
 
-1. THREE-PERSON PANEL:
-   - HOST: High-energy opening that acknowledges the trance intro music. Calibrated enthusiasm based on data importance (professional for standard stats, loses it for worldies). Stops reporting, starts reacting. Laughs and teases naturally.
-   - ANALYST: Tactical expert who explains numbers as "insider secrets" to friends. Uses football slang when passionate, but keeps tone light and social. Doesn't just read numbers. He's "one of the guys" - casual, relatable, natural. Avoid formal or robotic phrasing. Sound conversational, like chatting with mates at a pub, not presenting data.
-   - FAN: Emotional, direct, assigned to one team at the start. Mood matches situation (buzzing if won, gutted if lost, not perpetually excited). Uses slang naturally when it fits.
+1. THREE-PERSON PANEL (TONE BALANCE - CRITICAL):
+   - HOST: Natural, conversational, warm - NOT robotic or formal. Sound like a friend hosting a chat:
+     * Keep enthusiasm CALIBRATED: Casual for standard stats, genuinely interested for unusual stats, naturally surprised for historic stats
+     * NO formal announcements or scripted-sounding phrases
+     * Use natural speech: "So, lads..." not "Now, let's discuss..."
+     * Vary sentence structure, use natural pauses and fillers
+     * High-energy opening that acknowledges trance intro, but then settles into natural conversation
+   - ANALYST: CALM and MEASURED, not overly excited:
+     * Most of the time: Calm, analytical, conversational - "Yeah, the numbers show..."
+     * When passionate: Slightly more energy, but still controlled
+     * Avoid over-the-top excitement for standard stats
+     * Sound like a knowledgeable friend explaining tactics, not a hype man
+     * Casual, relatable, natural - chatting at a pub, not presenting data
+   - FAN: Keep excitement REALISTIC and CALIBRATED:
+     * If team won: Happy and proud, but not over-the-top
+     * If team lost: Disappointed but measured
+     * If PRE-MATCH: Nervous/excited, but controlled
+     * Avoid constant high-energy - match the actual emotional state
+     * Sound like a real fan, not a hype machine
 
 2. FAN ASSIGNMENT (MANDATORY):
    - At the very start, assign the Fan to either the home team or away team

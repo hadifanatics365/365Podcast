@@ -150,6 +150,84 @@ class PodcastOrchestrator:
             logger.info("[STEP 4] Enrich Game Data")
             context = await self.data_enricher.enrich_games(games, mode)
             
+            # CUSTOM DATA INJECTION for game 4452679
+            if games[0].gid == 4452679:
+                logger.info("[STEP 4] Injecting custom data for game 4452679")
+                game_data = context.get("game_data") or context.get("games", [{}])[0]
+                
+                # Inject custom pre-game stats
+                game_data["pre_game_stats"] = [
+                    {
+                        "name": "Recent Form",
+                        "values": [
+                            "Manchester City: Won 25 from latest 30 games",
+                            "Manchester United: Lost 7 games from 25 games"
+                        ]
+                    },
+                    {
+                        "name": "Clean Sheets",
+                        "values": [
+                            "Manchester United: Only 2 clean sheets in 25 games",
+                            "Manchester City: 13 clean sheets from 30 games"
+                        ]
+                    }
+                ]
+                
+                # Inject custom key players
+                game_data["key_players"] = [
+                    {
+                        "name": "Erling Haaland",
+                        "team": "Manchester City",
+                        "goals": 20,
+                        "description": "Haaland scores 20 goals from the start of the season"
+                    },
+                    {
+                        "name": "Benjamin Sesko",
+                        "team": "Manchester United",
+                        "goals": 4,
+                        "description": "Sesko scores only 4 goals"
+                    }
+                ]
+                
+                # Inject custom standings
+                game_data["standings"] = {
+                    "home_team": {
+                        "position": 7,
+                        "points": 32,
+                        "team_name": "Manchester United"
+                    },
+                    "away_team": {
+                        "position": 2,
+                        "points": 43,
+                        "team_name": "Manchester City"
+                    },
+                    "position_difference": 5
+                }
+                
+                # Inject custom betting odds (Sporting bet)
+                # Format must match what LineupAgent expects
+                game_data["betting"] = {
+                    "type": 1,  # Full-time Result
+                    "bookmaker": "Sporting bet",  # LineupAgent looks for "bookmaker" or "Bookmaker"
+                    "Bookmaker": "Sporting bet",  # Also add capitalized version
+                    "bookmaker_id": 161,  # Sporting bet ID
+                    "options": [
+                        {"name": "1", "rate": 3.58, "odds": 3.58, "description": "Manchester United Win", "Num": 1, "original_rate": 3.58},
+                        {"name": "X", "rate": 3.78, "odds": 3.78, "description": "Draw", "Num": 2, "original_rate": 3.78},
+                        {"name": "2", "rate": 1.94, "odds": 1.94, "description": "Manchester City Win", "Num": 3, "original_rate": 1.94}
+                    ]
+                }
+                # Also add to context level for easier access
+                context["betting"] = game_data["betting"]
+                
+                # Update context
+                if "game_data" in context:
+                    context["game_data"] = game_data
+                if "games" in context and context["games"]:
+                    context["games"][0] = game_data
+                
+                logger.info("[STEP 4] ✓ Custom data injected for game 4452679")
+            
             # Validate PILLAR 1 (The WHAT): Enriched Data Context
             if not context:
                 raise HolyTriangleError(
