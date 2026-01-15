@@ -126,3 +126,21 @@ class RateLimitError(PodcastGenerationError):
         if retry_after:
             details["retry_after_seconds"] = retry_after
         super().__init__(message, details=details, **kwargs)
+
+
+class HolyTriangleError(PodcastGenerationError):
+    """Holy Triangle prerequisite not met for script generation."""
+
+    def __init__(
+        self,
+        message: str = "Holy Triangle prerequisite not met",
+        missing_pillar: Optional[str] = None,
+        pillar_details: Optional[dict[str, Any]] = None,
+        **kwargs: Any,
+    ):
+        details = kwargs.pop("details", {})
+        if missing_pillar:
+            details["missing_pillar"] = missing_pillar
+        if pillar_details:
+            details["pillar_details"] = pillar_details
+        super().__init__(message, details=details, **kwargs)

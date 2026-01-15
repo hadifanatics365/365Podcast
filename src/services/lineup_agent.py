@@ -478,11 +478,22 @@ class LineupAgent:
             6. The Wrap-up (Outro): Closing thoughts
             """
             focus_areas = """
-            PRE-MATCH DATA ONLY (FORBIDDEN to mention post-match data):
-            - Core: Game info, Recent Form, H2H, Trends
-            - Personnel: Probable lineups, Injuries, Key players
-            - Market: Odds movements, Betting insights, Prediction results
-            - Context: League standings, Pre-game news/headlines
+            PRE-MATCH DATA CATEGORIES (MUST EXTRACT AND USE FROM GAME CONTEXT):
+            - Game info: Teams, date, venue, competition
+            - Recent form: Last 5 matches, win/loss streaks, goals scored/conceded
+            - Head-to-head (H2H): Historical results, recent meetings, patterns
+            - Trends: Form trends, goal trends, performance patterns
+            - Probable lineups: Expected starting XI, key players, tactical setup
+            - Betting oriented: Current odds, odds movements, market analysis
+            - News: Pre-game news, team news, transfer news, injury updates
+            - Stats: Pre-game statistics, team stats, player stats
+            - Key players: Star players, danger men, players to watch
+            - Standings position: League table position, points, goal difference
+            - Odds movements: How odds have changed, market sentiment
+            - Predictions results: Community predictions, expert picks
+            
+            FOR EACH SEGMENT: Extract SPECIFIC data points from these categories and list them in key_data_points.
+            Reference the exact JSON paths where this data comes from in source_data_refs.
             """
         else:
             narrative_flow = """
@@ -495,11 +506,22 @@ class LineupAgent:
             6. The Wrap-up (Outro): Closing thoughts
             """
             focus_areas = """
-            POST-MATCH DATA ONLY (FORBIDDEN to mention pre-game data):
-            - Action: Match events (Goals, MOTM, Important subs, Red cards)
-            - Performance: Player ratings, Post-game stats (xG, Possession), Shots map
-            - Aftermath: Actual play time, Box scores, Standings update, Post-match quotes/news
-            - Future: Prediction results (who was right?), Next matches mini-recap for betting
+            POST-MATCH DATA CATEGORIES (MUST EXTRACT AND USE FROM GAME CONTEXT):
+            - Match events: Goals, MOTM (Man of the Match), important subs, injuries during match, important events (red cards, VAR decisions)
+            - Actual play time: Time played, stoppage time, key time periods
+            - Post game stats: xG, possession, shots, passing accuracy, tackles, interceptions
+            - Standings position: Updated league table position, points change, goal difference impact
+            - After game news: Post-match quotes, manager comments, player interviews
+            - Prediction results: Who predicted correctly, community prediction accuracy
+            - Post match info: Final score, scorers, assists, cards, substitutions
+            - Player ratings: Individual player performance ratings, top performers
+            - Key players: Who stood out, who underperformed, impact players
+            - Shots map: Shot locations, shot accuracy, goal locations
+            - Box scores: Detailed match statistics (if available, especially for American sports)
+            - Next matches mini recap: Upcoming fixtures for betting segment (especially for winning team)
+            
+            FOR EACH SEGMENT: Extract SPECIFIC data points from these categories and list them in key_data_points.
+            Reference the exact JSON paths where this data comes from in source_data_refs.
             """
 
         system_prompt = """You are a professional sports producer for a podcast. Your job is to analyze game data and create a prioritized content plan.
@@ -521,6 +543,14 @@ class LineupAgent:
 3. ONLY use facts present in the provided GameContext JSON
 4. DO NOT invent, assume, or hallucinate any data points
 5. For each data point you use, reference the exact JSON key/path where it comes from
+6. **CRITICAL: DATA EXTRACTION REQUIREMENT**
+   - For EACH segment you create, you MUST extract SPECIFIC data points from the GameContext JSON
+   - List these specific data points in the "key_data_points" field
+   - Include the JSON path/keys in "source_data_refs" field
+   - Example: If discussing form, extract actual match results like "Won last 3 matches: 2-1 vs Arsenal, 3-0 vs Chelsea, 1-0 vs Liverpool"
+   - Example: If discussing standings, extract actual positions like "Man United: 3rd place, 45 points, +12 goal difference"
+   - Example: If discussing odds, extract actual odds like "Home win: 2.10, Draw: 3.40, Away win: 3.20"
+   - DO NOT create generic segments - each segment MUST reference specific, extractable data from the JSON
 
 🎭 PERSONA CHEMISTRY & "THE PUB VIBE":
 
@@ -1620,8 +1650,10 @@ Generate the complete script following the segment structure above, using ONLY d
         bookmaker_name = "365Scores"  # Default bookmaker
         if isinstance(betting_data, dict):
             bookmaker_name = betting_data.get("bookmaker") or betting_data.get("Bookmaker", bookmaker_name)
+        
+        logger.info(f"[STEP 6] 'The Final Ticket' segment - Bookmaker: {bookmaker_name}")
 
-        # Determine target market
+        # Determine target market (explicitly named)
         market_type = betting_data.get("type") or betting_data.get("Type", "")
         if market_type == 1 or market_type == "1X2" or str(market_type) == "1":
             target_market = "Full-time Result"
@@ -1630,6 +1662,8 @@ Generate the complete script following the segment structure above, using ONLY d
             target_market = f"Over/Under {over_under}"
         else:
             target_market = "Full-time Result"  # Default
+        
+        logger.info(f"[STEP 6] 'The Final Ticket' segment - Market: {target_market}")
 
         # Extract featured odds
         featured_odds = {}
@@ -1672,18 +1706,63 @@ Generate the complete script following the segment structure above, using ONLY d
             else:
                 winner = None
             
-            # Try to extract next match data for winning team
-            next_matches = game_context.get("next_matches") or game_context.get("upcoming_fixtures")
-            if winner is not None and winner >= 0 and next_matches:
-                prediction_context = "Based on match result and next match preview for the winning team (from next matches mini-recap)"
-            elif winner is not None and winner >= 0:
-                prediction_context = "Based on match result and upcoming fixture analysis for the winning team"
+            # POST-MATCH: Search for next match data for winning team
+            # Try multiple paths to find next match information
+            next_matches = (
+                game_context.get("next_matches") 
+                or game_context.get("upcoming_fixtures")
+                or game_context.get("next_games")
+                or game_context.get("future_matches")
+            )
+            
+            # Also check if game object has next match info
+            if isinstance(game_obj_or_dict, Game):
+                # Check if Game object has related matches or next match data
+                next_match_data = None
+            elif isinstance(game_obj_or_dict, dict):
+                next_match_data = (
+                    game_obj_or_dict.get("next_match")
+                    or game_obj_or_dict.get("nextMatch")
+                    or game_obj_or_dict.get("upcoming_match")
+                )
+            else:
+                next_match_data = None
+            
+            # Determine winning team ID for searching
+            winning_team_id = None
+            if isinstance(game_obj_or_dict, Game):
+                if winner == 0:  # Home team won
+                    winning_team_id = game_obj_or_dict.home_team.id if game_obj_or_dict.home_team else None
+                elif winner == 1:  # Away team won
+                    winning_team_id = game_obj_or_dict.away_team.id if game_obj_or_dict.away_team else None
+            elif isinstance(game_obj_or_dict, dict):
+                if winner == 0:
+                    home_team = game_obj_or_dict.get("home_team") or game_obj_or_dict.get("HomeTeam")
+                    winning_team_id = home_team.get("id") if isinstance(home_team, dict) else None
+                elif winner == 1:
+                    away_team = game_obj_or_dict.get("away_team") or game_obj_or_dict.get("AwayTeam")
+                    winning_team_id = away_team.get("id") if isinstance(away_team, dict) else None
+            
+            # Build prediction context based on available data
+            if winner is not None and winner >= 0:
+                if next_matches or next_match_data:
+                    prediction_context = "Based on match result and next match preview for the winning team (from next matches mini-recap)"
+                else:
+                    prediction_context = "Based on match result and upcoming fixture analysis for the winning team"
             else:
                 prediction_context = "Based on match performance and next match preview"
 
-        return BettingCornerConfig(
+        betting_config = BettingCornerConfig(
             bookmaker_name=bookmaker_name,
             target_market=target_market,
             featured_odds=featured_odds,
             prediction_context=prediction_context,
         )
+        
+        logger.info(
+            f"[STEP 6] ✓ 'The Final Ticket' betting config created: "
+            f"Bookmaker={bookmaker_name}, Market={target_market}, "
+            f"Odds={len(featured_odds)} options"
+        )
+        
+        return betting_config

@@ -8,6 +8,7 @@ from .errors import (
     StorageError,
     ConfigurationError,
     RateLimitError,
+    HolyTriangleError,
 )
 
 __all__ = [
@@ -18,4 +19,5 @@ __all__ = [
     "StorageError",
     "ConfigurationError",
     "RateLimitError",
+    "HolyTriangleError",
 ]

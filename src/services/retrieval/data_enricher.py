@@ -147,18 +147,59 @@ class DataEnricher:
         game: Game,
         context: dict[str, Any],
     ) -> dict[str, Any]:
+        """Enrich single game for pre-game spotlight."""
         # Store the Game object in context for LineupAgent
         context["game"] = game
-        """Enrich single game for pre-game spotlight."""
+        context["original_game_obj"] = game
+        
         enriched = self._extract_pregame_data(game)
 
-        # Try to fetch additional game center data
-        detailed_game = await self.game_fetcher.fetch_game_center(game.gid)
-        if detailed_game:
-            enriched.update(self._extract_pregame_data(detailed_game))
+        # Fetch comprehensive game center data (includes lineups, odds, news, standings)
+        gamecenter_data = await self.game_fetcher.fetch_game_center(game.gid)
+        if gamecenter_data:
+            # Extract lineups from GameCenter
+            if "Lineups" in gamecenter_data or "lineups" in gamecenter_data:
+                lineups = gamecenter_data.get("Lineups") or gamecenter_data.get("lineups", [])
+                if lineups:
+                    enriched["lineups"] = self._extract_lineups_from_gamecenter(lineups)
+                    enriched["lineups_status"] = gamecenter_data.get("LineupsStatusText") or "Probable Lineups"
+                    logger.info(f"Extracted lineups from GameCenter for game {game.gid}")
+            
+            # Extract betting odds from GameCenter
+            if "MainOdds" in gamecenter_data or "main_odds" in gamecenter_data:
+                main_odds = gamecenter_data.get("MainOdds") or gamecenter_data.get("main_odds")
+                if main_odds:
+                    enriched["betting"] = self._extract_betting_from_gamecenter(main_odds, gamecenter_data)
+                    logger.info(f"Extracted betting odds from GameCenter for game {game.gid}")
+            
+            # Extract news from GameCenter (news is in the response)
+            metadata = gamecenter_data.get("_gamecenter_metadata", {})
+            news_items = metadata.get("news", [])
+            if not news_items:
+                # Try direct access
+                news_items = gamecenter_data.get("News", []) or gamecenter_data.get("news", [])
+            
+            if news_items:
+                enriched["news"] = self._extract_news_from_gamecenter(news_items)
+                enriched["news_count"] = len(enriched["news"])
+                logger.info(f"Extracted {len(enriched['news'])} news items from GameCenter for game {game.gid}")
+            
+            # Extract standings from GameCenter (if available in Competitions)
+            competitions = metadata.get("competitions", [])
+            if competitions and game.competition_id:
+                standings_data = self._extract_standings_from_gamecenter(competitions, game.competition_id)
+                if standings_data:
+                    enriched["standings"] = self._format_standings(standings_data, game)
+                    logger.info(f"Extracted standings from GameCenter for competition {game.competition_id}")
 
-        # Fetch league standings
-        if game.competition_id:
+        # Fetch pre-game statistics separately
+        pregame_stats = await self.game_fetcher.fetch_pregame_statistics(game.gid)
+        if pregame_stats:
+            enriched["pre_game_stats"] = self._extract_pregame_stats_from_response(pregame_stats)
+            logger.info(f"Fetched pre-game statistics for game {game.gid}")
+
+        # Fallback: Fetch league standings if not found in GameCenter
+        if not enriched.get("standings") and game.competition_id:
             try:
                 standings = await self.game_fetcher.fetch_standings(game.competition_id)
                 enriched["standings"] = self._format_standings(standings, game)
@@ -167,22 +208,21 @@ class DataEnricher:
                 logger.warning(f"Failed to fetch standings for game {game.gid}: {e}")
                 enriched["standings"] = None
 
-        # Fetch relevant news from last 24 hours
-        try:
-            news_items = await self.news_fetcher.fetch_relevant_news(game, time_window_hours=24)
-            enriched["news"] = [news.to_dict() for news in news_items]
-            enriched["news_count"] = len(news_items)
-            logger.info(f"Fetched {len(news_items)} relevant news items for pre-game")
-        except Exception as e:
-            logger.warning(f"Failed to fetch news for game {game.gid}: {e}")
-            enriched["news"] = []
-            enriched["news_count"] = 0
+        # Fallback: Fetch news if not found in GameCenter
+        if not enriched.get("news"):
+            try:
+                news_items = await self.news_fetcher.fetch_relevant_news(game, time_window_hours=24)
+                enriched["news"] = [news.to_dict() for news in news_items]
+                enriched["news_count"] = len(news_items)
+                logger.info(f"Fetched {len(news_items)} relevant news items for pre-game")
+            except Exception as e:
+                logger.warning(f"Failed to fetch news for game {game.gid}: {e}")
+                enriched["news"] = []
+                enriched["news_count"] = 0
 
         # Store enriched data
         context["game_data"] = enriched  # Store enriched dict separately
         context["games"] = [enriched]
-        # Keep original Game object for LineupAgent status detection
-        # (don't overwrite if it was already set)
 
         return context
 
@@ -191,23 +231,57 @@ class DataEnricher:
         game: Game,
         context: dict[str, Any],
     ) -> dict[str, Any]:
+        """Enrich single game for post-game spotlight."""
         # Store the Game object in context for LineupAgent
         context["game"] = game
-        """Enrich single game for post-game spotlight."""
+        context["original_game_obj"] = game
+        
         enriched = self._extract_postgame_data(game)
 
-        # Fetch detailed statistics
+        # Fetch comprehensive game center data (includes lineups, odds, news, standings)
+        gamecenter_data = await self.game_fetcher.fetch_game_center(game.gid)
+        if gamecenter_data:
+            # Extract lineups from GameCenter
+            if "Lineups" in gamecenter_data or "lineups" in gamecenter_data:
+                lineups = gamecenter_data.get("Lineups") or gamecenter_data.get("lineups", [])
+                if lineups:
+                    enriched["lineups"] = self._extract_lineups_from_gamecenter(lineups)
+                    enriched["lineups_status"] = gamecenter_data.get("LineupsStatusText") or "Confirmed Lineups"
+                    logger.info(f"Extracted lineups from GameCenter for game {game.gid}")
+            
+            # Extract betting odds from GameCenter
+            if "MainOdds" in gamecenter_data or "main_odds" in gamecenter_data:
+                main_odds = gamecenter_data.get("MainOdds") or gamecenter_data.get("main_odds")
+                if main_odds:
+                    enriched["betting"] = self._extract_betting_from_gamecenter(main_odds, gamecenter_data)
+                    logger.info(f"Extracted betting odds from GameCenter for game {game.gid}")
+            
+            # Extract news from GameCenter
+            metadata = gamecenter_data.get("_gamecenter_metadata", {})
+            news_items = metadata.get("news", [])
+            if not news_items:
+                news_items = gamecenter_data.get("News", []) or gamecenter_data.get("news", [])
+            
+            if news_items:
+                enriched["news"] = self._extract_news_from_gamecenter(news_items)
+                enriched["news_count"] = len(enriched["news"])
+                logger.info(f"Extracted {len(enriched['news'])} news items from GameCenter for game {game.gid}")
+            
+            # Extract standings from GameCenter
+            competitions = metadata.get("competitions", [])
+            if competitions and game.competition_id:
+                standings_data = self._extract_standings_from_gamecenter(competitions, game.competition_id)
+                if standings_data:
+                    enriched["standings"] = self._format_standings(standings_data, game)
+                    logger.info(f"Extracted standings from GameCenter for competition {game.competition_id}")
+
+        # Fetch detailed statistics (fallback)
         stats = await self.game_fetcher.fetch_game_statistics(game.gid)
         if stats:
             enriched["detailed_statistics"] = stats
 
-        # Try to fetch full game center data
-        detailed_game = await self.game_fetcher.fetch_game_center(game.gid)
-        if detailed_game:
-            enriched.update(self._extract_postgame_data(detailed_game))
-
-        # Fetch league standings (updated after match)
-        if game.competition_id:
+        # Fallback: Fetch league standings if not found in GameCenter
+        if not enriched.get("standings") and game.competition_id:
             try:
                 standings = await self.game_fetcher.fetch_standings(game.competition_id)
                 enriched["standings"] = self._format_standings(standings, game)
@@ -216,23 +290,21 @@ class DataEnricher:
                 logger.warning(f"Failed to fetch standings for game {game.gid}: {e}")
                 enriched["standings"] = None
 
-        # Fetch relevant news from after match end
-        try:
-            # For finished games, fetch news from match end time onwards
-            news_items = await self.news_fetcher.fetch_relevant_news(game, time_window_hours=48)
-            enriched["news"] = [news.to_dict() for news in news_items]
-            enriched["news_count"] = len(news_items)
-            logger.info(f"Fetched {len(news_items)} relevant news items for post-game")
-        except Exception as e:
-            logger.warning(f"Failed to fetch news for game {game.gid}: {e}")
-            enriched["news"] = []
-            enriched["news_count"] = 0
+        # Fallback: Fetch news if not found in GameCenter
+        if not enriched.get("news"):
+            try:
+                news_items = await self.news_fetcher.fetch_relevant_news(game, time_window_hours=48)
+                enriched["news"] = [news.to_dict() for news in news_items]
+                enriched["news_count"] = len(news_items)
+                logger.info(f"Fetched {len(news_items)} relevant news items for post-game")
+            except Exception as e:
+                logger.warning(f"Failed to fetch news for game {game.gid}: {e}")
+                enriched["news"] = []
+                enriched["news_count"] = 0
 
         # Store enriched data
-        context["game_data"] = enriched  # Store enriched dict separately
+        context["game_data"] = enriched
         context["games"] = [enriched]
-        # Keep original Game object for LineupAgent status detection
-        # (don't overwrite if it was already set)
 
         return context
 
@@ -540,6 +612,151 @@ class DataEnricher:
         }
 
         return formatted
+
+    def _extract_lineups_from_gamecenter(self, lineups_data: list[dict[str, Any]]) -> dict[str, Any]:
+        """Extract and format lineups from GameCenter response."""
+        formatted: dict[str, Any] = {"home": None, "away": None}
+        
+        for lineup in lineups_data:
+            # Determine team (0=home, 1=away)
+            comp_num = lineup.get("CompNum") or lineup.get("comp_num", 0)
+            team_key = "home" if comp_num == 0 else "away"
+            
+            players = lineup.get("Players") or lineup.get("players", [])
+            formatted[team_key] = {
+                "formation": lineup.get("Formation") or lineup.get("formation"),
+                "players": [
+                    {
+                        "name": p.get("Name") or p.get("name"),
+                        "position": p.get("PositionName") or p.get("position_name"),
+                        "number": p.get("ShirtNumber") or p.get("shirt_number"),
+                        "is_captain": p.get("IsCaptain") or p.get("is_captain", False),
+                    }
+                    for p in players
+                ],
+            }
+        
+        return formatted
+    
+    def _extract_betting_from_gamecenter(self, main_odds: dict[str, Any], gamecenter_data: dict[str, Any]) -> dict[str, Any]:
+        """Extract and format betting odds from GameCenter response."""
+        options = main_odds.get("Options") or main_odds.get("options", [])
+        
+        # Also check for BetLine in GameCenter
+        bet_line = gamecenter_data.get("BetLine") or gamecenter_data.get("bet_line")
+        if bet_line:
+            bet_options = bet_line.get("Options") or bet_line.get("options", [])
+            if bet_options:
+                options = bet_options
+        
+        return {
+            "type": main_odds.get("Type") or main_odds.get("type", 1),  # 1=Full-time Result
+            "bookmaker_id": main_odds.get("BMID") or main_odds.get("bm_id"),
+            "options": [
+                {
+                    "name": opt.get("Name") or opt.get("name"),
+                    "odds": opt.get("Rate") or opt.get("rate"),
+                    "original_rate": opt.get("OriginalRate") or opt.get("original_rate"),
+                    "old_rate": opt.get("OldRate") or opt.get("old_rate"),
+                    "trend": opt.get("Trend") or opt.get("trend"),
+                    "won": opt.get("Won") or opt.get("won", False),
+                }
+                for opt in options
+            ],
+            "over_under_line": main_odds.get("OverUnder") or main_odds.get("overunder"),
+        }
+    
+    def _extract_news_from_gamecenter(self, news_items: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        """Extract and format news from GameCenter response."""
+        formatted_news = []
+        
+        for news in news_items:
+            # Extract news article data
+            formatted_news.append({
+                "id": news.get("ID") or news.get("id"),
+                "title": news.get("Title") or news.get("title"),
+                "summary": news.get("Summary") or news.get("summary"),
+                "url": news.get("URL") or news.get("url") or news.get("WebUrl") or news.get("web_url"),
+                "image_url": news.get("ImageURL") or news.get("image_url"),
+                "published_date": news.get("PublishedDate") or news.get("published_date"),
+                "source": news.get("Source") or news.get("source"),
+            })
+        
+        return formatted_news
+    
+    def _extract_standings_from_gamecenter(self, competitions: list[dict[str, Any]], competition_id: int) -> Optional[dict[str, Any]]:
+        """Extract standings from GameCenter competitions data."""
+        for comp in competitions:
+            comp_id = comp.get("ID") or comp.get("id")
+            if comp_id == competition_id:
+                # Check for standings/table data
+                if "Standings" in comp or "standings" in comp:
+                    standings = comp.get("Standings") or comp.get("standings", [])
+                    return {
+                        "teams": self._extract_teams_from_standings_list(standings),
+                        "competition_id": competition_id,
+                        "season_id": comp.get("SeasonID") or comp.get("season_id"),
+                    }
+                elif "Tables" in comp or "tables" in comp:
+                    tables = comp.get("Tables") or comp.get("tables", [])
+                    if tables:
+                        first_table = tables[0]
+                        standings = first_table.get("Standings") or first_table.get("standings", [])
+                        return {
+                            "teams": self._extract_teams_from_standings_list(standings),
+                            "competition_id": competition_id,
+                            "season_id": comp.get("SeasonID") or comp.get("season_id"),
+                            "table_name": first_table.get("Name") or first_table.get("name"),
+                        }
+        
+        return None
+    
+    def _extract_teams_from_standings_list(self, standings: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        """Extract team data from standings list."""
+        teams = []
+        
+        for item in standings:
+            team_id = item.get("TeamID") or item.get("TeamId") or item.get("ID") or item.get("Id")
+            team_name = item.get("Team") or item.get("TeamName") or item.get("Name")
+            position = item.get("Position") or item.get("Pos") or item.get("Rank")
+            
+            if team_id and team_name:
+                teams.append({
+                    "team_id": int(team_id),
+                    "team_name": str(team_name),
+                    "position": int(position) if position is not None else None,
+                    "points": item.get("Points") or item.get("Pts"),
+                    "played": item.get("Played") or item.get("P"),
+                    "wins": item.get("Wins") or item.get("W"),
+                    "draws": item.get("Draws") or item.get("D"),
+                    "losses": item.get("Losses") or item.get("L"),
+                    "goals_for": item.get("GoalsFor") or item.get("GF"),
+                    "goals_against": item.get("GoalsAgainst") or item.get("GA"),
+                    "goal_difference": item.get("GoalDifference") or item.get("GD"),
+                })
+        
+        # Sort by position
+        teams.sort(key=lambda x: x["position"] if x["position"] is not None else 999)
+        return teams
+    
+    def _extract_pregame_stats_from_response(self, stats_data: dict[str, Any]) -> list[dict[str, Any]]:
+        """Extract pre-game statistics from PreGame Statistics API response."""
+        stats = []
+        
+        # Handle different response structures
+        stats_list = stats_data.get("Statistics") or stats_data.get("statistics") or stats_data.get("Stats") or stats_data.get("stats")
+        if not stats_list and isinstance(stats_data, list):
+            stats_list = stats_data
+        
+        if stats_list:
+            for stat in stats_list:
+                stats.append({
+                    "name": stat.get("Name") or stat.get("name"),
+                    "values": stat.get("Values") or stat.get("values") or stat.get("Vals") or stat.get("vals"),
+                    "percentages": stat.get("Percentages") or stat.get("percentages") or stat.get("ValsPct") or stat.get("vals_pct"),
+                })
+        
+        return stats
 
     def _get_standings_context(
         self,

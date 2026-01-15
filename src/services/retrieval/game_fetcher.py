@@ -25,7 +25,8 @@ class GameFetcher:
 
     GAMES_PATH = "/data/games"
     STATISTICS_PATH = "/data/games/gamecenter/statistics/all"
-    GAME_CENTER_PATH = "/data/games/gamecenter"
+    GAME_CENTER_PATH = "/Data/Games/GameCenter/"  # Updated to match working API endpoint
+    GAME_CENTER_PREGAME_STATS_PATH = "/Data/Games/GameCenter/Statistics/PreGame"
     STANDINGS_PATH = "/data/competitions/standings"
 
     def __init__(self, settings: Optional[Settings] = None):
@@ -39,6 +40,42 @@ class GameFetcher:
             "langId": str(self.settings.scores_api_language),
             "tz": str(self.settings.scores_api_timezone),
             "apptype": "4",  # iOS app type from the codebase
+        }
+    
+    def _get_gamecenter_params(self, game_id: int) -> dict[str, str]:
+        """Get parameters for GameCenter API endpoint (with all required fields)."""
+        return {
+            "apptype": "1",
+            "appversion": "6.3.6",
+            "games": str(game_id),
+            "lang": str(self.settings.scores_api_language),
+            "oddsformat": "1",
+            "shownaodds": "true",
+            "storeversion": "6.3.6",
+            "theme": "dark",
+            "topbm": "174",  # Top bookmaker ID
+            "tz": str(self.settings.scores_api_timezone),
+            "uc": "21",  # User country ID
+            "usertestgroup": "44",
+            "withexpanded": "true",
+            "withexpandedstats": "true",
+            "withnews": "true",
+            "withstats": "false",  # Set to false to get expanded stats separately
+        }
+    
+    def _get_pregame_stats_params(self, game_id: int) -> dict[str, str]:
+        """Get parameters for PreGame Statistics API endpoint."""
+        return {
+            "apptype": "1",
+            "appversion": "6.3.9",
+            "gameid": str(game_id),
+            "lang": str(self.settings.scores_api_language),
+            "storeversion": "6.3.9",
+            "theme": "dark",
+            "topbm": "174",
+            "tz": str(self.settings.scores_api_timezone),
+            "uc": "21",
+            "usertestgroup": "44",
         }
 
     @with_retry(
@@ -158,29 +195,28 @@ class GameFetcher:
         initial_delay=0.5,
         exceptions=(httpx.TimeoutException, httpx.HTTPStatusError),
     )
-    async def fetch_game_center(self, game_id: int) -> Optional[Game]:
+    async def fetch_game_center(self, game_id: int) -> Optional[dict[str, Any]]:
         """
-        Fetch full game center data for a single game.
+        Fetch full game center data for a single game using the correct API endpoint.
 
-        This provides more detailed data including lineups, events, and statistics.
+        This provides comprehensive data including:
+        - Lineups
+        - Betting odds
+        - Standings positions
+        - News articles
+        - Statistics
+        - Expanded stats
 
         Args:
             game_id: The game ID to fetch
 
         Returns:
-            Game object with full details, or None if not found
-
-        Raises:
-            DataFetchError: If the API request fails
+            Dictionary containing full game center data, or None if not found
         """
-        params = self._get_base_params()
-        params["gameid"] = str(game_id)
-        params["withmainodds"] = "true"
-        params["WithOddsPreviews"] = "true"
-
+        params = self._get_gamecenter_params(game_id)
         url = f"{self.base_url}{self.GAME_CENTER_PATH}"
 
-        logger.debug(f"Fetching game center for game {game_id}")
+        logger.info(f"Fetching game center for game {game_id} with expanded data")
 
         try:
             async with httpx.AsyncClient(timeout=self.timeout) as client:
@@ -189,31 +225,71 @@ class GameFetcher:
 
                 data = response.json()
 
-                # Game center can return data in different structures:
-                # 1. {"Game": {...}} - game data under Game key
-                # 2. {"Games": [{...}]} - game data in Games array
-                # 3. Direct game data at root level
-                game_data = None
-
-                if "Game" in data and isinstance(data["Game"], dict):
-                    game_data = data["Game"]
-                elif "Games" in data and isinstance(data["Games"], list) and data["Games"]:
+                # Game center returns data in Games array
+                if "Games" in data and isinstance(data["Games"], list) and data["Games"]:
                     game_data = data["Games"][0]
-                elif "ID" in data:
-                    game_data = data
-
-                if not game_data:
-                    logger.debug(f"Game center response has unexpected structure for {game_id}")
+                    # Include additional data from response (news, competitions, etc.)
+                    game_data["_gamecenter_metadata"] = {
+                        "news": data.get("Games", [{}])[0].get("News", []),
+                        "competitions": data.get("Competitions", []),
+                        "bookmakers": data.get("Bookmakers", []),
+                    }
+                    logger.info(f"Successfully fetched game center for {game_id}")
+                    return game_data
+                elif "Game" in data and isinstance(data["Game"], dict):
+                    game_data = data["Game"]
+                    game_data["_gamecenter_metadata"] = {
+                        "news": data.get("News", []),
+                        "competitions": data.get("Competitions", []),
+                        "bookmakers": data.get("Bookmakers", []),
+                    }
+                    logger.info(f"Successfully fetched game center for {game_id}")
+                    return game_data
+                else:
+                    logger.warning(f"Game center response has unexpected structure for {game_id}")
                     return None
-
-                return Game.model_validate(game_data)
 
         except httpx.HTTPStatusError as e:
             logger.warning(f"Failed to fetch game center for {game_id}: {e.response.status_code}")
             return None
         except Exception as e:
-            logger.debug(f"Could not parse game center for {game_id}: {e}")
+            logger.warning(f"Error fetching game center for {game_id}: {e}")
             return None
+    
+    @with_retry(
+        max_attempts=3,
+        initial_delay=0.5,
+        exceptions=(httpx.TimeoutException, httpx.HTTPStatusError),
+    )
+    async def fetch_pregame_statistics(self, game_id: int) -> dict[str, Any]:
+        """
+        Fetch pre-game statistics for a single game.
+
+        Args:
+            game_id: The game ID to fetch statistics for
+
+        Returns:
+            Dictionary containing pre-game statistics data
+        """
+        params = self._get_pregame_stats_params(game_id)
+        url = f"{self.base_url}{self.GAME_CENTER_PREGAME_STATS_PATH}"
+
+        logger.debug(f"Fetching pre-game statistics for game {game_id}")
+
+        try:
+            async with httpx.AsyncClient(timeout=self.timeout) as client:
+                response = await client.get(url, params=params)
+                response.raise_for_status()
+                data = response.json()
+                logger.info(f"Successfully fetched pre-game statistics for {game_id}")
+                return data
+
+        except httpx.HTTPStatusError as e:
+            logger.warning(f"Failed to fetch pre-game statistics for game {game_id}: {e.response.status_code}")
+            return {}
+        except Exception as e:
+            logger.warning(f"Error fetching pre-game statistics for game {game_id}: {e}")
+            return {}
 
     async def fetch_featured_games(
         self,
